@@ -1,7 +1,7 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="MAUI_app.View.MainPage"
+             x:Class="MAUI_app.View.RegisterPage"
              BackgroundColor="#F5F5F7">
 
     <Grid>
@@ -28,22 +28,22 @@
                 <Border.Shadow>
                     <Shadow Brush="Black" Offset="0,10" Radius="20" Opacity="0.1" />
                 </Border.Shadow>
-                
+                 
                 <VerticalStackLayout Spacing="15">
                     <Image Source="dotnet_bot.png"
                            HeightRequest="80"
                            HorizontalOptions="Center"
-                           Margin="0,0,0 ,10"/>
+                           Margin="0,0,0,10"/>
                     
                     <Label x:Name="WelcomeLabel"
-                           Text="Business Login"
+                           Text="Create Account"
                            FontSize="28"
                            FontAttributes="Bold"
                            TextColor="#1C1C1E"
                            HorizontalOptions="Center" />
 
                     <Label x:Name="StatusLabel"
-                           Text="Please enter your credentials"
+                           Text="Please fill in the details below"
                            FontSize="14"
                            TextColor="#8E8E93"
                            HorizontalOptions="Center"
@@ -68,6 +68,13 @@
                            HeightRequest="50"
                            BackgroundColor="#F2F2F7"
                            TextColor="Black" />
+                           
+                    <Entry x:Name="ConfirmPasswordEntry"
+                           Placeholder="Confirm Password"
+                           IsPassword="True"
+                           HeightRequest="50"
+                           BackgroundColor="#F2F2F7"
+                           TextColor="Black" />
 
                     <ActivityIndicator x:Name="LoadingIndicator" 
                                        IsRunning="False" 
@@ -75,44 +82,24 @@
                                        Color="#6200EE"
                                        HeightRequest="40" />
                     
-                    <Button x:Name="LoginBtn"
-                            Text="Sign In" 
-                            Clicked="OnLoginClicked"
+                    <Button x:Name="RegisterBtn"
+                            Text="Sign Up" 
+                            Clicked="OnRegisterClicked"
                             BackgroundColor="#6200EE"
                             TextColor="White"
                             HeightRequest="50"
                             CornerRadius="12"
                             FontAttributes="Bold" />
                     
-                    <Button x:Name="GoToRegisterBtn"
-                            Text="Create an Account" 
-                            Clicked="OnGoToRegisterClicked"
+                    <Button x:Name="BackToLoginBtn"
+                            Text="Back to Login" 
+                            Clicked="OnBackToLoginClicked"
                             BackgroundColor="Transparent"
                             TextColor="#6200EE"
                             HeightRequest="50"
                             CornerRadius="12"
                             FontAttributes="Bold" />
-                    
-                    <Button x:Name="LogoutBtn"
-                            Text="Sign Out" 
-                            Clicked="OnLogoutClickedAsync"
-                            BackgroundColor="Transparent"
-                            TextColor="#FF3B30"
-                            BorderColor="#FF3B30"
-                            BorderWidth="1"
-                            HeightRequest="50"
-                            CornerRadius="12"
-                            IsVisible="False" />
-
-                    <Button x:Name="ExitBtn"
-                            Text="EXIT"
-                            Clicked="OnExitClicked"
-                            BackgroundColor="#FF3B30" 
-                            TextColor="White"          
-                            FontSize="11"
-                            HeightRequest="44"
-                            CornerRadius="12"
-                            Margin="0,10,0,0" />
+                            
                 </VerticalStackLayout>
             </Border>
         </ScrollView>

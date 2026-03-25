@@ -46,6 +46,12 @@ public partial class MainPage : ContentPage
             PasswordEntry.Text = string.Empty;
         }
     }
+    
+    private async void OnGoToRegisterClicked(object? sender, EventArgs e)
+    {
+        // Navigate to the RegisterPage and pass the existing auth service
+        await Navigation.PushAsync(new RegisterPage(_authService));
+    }
 
     private async void OnLogoutClickedAsync(object? sender, EventArgs e)
     {
