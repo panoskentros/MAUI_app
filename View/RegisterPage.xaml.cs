@@ -61,6 +61,12 @@ public partial class RegisterPage : ContentPage
     {
         await Navigation.PopAsync();
     }
+    
+    private void OnConfirmPasswordCompleted(object sender, EventArgs e)
+    {
+        // When they hit Enter on the confirm password field, trigger the sign up!
+        OnRegisterClicked(sender, e);
+    }
 
     private void SetLoading(bool isLoading)
     {

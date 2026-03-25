@@ -47,16 +47,18 @@ public partial class MainPage : ContentPage
 
         if (user != null)
         {
-            WelcomeLabel.Text = $"Welcome, {user.UserName}!";
-            // Assuming your ApplicationUser has a Role property
-            // StatusLabel.Text = $"Authenticated as {user.Role}"; 
-            ToggleLoginState(true);
+            // Clear the password field so it's empty if they log out
+            loginModel.HashedPassword = string.Empty; 
+            PasswordEntry.Text = string.Empty; 
+            
+            // Navigate to the new DashboardPage, passing the logged-in user object
+            await Navigation.PushAsync(new DashboardPage(user));
         }
         else
         {
             await DisplayAlert("Login Failed", "Invalid credentials.", "OK");
             loginModel.HashedPassword = string.Empty; 
-            PasswordEntry.Text = string.Empty; // Force UI update
+            PasswordEntry.Text = string.Empty;
         }
     }
     
@@ -74,11 +76,17 @@ public partial class MainPage : ContentPage
         UsernameEntry.Text = string.Empty;
         EmailEntry.Text = string.Empty;
         PasswordEntry.Text = string.Empty;
-
-        WelcomeLabel.Text = "Business Login";
-        StatusLabel.Text = "Please enter your credentials";
+        
+        WelcomeLabel.Text = "Patient Portal";
+        StatusLabel.Text = "Log in to manage your appointments";
 
         ToggleLoginState(false);
+    }
+    
+    private void OnPasswordEntryCompleted(object sender, EventArgs e)
+    {
+        // When they hit Enter on the password field, just call the login button method!
+        OnLoginClicked(sender, e);
     }
 
     private void ToggleLoginState(bool isLoggedIn)

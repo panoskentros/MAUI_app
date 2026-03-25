@@ -2,14 +2,13 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MAUI_app.View.RegisterPage"
-             BackgroundColor="#F5F5F7">
-
-    <Grid>
+             BackgroundColor="#F5F5F7"
+             Shell.NavBarIsVisible="False"> <Grid>
         <BoxView>
             <BoxView.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                    <GradientStop Color="#6200EE" Offset="0.1" />
-                    <GradientStop Color="#3700B3" Offset="1.0" />
+                    <GradientStop Color="#42A5F5" Offset="0.1" />
+                    <GradientStop Color="#0D47A1" Offset="1.0" />
                 </LinearGradientBrush>
             </BoxView.Background>
         </BoxView>
@@ -19,7 +18,10 @@
                     Padding="40" 
                     BackgroundColor="White"
                     StrokeThickness="0"
-                    VerticalOptions="Center">
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    MaximumWidthRequest="450"
+                    WidthRequest="450">
                 
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="24" />
@@ -28,63 +30,69 @@
                 <Border.Shadow>
                     <Shadow Brush="Black" Offset="0,10" Radius="20" Opacity="0.1" />
                 </Border.Shadow>
-                 
+                
                 <VerticalStackLayout Spacing="15">
-                    <Image Source="dotnet_bot.png"
+                    <Image Source="medical_logo.png"
                            HeightRequest="80"
                            HorizontalOptions="Center"
                            Margin="0,0,0,10"/>
                     
                     <Label x:Name="WelcomeLabel"
-                           Text="Create Account"
+                           Text="Patient Registration"
                            FontSize="28"
                            FontAttributes="Bold"
                            TextColor="#1C1C1E"
                            HorizontalOptions="Center" />
 
                     <Label x:Name="StatusLabel"
-                           Text="Please fill in the details below"
+                           Text="Create an account to book an appointment"
                            FontSize="14"
                            TextColor="#8E8E93"
                            HorizontalOptions="Center"
                            Margin="0,0,0,10"/>
 
-                    <Entry Placeholder="Username"
+                    <Entry Placeholder="Full Name / Username"
                            Text="{Binding UserName}" 
                            HeightRequest="50"
                            BackgroundColor="#F2F2F7"
-                           TextColor="Black" />
+                           TextColor="Black" 
+                           ReturnType="Next" />
 
                     <Entry Placeholder="Email Address"
                            Text="{Binding Email}"
                            Keyboard="Email"
                            HeightRequest="50"
                            BackgroundColor="#F2F2F7"
-                           TextColor="Black" />
+                           TextColor="Black" 
+                           ReturnType="Next" />
 
                     <Entry Placeholder="Password"
                            Text="{Binding HashedPassword}"
                            IsPassword="True"
                            HeightRequest="50"
                            BackgroundColor="#F2F2F7"
-                           TextColor="Black" />
+                           TextColor="Black" 
+                           ReturnType="Next" />
 
                     <Entry x:Name="ConfirmPassword"
-                            Placeholder="Confirm Password"
+                           Placeholder="Confirm Password"
                            IsPassword="True"
                            HeightRequest="50"
                            BackgroundColor="#F2F2F7"
-                           TextColor="Black" />
+                           TextColor="Black" 
+                           ReturnType="Done"
+                           Completed="OnConfirmPasswordCompleted"/>
+                    
                     <ActivityIndicator x:Name="LoadingIndicator" 
                                        IsRunning="False" 
                                        IsVisible="False"
-                                       Color="#6200EE"
+                                       Color="#0D47A1"
                                        HeightRequest="40" />
                     
                     <Button x:Name="RegisterBtn"
-                            Text="Sign Up" 
+                            Text="Complete Registration" 
                             Clicked="OnRegisterClicked"
-                            BackgroundColor="#6200EE"
+                            BackgroundColor="#0D47A1"
                             TextColor="White"
                             HeightRequest="50"
                             CornerRadius="12"
@@ -94,7 +102,7 @@
                             Text="Back to Login" 
                             Clicked="OnBackToLoginClicked"
                             BackgroundColor="Transparent"
-                            TextColor="#6200EE"
+                            TextColor="#0D47A1"
                             HeightRequest="50"
                             CornerRadius="12"
                             FontAttributes="Bold" />
