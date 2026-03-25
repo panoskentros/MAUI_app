@@ -1,4 +1,5 @@
 ﻿using System;
+using MAUI_app.Model;
 using MAUI_app.Services;
 using Microsoft.Maui.Controls;
 
@@ -8,9 +9,12 @@ public partial class MainPage : ContentPage
 {
     private readonly IAuthService _authService;
 
-    public MainPage(IAuthService authService)
+    private readonly AppDbContext _appDbContext;
+
+    public MainPage(IAuthService authService, AppDbContext appDbContext)
     {
         _authService = authService;
+        _appDbContext = appDbContext;
         InitializeComponent();
     }
 
@@ -49,8 +53,7 @@ public partial class MainPage : ContentPage
     
     private async void OnGoToRegisterClicked(object? sender, EventArgs e)
     {
-        // Navigate to the RegisterPage and pass the existing auth service
-        await Navigation.PushAsync(new RegisterPage(_authService));
+        await Navigation.PushAsync(new RegisterPage(_authService, _appDbContext));
     }
 
     private async void OnLogoutClickedAsync(object? sender, EventArgs e)

@@ -49,33 +49,32 @@
                            HorizontalOptions="Center"
                            Margin="0,0,0,10"/>
 
-                    <Entry x:Name="UsernameEntry"
-                           Placeholder="Username"
-                           HeightRequest="50"
-                           BackgroundColor="#F2F2F7"
-                           TextColor="Black" />
-                    
-                    <Entry x:Name="EmailEntry"
-                           Placeholder="Email Address"
+                    <Entry Placeholder="Username"
+                            Text="{Binding Username}"
+                            HeightRequest="50"
+                            BackgroundColor="#F2F2F7"
+                            TextColor="Black" />
+
+                    <Entry Placeholder="Email Address"
+                           Text="{Binding Email}"
                            Keyboard="Email"
                            HeightRequest="50"
                            BackgroundColor="#F2F2F7"
                            TextColor="Black" />
 
-                    <Entry x:Name="PasswordEntry"
-                           Placeholder="Password"
-                           IsPassword="True"
-                           HeightRequest="50"
-                           BackgroundColor="#F2F2F7"
-                           TextColor="Black" />
-                           
-                    <Entry x:Name="ConfirmPasswordEntry"
-                           Placeholder="Confirm Password"
+                    <Entry Placeholder="Password"
+                           Text="{Binding HashedPassword}"
                            IsPassword="True"
                            HeightRequest="50"
                            BackgroundColor="#F2F2F7"
                            TextColor="Black" />
 
+                    <Entry x:Name="ConfirmPassword"
+                            Placeholder="Confirm Password"
+                           IsPassword="True"
+                           HeightRequest="50"
+                           BackgroundColor="#F2F2F7"
+                           TextColor="Black" />
                     <ActivityIndicator x:Name="LoadingIndicator" 
                                        IsRunning="False" 
                                        IsVisible="False"
