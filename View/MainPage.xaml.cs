@@ -7,22 +7,28 @@ namespace MAUI_app.View;
 
 public partial class MainPage : ContentPage
 {
+    private ApplicationUser loginModel { get; set; }
     private readonly IAuthService _authService;
-
     private readonly AppDbContext _appDbContext;
 
     public MainPage(IAuthService authService, AppDbContext appDbContext)
     {
+        InitializeComponent();
+        
         _authService = authService;
         _appDbContext = appDbContext;
-        InitializeComponent();
+        
+        // Create a model to hold the login data and bind it to the UI
+        loginModel = new ApplicationUser();
+        BindingContext = loginModel;
     }
 
     private async void OnLoginClicked(object? sender, EventArgs eventArgs)
     {
-        var username = UsernameEntry.Text;
-        var email = EmailEntry.Text;
-        var password = PasswordEntry.Text;
+        // Read directly from the bound model instead of the UI elements
+        var username = loginModel.UserName;
+        var email = loginModel.Email;
+        var password = loginModel.HashedPassword;
 
         if (string.IsNullOrWhiteSpace(username) || 
             string.IsNullOrWhiteSpace(email) || 
@@ -34,6 +40,7 @@ public partial class MainPage : ContentPage
 
         SetLoading(true);
 
+        // This calls your PostgreSQL database via the AuthService
         var user = await _authService.LoginAsync(username, email, password);
 
         SetLoading(false);
@@ -41,13 +48,15 @@ public partial class MainPage : ContentPage
         if (user != null)
         {
             WelcomeLabel.Text = $"Welcome, {user.UserName}!";
-            StatusLabel.Text = $"Authenticated as {user.Role}";
+            // Assuming your ApplicationUser has a Role property
+            // StatusLabel.Text = $"Authenticated as {user.Role}"; 
             ToggleLoginState(true);
         }
         else
         {
             await DisplayAlert("Login Failed", "Invalid credentials.", "OK");
-            PasswordEntry.Text = string.Empty;
+            loginModel.HashedPassword = string.Empty; 
+            PasswordEntry.Text = string.Empty; // Force UI update
         }
     }
     
@@ -78,6 +87,7 @@ public partial class MainPage : ContentPage
         EmailEntry.IsVisible = !isLoggedIn;
         PasswordEntry.IsVisible = !isLoggedIn;
         LoginBtn.IsVisible = !isLoggedIn;
+        GoToRegisterBtn.IsVisible = !isLoggedIn;
         LogoutBtn.IsVisible = isLoggedIn;
     }
 

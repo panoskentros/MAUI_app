@@ -11,14 +11,15 @@ public partial class RegisterPage : ContentPage
     private readonly IAuthService _authService;
     private readonly AppDbContext _appDbContext;
 
-    public RegisterPage(IAuthService authService,AppDbContext appDbContext)
+    public RegisterPage(IAuthService authService, AppDbContext appDbContext)
     {
+        InitializeComponent();
+        
         _authService = authService;
         _appDbContext = appDbContext;
         
         model = new ApplicationUser();
-        BindingContext = model;
-        InitializeComponent();
+        BindingContext = model; 
     }
 
     private async void OnRegisterClicked(object? sender, EventArgs eventArgs)

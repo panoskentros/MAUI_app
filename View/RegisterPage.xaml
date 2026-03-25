@@ -50,10 +50,10 @@
                            Margin="0,0,0,10"/>
 
                     <Entry Placeholder="Username"
-                            Text="{Binding Username}"
-                            HeightRequest="50"
-                            BackgroundColor="#F2F2F7"
-                            TextColor="Black" />
+                           Text="{Binding UserName}" 
+                           HeightRequest="50"
+                           BackgroundColor="#F2F2F7"
+                           TextColor="Black" />
 
                     <Entry Placeholder="Email Address"
                            Text="{Binding Email}"

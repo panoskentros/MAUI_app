@@ -68,4 +68,8 @@
       </Compile>
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="appsettings.json" />
+    </ItemGroup>
+
 </Project>
