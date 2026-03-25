@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using MAUI_app.Model;
+using MAUI_app.Services;
+using Microsoft.Extensions.Logging;
 
 namespace MAUI_app;
 
@@ -14,7 +16,8 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
-
+        builder.Services.AddSingleton<IAuthService, AuthService>();
+        builder.Services.AddDbContext<AppDbContext>();
 #if DEBUG
         builder.Logging.AddDebug();
 #endif
