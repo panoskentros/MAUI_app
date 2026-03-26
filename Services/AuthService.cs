@@ -1,3 +1,4 @@
+using MAUI_app.Data;
 using MAUI_app.Model;
 
 namespace MAUI_app.Services;
@@ -11,17 +12,24 @@ public interface IAuthService
 
 public class AuthService : IAuthService
 {
-    private readonly AppDbContext _context;
+    private readonly IRepository<ApplicationUser> _userRepository;
 
-    public AuthService(AppDbContext context)
+    public AuthService(IRepository<ApplicationUser> userRepository)
     {
-        _context = context;
+        _userRepository = userRepository;
     }
 
-    public async Task<ApplicationUser?> LoginAsync(string username,string email, string password)
+    public async Task<ApplicationUser?> LoginAsync(string username, string email, string password)
     {
-        var user = await _context.Users
-            .FirstOrDefaultAsync(u => u.UserName == username && u.Email == email);
+        var result = await _userRepository.GetAllAsync(u => 
+            u.UserName == username && u.Email == email);
+
+        if (!result.Success)
+        {
+            return null;
+        }
+
+        var user = result.Data.FirstOrDefault();
 
         if (user == null)
         {
@@ -32,6 +40,4 @@ public class AuthService : IAuthService
 
         return isValid ? user : null;
     }
-
-   
 }
