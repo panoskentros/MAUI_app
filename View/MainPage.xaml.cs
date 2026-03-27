@@ -21,18 +21,10 @@ public partial class MainPage : ContentPage, IMainView
     {
         string usernameOrEmail = UsernameOrEmailEntry.Text;
         string password = PasswordEntry.Text;
-
+        Shell.Current.FlyoutBehavior = FlyoutBehavior.Locked;
         await _controller.LoginAsync(usernameOrEmail, password);
     }
-
-    private async void OnPasswordEntryCompleted(object sender, EventArgs e)
-    {
-        string usernameOrEmail = UsernameOrEmailEntry.Text;
-        string password = PasswordEntry.Text;
-
-        await _controller.LoginAsync(usernameOrEmail, password);
-    }
-
+    
     private async void OnGoToRegisterClicked(object sender, EventArgs e)
     {
         await _controller.GoToRegisterAsync();

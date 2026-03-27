@@ -106,7 +106,7 @@
                                        TextColor="Black" 
                                        ReturnType="Done" 
                                        VerticalOptions="Center"
-                                       Completed="OnPasswordEntryCompleted" />
+                                       Completed="OnLoginClicked"/>
                             </Grid>
                         </Border>
 

@@ -3,13 +3,52 @@
     x:Class="MAUI_app.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:MAUI_app"
     xmlns:view="clr-namespace:MAUI_app.View"
-    Title="MAUI_app">
+    Title="Medical Portal"
+    FlyoutBehavior="Flyout"
+    FlyoutWidth="185"
+    FlyoutBackgroundColor="LightBlue">
 
-    <ShellContent
-        Title="Home"
+    <Shell.MenuBarItems>
+        <MenuBarItem Text="File">
+            <MenuFlyoutItem Text="Logout" />
+        </MenuBarItem>
+    </Shell.MenuBarItems>
+
+    <ShellContent 
+        Title="Login"
         ContentTemplate="{DataTemplate view:MainPage}"
-        Route="MainPage" />
+        Route="LoginPage"
+        FlyoutItemIsVisible="False" />
+
+    <FlyoutItem Route="app_sections" FlyoutDisplayOptions="AsMultipleItems">
+        
+        <Tab Title="Core" Route="core" Icon="home_icon.png">
+            <ShellContent Route="dashboard"
+                          Title="Dashboard"
+                          Icon="home_icon.png"
+                          ContentTemplate="{DataTemplate view:DashboardPage}" />
+            <ShellContent Route="appointments"
+                          Title="Appointments"
+                          Icon="calendar_icon.png"
+                          ContentTemplate="{DataTemplate view:DashboardPage}" />
+        </Tab>
+
+        <ShellContent Route="medications"
+                      Title="Medications"
+                      Icon="pill_icon.png"
+                      ContentTemplate="{DataTemplate view:DashboardPage}" />
+        
+        <ShellContent Route="messages"
+                      Title="Messages"
+                      Icon="message_icon.png"
+                      ContentTemplate="{DataTemplate view:DashboardPage}" />
+
+        <ShellContent Route="settings"
+                      Title="Settings"
+                      Icon="settings_icon.png"
+                      ContentTemplate="{DataTemplate view:DashboardPage}" />
+                      
+    </FlyoutItem>
 
 </Shell>
