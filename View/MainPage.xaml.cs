@@ -8,15 +8,12 @@ namespace MAUI_app.View;
 public partial class MainPage : ContentPage, IMainView
 {
     private readonly MainController _controller;
-    private ApplicationUser _loginModel;
     private readonly RegisterPage _registerPage;
     public MainPage(IAuthService authService,RegisterPage registerPage)
     {
         InitializeComponent();
         
         _controller = new MainController(this, authService);
-        _loginModel = new ApplicationUser();
-        BindingContext = _loginModel;
         _registerPage = registerPage;
     }
 
@@ -75,7 +72,7 @@ public partial class MainPage : ContentPage, IMainView
 
     public void ClearFields()
     {
-        _loginModel =  new ApplicationUser();
-        BindingContext = _loginModel;
+        UsernameOrEmailEntry.Text = string.Empty;
+        PasswordEntry.Text = string.Empty;
     }
 }
