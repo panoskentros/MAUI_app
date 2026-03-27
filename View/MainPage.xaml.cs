@@ -22,12 +22,18 @@ public partial class MainPage : ContentPage, IMainView
 
     private async void OnLoginClicked(object sender, EventArgs e)
     {
-        await _controller.LoginAsync(_loginModel.UserName, _loginModel.Email, _loginModel.HashedPassword);
+        string usernameOrEmail = UsernameOrEmailEntry.Text;
+        string password = PasswordEntry.Text;
+
+        await _controller.LoginAsync(usernameOrEmail, password);
     }
 
     private async void OnPasswordEntryCompleted(object sender, EventArgs e)
     {
-        await _controller.LoginAsync(_loginModel.UserName, _loginModel.Email, _loginModel.HashedPassword);
+        string usernameOrEmail = UsernameOrEmailEntry.Text;
+        string password = PasswordEntry.Text;
+
+        await _controller.LoginAsync(usernameOrEmail, password);
     }
 
     private async void OnGoToRegisterClicked(object sender, EventArgs e)

@@ -38,31 +38,21 @@
                            Margin="0,0,0,10"/>
                     
                     <Label x:Name="WelcomeLabel"
-                           Text="Patient Portal"
+                           Text="Hospital Portal"
                            FontSize="28"
                            FontAttributes="Bold"
                            TextColor="#1C1C1E"
                            HorizontalOptions="Center" />
 
                     <Label x:Name="StatusLabel"
-                           Text="Log in to manage your appointments"
+                           Text="Please log in to continue"
                            FontSize="14"
                            TextColor="#8E8E93"
                            HorizontalOptions="Center"
                            Margin="0,0,0,10"/>
 
-                    <Entry x:Name="UsernameEntry"
-                           Placeholder="Username"
-                           Text="{Binding UserName}"
-                           HeightRequest="50"
-                           BackgroundColor="#F2F2F7"
-                           TextColor="Black" 
-                           ReturnType="Next" />
-                    
-                    <Entry x:Name="EmailEntry"
-                           Placeholder="Email Address"
-                           Text="{Binding Email}"
-                           Keyboard="Email"
+                    <Entry x:Name="UsernameOrEmailEntry"
+                           Placeholder="Username or Email"
                            HeightRequest="50"
                            BackgroundColor="#F2F2F7"
                            TextColor="Black" 
@@ -70,7 +60,6 @@
 
                     <Entry x:Name="PasswordEntry"
                            Placeholder="Password"
-                           Text="{Binding HashedPassword}"
                            IsPassword="True"
                            HeightRequest="50"
                            BackgroundColor="#F2F2F7"

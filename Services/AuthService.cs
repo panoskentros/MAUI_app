@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 public interface IAuthService
 {
-    Task<ApplicationUser?> LoginAsync(string username,string email, string password);
+    Task<ApplicationUser?> LoginAsync(string usernameOrEmail, string password);
 }
 
 public class AuthService : IAuthService
@@ -19,22 +19,12 @@ public class AuthService : IAuthService
         _userRepository = userRepository;
     }
 
-    public async Task<ApplicationUser?> LoginAsync(string username, string email, string password)
+    public async Task<ApplicationUser?> LoginAsync(string usernameOrEmail, string password)
     {
-        var result = await _userRepository.GetAllAsync(u => 
-            u.UserName == username && u.Email == email);
+        var user = await _userRepository.GetQueryable()
+            .FirstOrDefaultAsync(u => u.UserName == usernameOrEmail || u.Email == usernameOrEmail);
 
-        if (!result.Success)
-        {
-            return null;
-        }
-
-        var user = result.Data.FirstOrDefault();
-
-        if (user == null)
-        {
-            return null;
-        }
+        if (user == null) return null;
 
         bool isValid = PasswordHasher.VerifyPassword(password, user.HashedPassword);
 

@@ -56,16 +56,21 @@
                         <Border.StrokeShape><RoundRectangle CornerRadius="16" /></Border.StrokeShape>
                         <Border.Shadow><Shadow Brush="Black" Offset="0,5" Radius="10" Opacity="0.05" /></Border.Shadow>
                         <VerticalStackLayout HorizontalOptions="Center" Spacing="10">
-                            <Label Text="💊" FontSize="32" HorizontalOptions="Center" />
+                            <Image Source="pill_icon.png" 
+                                   WidthRequest="32" 
+                                   HeightRequest="32" 
+                                   HorizontalOptions="Center" />
                             <Label Text="Prescriptions" FontSize="14" FontAttributes="Bold" TextColor="#1C1C1E" HorizontalOptions="Center" />
                         </VerticalStackLayout>
                     </Border>
-                    
                     <Border Grid.Column="1" Padding="15" BackgroundColor="White" StrokeThickness="0">
                         <Border.StrokeShape><RoundRectangle CornerRadius="16" /></Border.StrokeShape>
                         <Border.Shadow><Shadow Brush="Black" Offset="0,5" Radius="10" Opacity="0.05" /></Border.Shadow>
                         <VerticalStackLayout HorizontalOptions="Center" Spacing="10">
-                            <Label Text="🔬" FontSize="32" HorizontalOptions="Center" />
+                            <Image Source="lab_icon.png" 
+                                   WidthRequest="32" 
+                                   HeightRequest="32" 
+                                   HorizontalOptions="Center" />
                             <Label Text="Test Results" FontSize="14" FontAttributes="Bold" TextColor="#1C1C1E" HorizontalOptions="Center" />
                         </VerticalStackLayout>
                     </Border>

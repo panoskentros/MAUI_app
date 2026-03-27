@@ -14,16 +14,18 @@ public class MainController
         _authService = authService;
     }
 
-    public async Task LoginAsync(string username, string email, string password)
+    public async Task LoginAsync(string usernameOrEmail, string password)
     {
-        if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+        if (string.IsNullOrWhiteSpace(usernameOrEmail) || string.IsNullOrWhiteSpace(password))
         {
             await _view.ShowAlert("Validation Error", "All fields are required.");
             return;
         }
 
         _view.SetLoading(true);
-        var user = await _authService.LoginAsync(username, email, password);
+    
+        var user = await _authService.LoginAsync(usernameOrEmail, password);
+    
         _view.SetLoading(false);
 
         if (user != null)
@@ -33,7 +35,7 @@ public class MainController
         }
         else
         {
-            await _view.ShowAlert("Login Failed", "Invalid username or password.");
+            await _view.ShowAlert("Login Failed", "Invalid username/email or password.");
         }
     }
 
