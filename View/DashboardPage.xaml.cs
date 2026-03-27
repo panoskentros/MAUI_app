@@ -10,13 +10,11 @@ public partial class DashboardPage : ContentPage
     {
         InitializeComponent();
         
-        // Dynamically set the welcome text using the logged-in user's name
         WelcomeLabel.Text = $"Welcome, {user.UserName}!";
     }
 
     private async void OnSignOutClicked(object sender, EventArgs e)
     {
-        // Pop this page off the stack to go back to the login screen
         await Navigation.PopAsync();
     }
 }
