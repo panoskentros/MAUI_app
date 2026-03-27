@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MAUI_app.View.MainPage"
              BackgroundColor="#F5F5F7"
-             Shell.NavBarIsVisible="False"> <Grid>
+             Shell.NavBarIsVisible="False">
+    <Grid>
         <BoxView>
             <BoxView.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
@@ -15,103 +16,109 @@
 
         <ScrollView VerticalOptions="Center">
             <Border Margin="30" 
-                    Padding="40" 
                     BackgroundColor="White"
                     StrokeThickness="0"
                     VerticalOptions="Center"
                     HorizontalOptions="Center"
-                    MaximumWidthRequest="450"
-                    WidthRequest="450">
+                    MaximumWidthRequest="900"
+                    WidthRequest="900"
+                    HeightRequest="600">
                 
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="24" />
                 </Border.StrokeShape>
-
                 <Border.Shadow>
                     <Shadow Brush="Black" Offset="0,10" Radius="20" Opacity="0.1" />
                 </Border.Shadow>
                 
-                <VerticalStackLayout Spacing="15">
-                    <Image Source="medical_logo.png"
-                           HeightRequest="80"
-                           HorizontalOptions="Center"
-                           Margin="0,0,0,10"/>
+                <Grid ColumnDefinitions="*, *">
                     
-                    <Label x:Name="WelcomeLabel"
-                           Text="Hospital Portal"
-                           FontSize="28"
-                           FontAttributes="Bold"
-                           TextColor="#1C1C1E"
-                           HorizontalOptions="Center" />
+                    <Grid Grid.Column="0">
+                        <Image Source="hospital_hero.png" 
+                               Aspect="AspectFill" />
+                        
+                        <BoxView BackgroundColor="#0D47A1" Opacity="0.6" />
+                        
+                        <VerticalStackLayout VerticalOptions="Center" Margin="40">
+                            <Label Text="Your Health," FontSize="36" FontAttributes="Bold" TextColor="White" />
+                            <Label Text="Our Priority" FontSize="36" FontAttributes="Bold" TextColor="White" Margin="0,0,0,10"/>
+                            <Label Text="Manage your appointments, view test results, and stay connected with your healthcare providers all in one secure place." 
+                                   FontSize="16" TextColor="#E3F2FD" LineHeight="1.5" />
+                        </VerticalStackLayout>
+                    </Grid>
 
-                    <Label x:Name="StatusLabel"
-                           Text="Please log in to continue"
-                           FontSize="14"
-                           TextColor="#8E8E93"
-                           HorizontalOptions="Center"
-                           Margin="0,0,0,10"/>
+                    <VerticalStackLayout Grid.Column="1" Spacing="15" Padding="40" VerticalOptions="Center">
+                        
+                        <Image Source="medical_logo.png" HeightRequest="60" HorizontalOptions="Center" Margin="0,0,0,10"/>
+                        
+                        <Label x:Name="WelcomeLabel" Text="Hospital Portal" FontSize="28" FontAttributes="Bold" TextColor="#1C1C1E" HorizontalOptions="Center" />
+                        <Label x:Name="StatusLabel" Text="Please log in to continue" FontSize="14" TextColor="#8E8E93" HorizontalOptions="Center" Margin="0,0,0,10"/>
 
-                    <Entry x:Name="UsernameOrEmailEntry"
-                           Placeholder="Username or Email"
-                           HeightRequest="50"
-                           BackgroundColor="#F2F2F7"
-                           TextColor="Black" 
-                           ReturnType="Next" />
+                        <Border BackgroundColor="#F2F2F7" 
+                                StrokeThickness="0" 
+                                HeightRequest="50"
+                                Margin="0,0,0,15">
+    
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="8" /> 
+                            </Border.StrokeShape>
+    
+                            <Grid ColumnDefinitions="Auto, *">
+                                <Image Grid.Column="0"
+                                       Source="user_icon.png" 
+                                       WidthRequest="22" 
+                                       HeightRequest="22" 
+                                       Margin="15,0,10,0" 
+                                       VerticalOptions="Center" />
+               
+                                <Entry x:Name="UsernameOrEmailEntry" 
+                                       Grid.Column="1" 
+                                       Placeholder="Username or Email" 
+                                       BackgroundColor="Transparent" 
+                                       TextColor="Black" 
+                                       ReturnType="Next" 
+                                       VerticalOptions="Center" />
+                            </Grid>
+                        </Border>
 
-                    <Entry x:Name="PasswordEntry"
-                           Placeholder="Password"
-                           IsPassword="True"
-                           HeightRequest="50"
-                           BackgroundColor="#F2F2F7"
-                           TextColor="Black" 
-                           ReturnType="Done" 
-                           Completed="OnPasswordEntryCompleted" />
+                        <Border BackgroundColor="#F2F2F7" 
+                                StrokeThickness="0" 
+                                HeightRequest="50"
+                                Margin="0,0,0,15">
+    
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="8" />
+                            </Border.StrokeShape>
+    
+                            <Grid ColumnDefinitions="Auto, *">
+                                <Image Grid.Column="0"
+                                       Source="key_icon.png" 
+                                       WidthRequest="22" 
+                                       HeightRequest="22" 
+                                       Margin="15,0,10,0" 
+                                       VerticalOptions="Center" />
+               
+                                <Entry x:Name="PasswordEntry" 
+                                       Grid.Column="1" 
+                                       Placeholder="Password" 
+                                       IsPassword="True"
+                                       BackgroundColor="Transparent" 
+                                       TextColor="Black" 
+                                       ReturnType="Done" 
+                                       VerticalOptions="Center"
+                                       Completed="OnPasswordEntryCompleted" />
+                            </Grid>
+                        </Border>
 
-                    <ActivityIndicator x:Name="LoadingIndicator" 
-                                       IsRunning="False" 
-                                       IsVisible="False"
-                                       Color="#0D47A1"
-                                       HeightRequest="40" />
-                    
-                    <Button x:Name="LoginBtn"
-                            Text="Sign In" 
-                            Clicked="OnLoginClicked"
-                            BackgroundColor="#0D47A1"
-                            TextColor="White"
-                            HeightRequest="50"
-                            CornerRadius="12"
-                            FontAttributes="Bold" />
-                    
-                    <Button x:Name="GoToRegisterBtn"
-                            Text="New Patient? Register Here" 
-                            Clicked="OnGoToRegisterClicked"
-                            BackgroundColor="Transparent"
-                            TextColor="#0D47A1"
-                            HeightRequest="50"
-                            CornerRadius="12"
-                            FontAttributes="Bold" />
-                    
-                    <Button x:Name="LogoutBtn"
-                            Text="Sign Out" 
-                            Clicked="OnLogoutClickedAsync"
-                            BackgroundColor="Transparent"
-                            TextColor="#FF3B30"
-                            BorderColor="#FF3B30"
-                            BorderWidth="1"
-                            HeightRequest="50"
-                            CornerRadius="12"
-                            IsVisible="False" />
-
-                    <Button x:Name="ExitBtn"
-                            Text="EXIT"
-                            Clicked="OnExitClicked"
-                            BackgroundColor="#FF3B30" 
-                            TextColor="White"          
-                            FontSize="11"
-                            HeightRequest="44"
-                            CornerRadius="12"
-                            Margin="0,10,0,0" />
-                </VerticalStackLayout>
+                        <ActivityIndicator x:Name="LoadingIndicator" IsRunning="False" IsVisible="False" Color="#0D47A1" HeightRequest="40" />
+                        
+                        <Button x:Name="LoginBtn" Text="Sign In" Clicked="OnLoginClicked" BackgroundColor="#0D47A1" TextColor="White" HeightRequest="50" CornerRadius="12" FontAttributes="Bold" Margin="0,10,0,0"/>
+                        <Button x:Name="GoToRegisterBtn" Text="New Patient? Register Here" Clicked="OnGoToRegisterClicked" BackgroundColor="Transparent" TextColor="#0D47A1" HeightRequest="50" CornerRadius="12" FontAttributes="Bold" />
+                        
+                        <Button x:Name="ExitBtn" Text="EXIT" Clicked="OnExitClicked" BackgroundColor="#FF3B30" TextColor="White" FontSize="11" HeightRequest="40" CornerRadius="12" HorizontalOptions="Center" WidthRequest="100" Margin="0,20,0,0" />
+                        
+                    </VerticalStackLayout>
+                </Grid>
             </Border>
         </ScrollView>
     </Grid>

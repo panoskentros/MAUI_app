@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MAUI_app.View.RegisterPage"
              BackgroundColor="#F5F5F7"
-             Shell.NavBarIsVisible="False"> <Grid>
+             Shell.NavBarIsVisible="False">
+    <Grid>
         <BoxView>
             <BoxView.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
@@ -15,99 +16,86 @@
 
         <ScrollView VerticalOptions="Center">
             <Border Margin="30" 
-                    Padding="40" 
                     BackgroundColor="White"
                     StrokeThickness="0"
                     VerticalOptions="Center"
                     HorizontalOptions="Center"
-                    MaximumWidthRequest="450"
-                    WidthRequest="450">
+                    MaximumWidthRequest="900"
+                    WidthRequest="900"
+                    HeightRequest="600">
                 
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="24" />
                 </Border.StrokeShape>
-
                 <Border.Shadow>
                     <Shadow Brush="Black" Offset="0,10" Radius="20" Opacity="0.1" />
                 </Border.Shadow>
                 
-                <VerticalStackLayout Spacing="15">
-                    <Image Source="medical_logo.png"
-                           HeightRequest="80"
-                           HorizontalOptions="Center"
-                           Margin="0,0,0,10"/>
+                <Grid ColumnDefinitions="*, *">
                     
-                    <Label x:Name="WelcomeLabel"
-                           Text="Patient Registration"
-                           FontSize="28"
-                           FontAttributes="Bold"
-                           TextColor="#1C1C1E"
-                           HorizontalOptions="Center" />
+                    <VerticalStackLayout Grid.Column="0" Spacing="15" Padding="40" VerticalOptions="Center">
+                        
+                        <Label x:Name="WelcomeLabel" Text="Join Us Today" FontSize="28" FontAttributes="Bold" TextColor="#1C1C1E" HorizontalOptions="Center" />
+                        <Label x:Name="StatusLabel" Text="Create an account to book appointments and access your medical history" FontSize="14" TextColor="#8E8E93" HorizontalOptions="Center" HorizontalTextAlignment="Center" Margin="0,0,0,15"/>
 
-                    <Label x:Name="StatusLabel"
-                           Text="Create an account to book an appointment"
-                           FontSize="14"
-                           TextColor="#8E8E93"
-                           HorizontalOptions="Center"
-                           Margin="0,0,0,10"/>
+                        <Entry x:Name="UsernameEntry" 
+                               Text="{Binding UserName}" 
+                               Placeholder="Full Name / Username" 
+                               HeightRequest="50" 
+                               BackgroundColor="#F2F2F7" 
+                               TextColor="Black" 
+                               ReturnType="Next" />
 
-                    <Entry Placeholder="Full Name / Username"
-                           Text="{Binding UserName}" 
-                           HeightRequest="50"
-                           BackgroundColor="#F2F2F7"
-                           TextColor="Black" 
-                           ReturnType="Next" />
+                        <Entry x:Name="EmailEntry" 
+                               Text="{Binding Email}" 
+                               Placeholder="Email Address" 
+                               Keyboard="Email" 
+                               HeightRequest="50" 
+                               BackgroundColor="#F2F2F7" 
+                               TextColor="Black" 
+                               ReturnType="Next" />
 
-                    <Entry Placeholder="Email Address"
-                           Text="{Binding Email}"
-                           Keyboard="Email"
-                           HeightRequest="50"
-                           BackgroundColor="#F2F2F7"
-                           TextColor="Black" 
-                           ReturnType="Next" />
+                        <Entry x:Name="PasswordEntry" 
+                               Text="{Binding HashedPassword}" 
+                               Placeholder="Password" 
+                               IsPassword="True" 
+                               HeightRequest="50" 
+                               BackgroundColor="#F2F2F7" 
+                               TextColor="Black" 
+                               ReturnType="Next" />
 
-                    <Entry Placeholder="Password"
-                           Text="{Binding HashedPassword}"
-                           IsPassword="True"
-                           HeightRequest="50"
-                           BackgroundColor="#F2F2F7"
-                           TextColor="Black" 
-                           ReturnType="Next" />
+                        <Entry x:Name="ConfirmPassword" 
+                               Placeholder="Confirm Password" 
+                               IsPassword="True" 
+                               HeightRequest="50" 
+                               BackgroundColor="#F2F2F7" 
+                               TextColor="Black" 
+                               ReturnType="Done" 
+                               Completed="OnConfirmPasswordCompleted"/>
+                        
+                        <ActivityIndicator x:Name="LoadingIndicator" IsRunning="False" IsVisible="False" Color="#0D47A1" HeightRequest="40" />
+                        
+                        <Button x:Name="RegisterBtn" Text="Complete Registration" Clicked="OnRegisterClicked" BackgroundColor="#0D47A1" TextColor="White" HeightRequest="50" CornerRadius="12" FontAttributes="Bold" Margin="0,10,0,0"/>
+                        <Button x:Name="BackToLoginBtn" Text="Back to Login" Clicked="OnBackToLoginClicked" BackgroundColor="Transparent" TextColor="#0D47A1" HeightRequest="50" CornerRadius="12" FontAttributes="Bold" />
+                        
+                    </VerticalStackLayout>
 
-                    <Entry x:Name="ConfirmPassword"
-                           Placeholder="Confirm Password"
-                           IsPassword="True"
-                           HeightRequest="50"
-                           BackgroundColor="#F2F2F7"
-                           TextColor="Black" 
-                           ReturnType="Done"
-                           Completed="OnConfirmPasswordCompleted"/>
-                    
-                    <ActivityIndicator x:Name="LoadingIndicator" 
-                                       IsRunning="False" 
-                                       IsVisible="False"
-                                       Color="#0D47A1"
-                                       HeightRequest="40" />
-                    
-                    <Button x:Name="RegisterBtn"
-                            Text="Complete Registration" 
-                            Clicked="OnRegisterClicked"
-                            BackgroundColor="#0D47A1"
-                            TextColor="White"
-                            HeightRequest="50"
-                            CornerRadius="12"
-                            FontAttributes="Bold" />
-                    
-                    <Button x:Name="BackToLoginBtn"
-                            Text="Back to Login" 
-                            Clicked="OnBackToLoginClicked"
-                            BackgroundColor="Transparent"
-                            TextColor="#0D47A1"
-                            HeightRequest="50"
-                            CornerRadius="12"
-                            FontAttributes="Bold" />
-                            
-                </VerticalStackLayout>
+                    <Grid Grid.Column="1">
+                        <Image Source="hospital_hero.png" Aspect="AspectFill" />
+                        
+                        <BoxView BackgroundColor="#42A5F5" Opacity="0.7" />
+                        
+                        <VerticalStackLayout VerticalOptions="Center" Margin="40">
+                            <Image Source="medical_logo.png" HeightRequest="80" HorizontalOptions="Start" Margin="0,0,0,20"/>
+                            <Label Text="Secure" FontSize="32" FontAttributes="Bold" TextColor="White" />
+                            <Label Text="Private" FontSize="32" FontAttributes="Bold" TextColor="White" />
+                            <Label Text="Accessible" FontSize="32" FontAttributes="Bold" TextColor="White" Margin="0,0,0,15"/>
+                            <Label Text="Your medical data is encrypted and stored safely, accessible only to you and your authorized healthcare professionals." 
+                                   FontSize="15" TextColor="#E3F2FD" LineHeight="1.5" />
+                        </VerticalStackLayout>
+                    </Grid>
+
+                </Grid>
             </Border>
         </ScrollView>
     </Grid>
