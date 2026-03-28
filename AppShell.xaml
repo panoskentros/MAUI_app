@@ -3,13 +3,134 @@
     x:Class="MAUI_app.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:MAUI_app"
     xmlns:view="clr-namespace:MAUI_app.View"
-    Title="MAUI_app">
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    FlyoutBackgroundColor="#0D47A1"
+    FlyoutWidth="250"
+    Shell.ForegroundColor="White"
+    Shell.NavBarIsVisible="False"
+    Shell.TabBarIsVisible="False">
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate view:MainPage}"
-        Route="MainPage" />
+    <Shell.Resources>
+        <Style Class="FlyoutItemLayoutStyle" TargetType="Layout" ApplyToDerivedTypes="True">
+            <Setter Property="VisualStateManager.VisualStateGroups">
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor" Value="Transparent" />
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="Selected">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor" Value="Transparent" />
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="PointerOver">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor" Value="Transparent" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter>
+        </Style>
+    </Shell.Resources>
+
+    <Shell.FlyoutHeader>
+        <Grid Padding="20,40,20,20">
+            <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
+                <Label Text="Hospital App" TextColor="White" FontSize="20" FontAttributes="Bold" VerticalOptions="Center"/>
+            </HorizontalStackLayout>
+        </Grid>
+    </Shell.FlyoutHeader>
+
+    <Shell.ItemTemplate>
+        <DataTemplate>
+            <Grid>
+                
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroupList>
+                        <VisualStateGroup x:Name="CommonStates">
+                            <VisualState x:Name="Normal" />
+                            <VisualState x:Name="Selected">
+                                <VisualState.Setters>
+                                    <Setter TargetName="ItemBorder" Property="Border.BackgroundColor" Value="White" />
+                                    <Setter TargetName="ItemText" Property="Label.TextColor" Value="#0D47A1" />
+                                    <Setter TargetName="MenuIconTint" Property="toolkit:IconTintColorBehavior.TintColor" Value="#0D47A1" />
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </VisualStateManager.VisualStateGroups>
+
+                <Border x:Name="ItemBorder" BackgroundColor="Transparent" Padding="15,12,20,12" Margin="15,5,15,5" StrokeThickness="0" HorizontalOptions="Start"> 
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="15" />
+                    </Border.StrokeShape>
+                    
+                    <HorizontalStackLayout Spacing="15">
+                        
+                        <Image Source="{Binding FlyoutIcon}" HeightRequest="22" WidthRequest="22" VerticalOptions="Center">
+                            <Image.Behaviors>
+                                <toolkit:IconTintColorBehavior x:Name="MenuIconTint" TintColor="#BBDEFB" />
+                            </Image.Behaviors>
+                        </Image>
+                        
+                        <Label x:Name="ItemText" Text="{Binding Title}" TextColor="#BBDEFB" FontSize="15" FontAttributes="Bold" VerticalOptions="Center" LineBreakMode="TailTruncation" />
+                    </HorizontalStackLayout>
+                </Border>
+                
+            </Grid>
+        </DataTemplate>
+    </Shell.ItemTemplate>
+
+    <Shell.FlyoutFooter>
+        <Grid Padding="15,10,15,30">
+            <Border BackgroundColor="Transparent" Padding="15,12" StrokeThickness="0">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnSignOutTapped" />
+                </Border.GestureRecognizers>
+                <HorizontalStackLayout Spacing="15">
+                    
+                    <Image Source="logout_icon.png" 
+                           HeightRequest="22" 
+                           WidthRequest="22" 
+                           VerticalOptions="Center">
+                        <Image.Behaviors>
+                            <toolkit:IconTintColorBehavior TintColor="White" />
+                        </Image.Behaviors>
+                    </Image>
+                    
+                    <Label Text="Logout" TextColor="White" FontSize="15" FontAttributes="Bold" VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+            </Border>
+        </Grid>
+    </Shell.FlyoutFooter>
+
+    <ShellContent Title="Login"
+                  ContentTemplate="{DataTemplate view:MainPage}"
+                  Route="LoginPage"
+                  FlyoutItemIsVisible="False" />
+
+    <FlyoutItem Title="Dashboard" Icon="home_icon.png" Shell.NavBarIsVisible="False">
+        <ShellContent Route="dashboard" ContentTemplate="{DataTemplate view:DashboardPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Appointments" Icon="calendar_icon.png" Shell.NavBarIsVisible="False">
+        <ShellContent Route="appointments" ContentTemplate="{DataTemplate view:DashboardPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Medications" Icon="pill_icon.png" Shell.NavBarIsVisible="False">
+        <ShellContent Route="medications" ContentTemplate="{DataTemplate view:DashboardPage}" />
+    </FlyoutItem>
+    
+    <FlyoutItem Title="Messages" Icon="message_icon.png" Shell.NavBarIsVisible="False">
+        <ShellContent Route="messages" ContentTemplate="{DataTemplate view:DashboardPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Settings" Icon="settings_icon.png" Shell.NavBarIsVisible="False">
+        <ShellContent Route="settings" ContentTemplate="{DataTemplate view:DashboardPage}" />
+    </FlyoutItem>
 
 </Shell>

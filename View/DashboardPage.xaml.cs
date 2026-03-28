@@ -1,20 +1,22 @@
 ﻿using System;
 using MAUI_app.Model;
+using MAUI_app.Services;
 using Microsoft.Maui.Controls;
 
 namespace MAUI_app.View;
 
 public partial class DashboardPage : ContentPage
 {
-    public DashboardPage(ApplicationUser user)
-    {
-        InitializeComponent();
-        
-        WelcomeLabel.Text = $"Welcome, {user.UserName}!";
-    }
+    private ApplicationUser? _currentUser; 
 
-    private async void OnSignOutClicked(object sender, EventArgs e)
+    public DashboardPage(IAuthService authService)
     {
-        await Navigation.PopAsync();
+   
+        InitializeComponent();    
+        _currentUser = authService.CurrentUser;
+        if (_currentUser != null)
+        {
+            WelcomeLabel.Text = $"Welcome, {_currentUser.UserName}!";
+        }
     }
 }

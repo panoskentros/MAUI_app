@@ -7,18 +7,23 @@ using Microsoft.EntityFrameworkCore;
 
 public interface IAuthService
 {
+    
+    ApplicationUser? CurrentUser { get; }
+    bool IsLoggedIn { get; }
     Task<ApplicationUser?> LoginAsync(string usernameOrEmail, string password);
+    void Logout();
 }
 
 public class AuthService : IAuthService
 {
     private readonly IRepository<ApplicationUser> _userRepository;
-
+    public ApplicationUser? CurrentUser { get; private set; }
     public AuthService(IRepository<ApplicationUser> userRepository)
     {
         _userRepository = userRepository;
     }
-
+    public bool IsLoggedIn => CurrentUser != null;
+    
     public async Task<ApplicationUser?> LoginAsync(string usernameOrEmail, string password)
     {
         var user = await _userRepository.GetQueryable()
@@ -28,6 +33,16 @@ public class AuthService : IAuthService
 
         bool isValid = PasswordHasher.VerifyPassword(password, user.HashedPassword);
 
-        return isValid ? user : null;
+        if (isValid)
+        {
+            CurrentUser = user; 
+            return user;
+        }
+
+        return null;
+    }
+    public void Logout()
+    {
+        CurrentUser = null;
     }
 }

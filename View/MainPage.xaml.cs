@@ -21,18 +21,9 @@ public partial class MainPage : ContentPage, IMainView
     {
         string usernameOrEmail = UsernameOrEmailEntry.Text;
         string password = PasswordEntry.Text;
-
         await _controller.LoginAsync(usernameOrEmail, password);
     }
-
-    private async void OnPasswordEntryCompleted(object sender, EventArgs e)
-    {
-        string usernameOrEmail = UsernameOrEmailEntry.Text;
-        string password = PasswordEntry.Text;
-
-        await _controller.LoginAsync(usernameOrEmail, password);
-    }
-
+    
     private async void OnGoToRegisterClicked(object sender, EventArgs e)
     {
         await _controller.GoToRegisterAsync();
@@ -62,7 +53,7 @@ public partial class MainPage : ContentPage, IMainView
 
     public async Task NavigateToDashboard(ApplicationUser user)
     {
-        await Navigation.PushAsync(new DashboardPage(user));
+        await Shell.Current.GoToAsync("//dashboard");
     }
 
     public async Task NavigateToRegister()
