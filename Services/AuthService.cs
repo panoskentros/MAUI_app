@@ -9,6 +9,7 @@ public interface IAuthService
 {
     
     ApplicationUser? CurrentUser { get; }
+    bool IsLoggedIn { get; }
     Task<ApplicationUser?> LoginAsync(string usernameOrEmail, string password);
     void Logout();
 }
@@ -21,7 +22,8 @@ public class AuthService : IAuthService
     {
         _userRepository = userRepository;
     }
-
+    public bool IsLoggedIn => CurrentUser != null;
+    
     public async Task<ApplicationUser?> LoginAsync(string usernameOrEmail, string password)
     {
         var user = await _userRepository.GetQueryable()
