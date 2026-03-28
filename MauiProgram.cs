@@ -37,6 +37,7 @@ public static class MauiProgram
             });
         });
 #endif
+        builder.Services.AddSingleton<AppShell>();
         builder.Services.AddSingleton<IAuthService, AuthService>();
         builder.Services.AddScoped(typeof(IRepository<>), typeof(PostgreRepository<>));
         builder.Services.AddDbContext<AppDbContext>();

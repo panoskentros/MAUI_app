@@ -31,7 +31,7 @@ public class MainController
         if (user != null)
         {
             _view.ClearFields();
-            await _view.NavigateToDashboard(user);
+            await _view.NavigateToDashboard();
         }
         else
         {
@@ -44,6 +44,7 @@ public class MainController
     public async Task LogoutAsync()
     {
         _view.SetLoading(true);
+        _authService.Logout();
         await Task.Delay(300);
         _view.SetLoading(false);
         _view.ClearFields();
