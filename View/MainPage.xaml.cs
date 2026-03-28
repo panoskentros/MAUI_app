@@ -21,7 +21,6 @@ public partial class MainPage : ContentPage, IMainView
     {
         string usernameOrEmail = UsernameOrEmailEntry.Text;
         string password = PasswordEntry.Text;
-        Shell.Current.FlyoutBehavior = FlyoutBehavior.Locked;
         await _controller.LoginAsync(usernameOrEmail, password);
     }
     
@@ -54,7 +53,14 @@ public partial class MainPage : ContentPage, IMainView
 
     public async Task NavigateToDashboard(ApplicationUser user)
     {
-        await Navigation.PushAsync(new DashboardPage(user));
+        // Pack the user data into a dictionary for Shell to transport
+        var navParam = new System.Collections.Generic.Dictionary<string, object>
+        {
+            { "PassedUser", user }
+        };
+
+        // Use Shell routing instead of Navigation.PushAsync
+        await Shell.Current.GoToAsync("//dashboard", navParam);
     }
 
     public async Task NavigateToRegister()

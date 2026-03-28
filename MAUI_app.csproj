@@ -36,6 +36,7 @@
 
     <ItemGroup>
         <PackageReference Include="BCrypt.Net-Next" Version="4.1.0" />
+        <PackageReference Include="CommunityToolkit.Maui" Version="9.0.0" />
         <PackageReference Include="Duende.IdentityModel.OidcClient" Version="7.1.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.14">
           <PrivateAssets>all</PrivateAssets>

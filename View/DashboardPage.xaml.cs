@@ -4,17 +4,19 @@ using Microsoft.Maui.Controls;
 
 namespace MAUI_app.View;
 
+// This tells the page to look for the "PassedUser" parameter we just sent!
+[QueryProperty(nameof(IncomingUser), "PassedUser")]
 public partial class DashboardPage : ContentPage
 {
-    public DashboardPage(ApplicationUser user)
+    // When Shell passes the data, this property automatically updates the label
+    public ApplicationUser IncomingUser
     {
-        InitializeComponent();
-        
-        WelcomeLabel.Text = $"Welcome, {user.UserName}!";
+        set { WelcomeLabel.Text = $"Welcome, {value.UserName}!"; }
     }
 
-    private async void OnSignOutClicked(object sender, EventArgs e)
+    // The constructor is now empty, so AppShell won't crash!
+    public DashboardPage()
     {
-        await Navigation.PopAsync();
+        InitializeComponent();
     }
 }
