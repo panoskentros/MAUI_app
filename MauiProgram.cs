@@ -42,6 +42,7 @@ public static class MauiProgram
         builder.Services.AddDbContext<AppDbContext>();
         builder.Services.AddTransient<MainPage>();
         builder.Services.AddTransient<RegisterPage>();
+        builder.Services.AddTransient<DashboardPage>();
 #if DEBUG
         builder.Logging.AddDebug();
 #endif

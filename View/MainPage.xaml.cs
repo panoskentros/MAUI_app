@@ -53,14 +53,7 @@ public partial class MainPage : ContentPage, IMainView
 
     public async Task NavigateToDashboard(ApplicationUser user)
     {
-        // Pack the user data into a dictionary for Shell to transport
-        var navParam = new System.Collections.Generic.Dictionary<string, object>
-        {
-            { "PassedUser", user }
-        };
-
-        // Use Shell routing instead of Navigation.PushAsync
-        await Shell.Current.GoToAsync("//dashboard", navParam);
+        await Shell.Current.GoToAsync("//dashboard");
     }
 
     public async Task NavigateToRegister()
