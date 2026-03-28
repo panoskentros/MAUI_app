@@ -6,7 +6,7 @@ public interface IMainView
 {
     void SetLoading(bool isLoading);
     Task ShowAlert(string title, string message);
-    Task NavigateToDashboard(ApplicationUser user);
+    Task NavigateToDashboard();
     Task NavigateToRegister();
     void ClearFields();
 }

@@ -51,7 +51,7 @@ public partial class MainPage : ContentPage, IMainView
         await DisplayAlert(title, message, "OK");
     }
 
-    public async Task NavigateToDashboard(ApplicationUser user)
+    public async Task NavigateToDashboard()
     {
         await Shell.Current.GoToAsync("//dashboard");
     }
