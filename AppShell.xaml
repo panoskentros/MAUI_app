@@ -118,19 +118,19 @@
     </FlyoutItem>
 
     <FlyoutItem Title="Appointments" Icon="calendar_icon.png" Shell.NavBarIsVisible="False">
-        <ShellContent Route="appointments" ContentTemplate="{DataTemplate view:DashboardPage}" />
+        <ShellContent Route="appointments" ContentTemplate="{DataTemplate view:AppointmentsPage}" />
     </FlyoutItem>
 
     <FlyoutItem Title="Medications" Icon="pill_icon.png" Shell.NavBarIsVisible="False">
-        <ShellContent Route="medications" ContentTemplate="{DataTemplate view:DashboardPage}" />
+        <ShellContent Route="medications" ContentTemplate="{DataTemplate view:MedicationsPage}" />
     </FlyoutItem>
     
     <FlyoutItem Title="Messages" Icon="message_icon.png" Shell.NavBarIsVisible="False">
-        <ShellContent Route="messages" ContentTemplate="{DataTemplate view:DashboardPage}" />
+        <ShellContent Route="messages" ContentTemplate="{DataTemplate view:MessagesPage}" />
     </FlyoutItem>
 
     <FlyoutItem Title="Settings" Icon="settings_icon.png" Shell.NavBarIsVisible="False">
-        <ShellContent Route="settings" ContentTemplate="{DataTemplate view:DashboardPage}" />
+        <ShellContent Route="settings" ContentTemplate="{DataTemplate view:SettingsPage}" />
     </FlyoutItem>
 
 </Shell>
