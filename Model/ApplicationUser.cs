@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MAUI_app.Model;
 
@@ -21,4 +22,7 @@ public class ApplicationUser
 
     [Required]
     public UserRole Role { get; set; }
+    
+    [InverseProperty("ApplicationUser")]
+    public virtual ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
 }
