@@ -64,20 +64,32 @@
                     </VisualStateGroupList>
                 </VisualStateManager.VisualStateGroups>
 
-                <Border x:Name="ItemBorder" BackgroundColor="Transparent" Padding="15,12,20,12" Margin="15,5,15,5" StrokeThickness="0" HorizontalOptions="Start"> 
+                <Border x:Name="ItemBorder" 
+                        BackgroundColor="Transparent" 
+                        Padding="15,12,5,12" 
+                        Margin="15,5,15,5" 
+                        StrokeThickness="0" 
+                        HorizontalOptions="Start"> 
+                    
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="15" />
                     </Border.StrokeShape>
                     
                     <HorizontalStackLayout Spacing="15">
-                        
                         <Image Source="{Binding FlyoutIcon}" HeightRequest="22" WidthRequest="22" VerticalOptions="Center">
                             <Image.Behaviors>
                                 <toolkit:IconTintColorBehavior x:Name="MenuIconTint" TintColor="#BBDEFB" />
                             </Image.Behaviors>
                         </Image>
                         
-                        <Label x:Name="ItemText" Text="{Binding Title}" TextColor="#BBDEFB" FontSize="15" FontAttributes="Bold" VerticalOptions="Center" LineBreakMode="TailTruncation" />
+                        <Label x:Name="ItemText" 
+                               Text="{Binding Title}" 
+                               TextColor="#BBDEFB" 
+                               FontSize="15" 
+                               FontAttributes="Bold" 
+                               VerticalOptions="Center" 
+                               WidthRequest="140" 
+                               LineBreakMode="TailTruncation" />
                     </HorizontalStackLayout>
                 </Border>
                 
