@@ -23,7 +23,7 @@
                     HorizontalOptions="Center"
                     MaximumWidthRequest="900"
                     WidthRequest="900"
-                    HeightRequest="600">
+                    HeightRequest="750">
                 
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="24" />

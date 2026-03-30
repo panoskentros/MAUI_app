@@ -1,33 +1,23 @@
 ﻿using MAUI_app.Model;
+using MAUI_app.Services;
+using MAUI_app.View;
 
 namespace MAUI_app.Controller;
 
 public class AppointmentsController
 {
-    // 1. Figure out who is logged in
-    public string GetCurrentUserRole()
-    {
-        // 🛑 FOR TESTING: Change this to "Doctor" to test the other UI
-        return "Patient"; 
-    }
+    private IAuthService _authService;
+    private IAppointmentsView _view;
 
-    // 2. Fetch Patient Data
-    public List<Appointment> GetPatientAppointments()
+    public AppointmentsController(IAppointmentsView view, IAuthService authService)
     {
-        return new List<Appointment>
-        {
-            new Appointment { DoctorName = "Dr. Sarah Jenkins", AppointmentDate = DateTime.Now.AddDays(1), Status = "Upcoming" },
-            new Appointment { DoctorName = "Dr. Marcus Welby", AppointmentDate = DateTime.Now.AddDays(14), Status = "Upcoming" }
-        };
+        _view = view;
+        _authService = authService;
     }
-
-    // 3. Fetch Doctor Data
-    public List<Appointment> GetDoctorSchedule()
+    
+    public List<Appointment>? GetCurrentUserAppointments()
     {
-        return new List<Appointment>
-        {
-            new Appointment { PatientName = "John Doe", AppointmentDate = DateTime.Now.AddHours(2), Status = "Upcoming" },
-            new Appointment { PatientName = "Jane Smith", AppointmentDate = DateTime.Now.AddHours(3), Status = "Upcoming" }
-        };
+        return  _authService.CurrentUser?.Appointments.ToList(); 
     }
+    
 }
