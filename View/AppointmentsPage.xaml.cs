@@ -1,21 +1,26 @@
 ﻿using MAUI_app.Controller;
-using MAUI_app.Services;
+using MAUI_app.Data;
+using MAUI_app.Model;
+using MAUI_app.View.Interfaces;
 
 namespace MAUI_app.View;
 
-public partial class AppointmentsPage : ContentPage
+public partial class AppointmentsPage : ContentPage, IAppointmentsView
 {
-    private AppointmentsController _controller;
-    private readonly IAuthService _authService;
+    private readonly AppointmentsController _controller;
+    private IRepository<Appointment> _repository;
 
-    public AppointmentsPage(IAuthService authService)
+    public AppointmentsPage(AppointmentsController controller,IRepository<Appointment> repository)
     {
         InitializeComponent();
-        _authService = authService;
+        
+        _controller = controller;
+        _repository = repository;
+        BindingContext = _controller; 
+    }
+    public async Task InitializeAsync()
+    {
         
     }
-
-   
-
     
 }

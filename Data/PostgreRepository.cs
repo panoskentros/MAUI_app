@@ -4,7 +4,7 @@ namespace MAUI_app.Data;
 
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-
+using Npgsql;
 
 public class PostgreRepository<T> : IRepository<T> where T : class
 {
@@ -147,57 +147,121 @@ public class PostgreRepository<T> : IRepository<T> where T : class
 
     public async Task<IResult<T>> AddAsync(T entity, CancellationToken cancellationToken = default, bool asDetached = false)
     {
-       await _dbSet.AddAsync(entity, cancellationToken);
-        await _context.SaveChangesAsync(cancellationToken);
+        try
+        {
+            await _dbSet.AddAsync(entity, cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
 
-        if (asDetached)
-            _context.ChangeTracker.Clear(); 
-        return Result<T>.Ok(entity, "Entity added successfully.");
+            if (asDetached)
+                _context.ChangeTracker.Clear(); 
+            
+            return Result<T>.Ok(entity, "Entity added successfully.");
+        }
+        catch (DbUpdateException ex) when (ex.InnerException is PostgresException pgEx && pgEx.SqlState == "23505")
+        {
+            return Result<T>.Fail("This record already exists.");
+        }
+        catch (Exception ex)
+        {
+            return Result<T>.Fail($"Error: {ex.Message}");
+        }
     }
 
     public async Task<IResult<T>> UpdateAsync(T entity, CancellationToken cancellationToken = default, bool asDetached = false)
     {
-       _dbSet.Update(entity);
-        await _context.SaveChangesAsync(cancellationToken);
+        try
+        {
+            _dbSet.Update(entity);
+            await _context.SaveChangesAsync(cancellationToken);
 
-        if (asDetached)
-            _context.ChangeTracker.Clear();
+            if (asDetached)
+                _context.ChangeTracker.Clear();
 
-        return Result<T>.Ok(entity, "Entity updated successfully.");
+            return Result<T>.Ok(entity, "Entity updated successfully.");
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            return Result<T>.Fail("The data was modified by another user. Please refresh and try again.");
+        }
+        catch (DbUpdateException ex) when (ex.InnerException is PostgresException pgEx && pgEx.SqlState == "23505")
+        {
+            return Result<T>.Fail("Cannot update: a similar record already exists.");
+        }
+        catch (Exception ex)
+        {
+            return Result<T>.Fail($"Error: {ex.Message}");
+        }
     }
 
     public async Task<IResult> DeleteAsync(int id, CancellationToken cancellationToken = default)
     {
-       var entity = await _dbSet.FindAsync(new object[] { id }, cancellationToken);
-       if (entity == null)
-          return Result.Fail($"Entity with ID {id} not found.");
+        try
+        {
+            var entity = await _dbSet.FindAsync(new object[] { id }, cancellationToken);
+            if (entity == null)
+                return Result.Fail($"Entity with ID {id} not found.");
 
-       _dbSet.Remove(entity);
-       await _context.SaveChangesAsync(cancellationToken);
-       return Result.Ok("Entity deleted successfully.");
+            _dbSet.Remove(entity);
+            await _context.SaveChangesAsync(cancellationToken);
+            return Result.Ok("Entity deleted successfully.");
+        }
+        catch (DbUpdateException ex) when (ex.InnerException is PostgresException pgEx && pgEx.SqlState == "23503")
+        {
+            return Result.Fail("Cannot delete this record because it is linked to other data.");
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            return Result.Fail("The data has already been modified or deleted by another user.");
+        }
+        catch (Exception ex)
+        {
+            return Result.Fail($"Error: {ex.Message}");
+        }
     }
 
     public async Task<IResult> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
-       var entity = await _dbSet.FindAsync(new object[] { id }, cancellationToken);
-       if (entity == null)
-          return Result.Fail($"Entity with ID {id.ToString()} not found.");
+        try
+        {
+            var entity = await _dbSet.FindAsync(new object[] { id }, cancellationToken);
+            if (entity == null)
+                return Result.Fail($"Entity with ID {id.ToString()} not found.");
 
-       _dbSet.Remove(entity);
-       await _context.SaveChangesAsync(cancellationToken);
-       return Result.Ok("Entity deleted successfully");
+            _dbSet.Remove(entity);
+            await _context.SaveChangesAsync(cancellationToken);
+            return Result.Ok("Entity deleted successfully.");
+        }
+        catch (DbUpdateException ex) when (ex.InnerException is PostgresException pgEx && pgEx.SqlState == "23503")
+        {
+            return Result.Fail("Cannot delete this record because it is linked to other data.");
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            return Result.Fail("The data has already been modified or deleted by another user.");
+        }
+        catch (Exception ex)
+        {
+            return Result.Fail($"Error: {ex.Message}");
+        }
     }
 
     public async Task<bool> DeleteAsync(int key1, int key2, int key3)
     {
-        var _entity = await GetByIdAsync(new object[] { key1, key2, key3 });
+        try
+        {
+            var _entity = await GetByIdAsync(new object[] { key1, key2, key3 });
 
-        if (!_entity.Success)
+            if (!_entity.Success)
+                return false;
+
+            _dbSet.Remove(_entity.Data);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        catch
+        {
             return false;
-
-        _dbSet.Remove(_entity.Data);
-        await _context.SaveChangesAsync();
-        return true;
+        }
     }
     
     public async Task<IResult<T>> GetByIdAsync(int id, string keyName = "Id", CancellationToken cancellationToken = default, IEnumerable<Expression<Func<T, object>>>? includes = null, IEnumerable<Func<IQueryable<T>, IQueryable<T>>>? thenIncludes = null)
@@ -229,5 +293,4 @@ public class PostgreRepository<T> : IRepository<T> where T : class
     {
        return await _dbSet.CountAsync(predicate, cancellationToken);
     }
-    
-} 
+}

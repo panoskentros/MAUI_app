@@ -1,23 +1,25 @@
-﻿using MAUI_app.Model;
-using MAUI_app.Services;
-using MAUI_app.View;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using MAUI_app.Data;
+using MAUI_app.Model;
 
 namespace MAUI_app.Controller;
 
 public class AppointmentsController
 {
-    private IAuthService _authService;
-    private IAppointmentsView _view;
-
-    public AppointmentsController(IAppointmentsView view, IAuthService authService)
-    {
-        _view = view;
-        _authService = authService;
-    }
+    private readonly IRepository<Appointment> _repository;
     
-    public List<Appointment>? GetCurrentUserAppointments()
+    public AppointmentsController(IRepository<Appointment> repository)
     {
-        return  _authService.CurrentUser?.Appointments.ToList(); 
+        _repository = repository;
+
     }
+
+    public async Task InitializeAsync()
+    {
+   
+    }
+
     
 }
