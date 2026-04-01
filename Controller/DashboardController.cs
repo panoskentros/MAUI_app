@@ -22,7 +22,7 @@ public class DashboardController
     // Doctor Summary Data
     public string GetTodayStatsDoctor()
     {
-        return "You have 6 appointments today.";
+        return "You have 6 appointments today";
     }
 
     public string GetNextPatient()

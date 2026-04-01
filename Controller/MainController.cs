@@ -19,7 +19,7 @@ public class MainController
     {
         if (string.IsNullOrWhiteSpace(usernameOrEmail) || string.IsNullOrWhiteSpace(password))
         {
-            await _view.ShowAlert("Validation Error", "All fields are required.");
+            await _view.ShowAlert("Validation Error", "All fields are required");
             return;
         }
 
@@ -36,7 +36,7 @@ public class MainController
         }
         else
         {
-            await _view.ShowAlert("Login Failed", "Invalid username/email or password.");
+            await _view.ShowAlert("Login Failed", "Invalid username/email or password");
         }
     }
 
