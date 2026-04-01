@@ -8,6 +8,7 @@ namespace MAUI_app.View;
 
 public partial class RegisterPage : ContentPage, IRegisterView
 {
+    
     private readonly RegisterController _controller;
     private ApplicationUser _model;
 

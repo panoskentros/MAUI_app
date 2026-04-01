@@ -68,6 +68,10 @@ public partial class MainPage : ContentPage, IMainView
 
     public async Task NavigateToDashboard()
     {
+        if (App.Current.MainPage is AppShell shell)
+        {
+            shell.UpdateMenuBasedOnRole();
+        }
         await Shell.Current.GoToAsync("//dashboard");
     }
 

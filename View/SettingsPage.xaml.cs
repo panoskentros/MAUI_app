@@ -15,6 +15,7 @@ public partial class SettingsPage : ContentPage
 
         if (authService.CurrentUser != null)
         {
+            PageBanner.SetTitle("Settings");
             PageBanner.SetWelcomeMessage(authService.CurrentUser.UserName);
         }
     }
@@ -23,12 +24,10 @@ public partial class SettingsPage : ContentPage
     {
         base.OnAppearing();
         
-        // MVC: Get preferences from Controller and manually update the UI
         UserSettings preferences = _controller.GetCurrentUserPreferences();
         NotificationsSwitch.IsToggled = preferences.NotificationsEnabled;
     }
 
-    // MVC: When the user flips the switch, tell the Controller to save it!
     private void OnNotificationToggled(object sender, ToggledEventArgs e)
     {
         UserSettings updatedSettings = new UserSettings 

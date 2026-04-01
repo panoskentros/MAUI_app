@@ -14,6 +14,7 @@ public partial class MedicationsPage : ContentPage
 
         if (authService.CurrentUser != null)
         {
+            PageBanner.SetTitle("Medical Records");
             PageBanner.SetWelcomeMessage(authService.CurrentUser.UserName);
         }
     }

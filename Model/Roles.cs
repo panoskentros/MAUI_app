@@ -1,7 +1,9 @@
-namespace MAUI_app.Model;
-
-public enum UserRole
+namespace MAUI_app.Model
 {
-    Admin,
-    User
+    public enum UserRole
+    {
+        Patient,
+        Secretary,
+        Doctor
+    }
 }
