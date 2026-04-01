@@ -29,6 +29,32 @@ public partial class RegisterPage : ContentPage, IRegisterView
     {
         await Navigation.PopAsync();
     }
+    
+    private bool _isRegPasswordHidden = true;
+    private bool _isConfirmPasswordHidden = true;
+    private async void OnToggleRegPasswordClicked(object sender, TappedEventArgs e)
+    {
+        if (sender is Image eyeIcon)
+        {
+            _isRegPasswordHidden = !_isRegPasswordHidden;
+            PasswordEntry.IsPassword = _isRegPasswordHidden;
+            eyeIcon.Source = _isRegPasswordHidden ? "eye_slash_icon.png" : "eye_icon.png";
+            await eyeIcon.ScaleTo(0.8, 100);
+            await eyeIcon.ScaleTo(1.0, 100);
+        }
+    }
+
+    private async void OnToggleConfirmPasswordClicked(object sender, TappedEventArgs e)
+    {
+        if (sender is Image eyeIcon)
+        {
+            _isConfirmPasswordHidden = !_isConfirmPasswordHidden;
+            ConfirmPassword.IsPassword = _isConfirmPasswordHidden;
+            eyeIcon.Source = _isConfirmPasswordHidden ? "eye_slash_icon.png" : "eye_icon.png";
+            await eyeIcon.ScaleTo(0.8, 100);
+            await eyeIcon.ScaleTo(1.0, 100);
+        }
+    }
 
     public void SetLoading(bool isLoading)
     {
@@ -36,6 +62,7 @@ public partial class RegisterPage : ContentPage, IRegisterView
         LoadingIndicator.IsRunning = isLoading;
         RegisterBtn.IsEnabled = !isLoading;
         BackToLoginBtn.IsEnabled = !isLoading;
+        RegisterBtn.Text = isLoading ? "" : "Complete Registration";
     }
 
     public async Task ShowAlert(string title, string message)

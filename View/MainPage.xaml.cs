@@ -39,6 +39,19 @@ public partial class MainPage : ContentPage, IMainView
     {
         Application.Current?.Quit();
     }
+    
+    private bool _isPasswordHidden = true;
+    private async void OnTogglePasswordClicked(object sender, TappedEventArgs e)
+    {
+        if (sender is Image eyeIcon)
+        {
+            _isPasswordHidden = !_isPasswordHidden;
+            PasswordEntry.IsPassword = _isPasswordHidden;
+            eyeIcon.Source = _isPasswordHidden ? "eye_slash_icon.png" : "eye_icon.png";
+            await eyeIcon.ScaleTo(0.8, 100);
+            await eyeIcon.ScaleTo(1.0, 100);
+        }
+    }
 
     public void SetLoading(bool isLoading)
     {

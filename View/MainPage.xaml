@@ -65,15 +65,16 @@
                             </Border.StrokeShape>
     
                             <Grid ColumnDefinitions="Auto, *">
-                                <Image Grid.Column="0"
+                                <Image Grid.Column="0" 
                                        Source="user_icon.png" 
                                        WidthRequest="22" 
                                        HeightRequest="22" 
                                        Margin="15,0,10,0" 
                                        VerticalOptions="Center" />
-               
+                
                                 <Entry x:Name="UsernameOrEmailEntry" 
                                        Grid.Column="1" 
+                                       Margin="0,0,4,0"
                                        Placeholder="Username or Email" 
                                        BackgroundColor="Transparent" 
                                        TextColor="Black" 
@@ -91,14 +92,9 @@
                                 <RoundRectangle CornerRadius="8" />
                             </Border.StrokeShape>
     
-                            <Grid ColumnDefinitions="Auto, *">
-                                <Image Grid.Column="0"
-                                       Source="key_icon.png" 
-                                       WidthRequest="22" 
-                                       HeightRequest="22" 
-                                       Margin="15,0,10,0" 
-                                       VerticalOptions="Center" />
-               
+                            <Grid ColumnDefinitions="Auto, *, Auto">
+                                <Image Grid.Column="0" Source="key_icon.png" WidthRequest="22" HeightRequest="22" Margin="15,0,10,0" VerticalOptions="Center" />
+                                
                                 <Entry x:Name="PasswordEntry" 
                                        Grid.Column="1" 
                                        Placeholder="Password" 
@@ -108,6 +104,19 @@
                                        ReturnType="Done" 
                                        VerticalOptions="Center"
                                        Completed="OnLoginClicked"/>
+                                
+                                <Image x:Name="TogglePasswordBtn" 
+                                       Grid.Column="2" 
+                                       Source="eye_slash_icon.png" 
+                                       WidthRequest="22" 
+                                       HeightRequest="22" 
+                                       Aspect="AspectFit"
+                                       Margin="0,0,15,0" 
+                                       VerticalOptions="Center">
+                                    <Image.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="OnTogglePasswordClicked" />
+                                    </Image.GestureRecognizers>
+                                </Image>
                             </Grid>
                         </Border>
                         
