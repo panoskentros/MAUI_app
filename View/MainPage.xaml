@@ -110,13 +110,28 @@
                                        Completed="OnLoginClicked"/>
                             </Grid>
                         </Border>
-
-                        <ActivityIndicator x:Name="LoadingIndicator" IsRunning="False" IsVisible="False" Color="#0D47A1" HeightRequest="40" />
                         
-                        <Button x:Name="LoginBtn" Text="Sign In" Clicked="OnLoginClicked" BackgroundColor="#0D47A1" TextColor="White" HeightRequest="50" CornerRadius="12" FontAttributes="Bold" Margin="0,10,0,0"/>
+                        <Grid Margin="0,10,0,0" HeightRequest="50">
+                            <Button x:Name="LoginBtn" 
+                                    Text="Sign In" 
+                                    Clicked="OnLoginClicked" 
+                                    BackgroundColor="#0D47A1" 
+                                    TextColor="White" 
+                                    CornerRadius="12" 
+                                    FontAttributes="Bold" />
+                            <ActivityIndicator x:Name="LoadingIndicator" 
+                                               IsRunning="False" 
+                                               IsVisible="False" 
+                                               Color="White" 
+                                               HeightRequest="25" 
+                                               WidthRequest="25" 
+                                               HorizontalOptions="Center" 
+                                               VerticalOptions="Center" 
+                                               InputTransparent="True" />
+                        </Grid>
                         <Button x:Name="GoToRegisterBtn" Text="New Patient? Register Here" Clicked="OnGoToRegisterClicked" BackgroundColor="Transparent" TextColor="#0D47A1" HeightRequest="50" CornerRadius="12" FontAttributes="Bold" />
                         
-                        <Button x:Name="ExitBtn" Text="EXIT" Clicked="OnExitClicked" BackgroundColor="#FF3B30" TextColor="White" FontSize="11" HeightRequest="40" CornerRadius="12" HorizontalOptions="Center" WidthRequest="100" Margin="0,20,0,0" />
+                        <Button x:Name="ExitBtn" Text="EXIT" Clicked="OnExitClicked" BackgroundColor="#FF3B30" TextColor="White" FontSize="11" HeightRequest="40" CornerRadius="12" HorizontalOptions="Center" WidthRequest="100" Margin="0,5,0,0" />
                         
                     </VerticalStackLayout>
                 </Grid>

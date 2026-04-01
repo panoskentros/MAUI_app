@@ -20,6 +20,8 @@ public class AppDbContext : DbContext
             entity.HasIndex(u => u.UserName).IsUnique();
             entity.HasIndex(u => u.Email).IsUnique();
         });
-        
+        modelBuilder.Entity<Appointment>()
+            .HasIndex(a => new { a.AppointmentDate })
+            .IsUnique();
     }
 }

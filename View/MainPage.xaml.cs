@@ -45,6 +45,7 @@ public partial class MainPage : ContentPage, IMainView
         LoadingIndicator.IsRunning = isLoading;
         LoadingIndicator.IsVisible = isLoading;
         LoginBtn.IsEnabled = !isLoading;
+        LoginBtn.Text = isLoading ? "" : "Sign In";
     }
 
     public async Task ShowAlert(string title, string message)
