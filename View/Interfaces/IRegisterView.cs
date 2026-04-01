@@ -1,4 +1,4 @@
-namespace MAUI_app.View;
+namespace MAUI_app.View.Interfaces;
 
 public interface IRegisterView
 {

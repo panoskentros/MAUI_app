@@ -1,46 +1,26 @@
 ﻿using MAUI_app.Controller;
-using MAUI_app.Services;
+using MAUI_app.Data;
+using MAUI_app.Model;
+using MAUI_app.View.Interfaces;
 
 namespace MAUI_app.View;
 
-public partial class AppointmentsPage : ContentPage
+public partial class AppointmentsPage : ContentPage, IAppointmentsView
 {
-    private AppointmentsController _controller;
+    private readonly AppointmentsController _controller;
+    private IRepository<Appointment> _repository;
 
-    // Inject IAuthService exactly like you did on the Dashboard!
-    public AppointmentsPage(IAuthService authService)
+    public AppointmentsPage(AppointmentsController controller,IRepository<Appointment> repository)
     {
         InitializeComponent();
-        _controller = new AppointmentsController(); 
         
-        // Pass the username to the banner!
-        if (authService.CurrentUser != null)
-        {
-            PageBanner.SetWelcomeMessage(authService.CurrentUser.UserName);
-        }
+        _controller = controller;
+        _repository = repository;
+        BindingContext = _controller; 
     }
-
-    protected override void OnAppearing()
+    public async Task InitializeAsync()
     {
-        base.OnAppearing();
-        LoadDynamicUI();
+        
     }
-
-    private void LoadDynamicUI()
-    {
-        string role = _controller.GetCurrentUserRole();
-
-        if (role == "Patient")
-        {
-            PatientViewContainer.IsVisible = true;
-            DoctorViewContainer.IsVisible = false;
-            PatientAppointmentsList.ItemsSource = _controller.GetPatientAppointments();
-        }
-        else if (role == "Doctor")
-        {
-            PatientViewContainer.IsVisible = false;
-            DoctorViewContainer.IsVisible = true;
-            DoctorScheduleList.ItemsSource = _controller.GetDoctorSchedule();
-        }
-    }
+    
 }

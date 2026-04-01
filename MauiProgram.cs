@@ -4,6 +4,7 @@ using MAUI_app.Services;
 using MAUI_app.View;
 using Microsoft.Extensions.Logging;
 using CommunityToolkit.Maui;
+using MAUI_app.Controller;
 
 #if WINDOWS
 using Microsoft.Maui.LifecycleEvents;
@@ -45,6 +46,7 @@ public static class MauiProgram
         builder.Services.AddTransient<RegisterPage>();
         builder.Services.AddTransient<DashboardPage>();
         builder.Services.AddTransient<AppointmentsPage>();
+        builder.Services.AddTransient<AppointmentsController>();
 #if DEBUG
         builder.Logging.AddDebug();
 #endif

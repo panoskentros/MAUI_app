@@ -1,11 +1,12 @@
-using MAUI_app.Services;
+using MAUI_app.Model;
 using Microsoft.EntityFrameworkCore;
 
-namespace MAUI_app.Model;
+namespace MAUI_app.Data;
 
 public class AppDbContext : DbContext
 {
     public DbSet<ApplicationUser> Users { get; set; }
+    public DbSet<Appointment> Appointments { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
