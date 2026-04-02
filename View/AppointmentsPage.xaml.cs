@@ -9,25 +9,29 @@ namespace MAUI_app.View;
 public partial class AppointmentsPage : ContentPage, IAppointmentsView
 {
     private readonly AppointmentsController _controller;
-    private IRepository<Appointment> _repository;
 
-    public AppointmentsPage(AppointmentsController controller,IRepository<Appointment> repository, IAuthService authService)
+    public AppointmentsPage(AppointmentsController controller, IAuthService authService)
     {
         InitializeComponent();
         
         _controller = controller;
-        _repository = repository;
         BindingContext = _controller; 
-        if (authService.CurrentUser != null)
+        
+        var user = authService.CurrentUser;
+        if (user != null)
         {
-            PageBanner.SetTitle("Appointments");
-            PageBanner.SetWelcomeMessage(authService.CurrentUser.UserName);
+            if (user.Role == UserRole.Doctor)
+                PageBanner.SetTitle("Daily Schedule");
+            else
+                PageBanner.SetTitle("Appointments");
+
+            PageBanner.SetWelcomeMessage(user.Role == UserRole.Doctor ? "Dr. " + user.UserName : user.UserName);
         }
-        
     }
-    public async Task InitializeAsync()
+
+    protected override async void OnAppearing()
     {
-        
+        base.OnAppearing();
+        await _controller.InitializeAsync();
     }
-    
 }

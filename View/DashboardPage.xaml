@@ -30,10 +30,25 @@
                             <Label Text="UPCOMING APPOINTMENT" FontSize="12" FontAttributes="Bold" TextColor="#BBDEFB" VerticalOptions="Center"/>
                         </HorizontalStackLayout>
                         
-                        <Label Text="Tomorrow, 10:30 AM" FontSize="22" FontAttributes="Bold" TextColor="White" />
-                        <Label Text="Dr. Sarah Jenkins - General Checkup" FontSize="14" TextColor="#E3F2FD" />
+                        <Label Text="{Binding PatientNextAppointmentDate}" FontSize="22" FontAttributes="Bold" TextColor="White" />
+                        <Label Text="{Binding PatientNextAppointmentDetails}" FontSize="14" TextColor="#E3F2FD" />
                         
-                        <Button Text="Reschedule" BackgroundColor="White" TextColor="#0D47A1" CornerRadius="8" HeightRequest="40" FontAttributes="Bold" Margin="0,10,0,0" HorizontalOptions="Start" WidthRequest="120"/>
+                        <HorizontalStackLayout Spacing="10" Margin="0,10,0,0">
+                            
+                            <Button Text="Reschedule" BackgroundColor="White" TextColor="#0D47A1" CornerRadius="8" HeightRequest="40" FontAttributes="Bold" WidthRequest="120"/>
+                            
+                            <Button Text="{Binding MoreAppointmentsText}" 
+                                    IsVisible="{Binding HasMoreAppointments}"
+                                    Clicked="OnViewAllAppointmentsClicked"
+                                    BackgroundColor="Transparent" 
+                                    TextColor="#BBDEFB" 
+                                    BorderColor="#BBDEFB" 
+                                    BorderWidth="1" 
+                                    CornerRadius="8" 
+                                    HeightRequest="40" 
+                                    FontAttributes="Bold" 
+                                    Padding="15,0"/>
+                        </HorizontalStackLayout>
                     </VerticalStackLayout>
                 </Border>
 
@@ -82,7 +97,7 @@
                         <Border.StrokeShape><RoundRectangle CornerRadius="12" /></Border.StrokeShape>
                         <VerticalStackLayout>
                             <Label Text="12" FontSize="24" FontAttributes="Bold" TextColor="#0D47A1" />
-                            <Label Text="Appointments Today" FontSize="12" TextColor="#0D47A1" />
+                            <Label Text="{Binding AppointmentsTodayCount}" FontSize="24" FontAttributes="Bold" TextColor="#0D47A1" />
                         </VerticalStackLayout>
                     </Border>
                     <Border Grid.Column="1" BackgroundColor="#FFF3E0" StrokeThickness="0" Padding="15">
@@ -112,8 +127,8 @@
                             <Label Text="NEXT PATIENT WAITING" FontSize="12" FontAttributes="Bold" TextColor="#A1A1AA" VerticalOptions="Center"/>
                         </HorizontalStackLayout>
                         
-                        <Label Text="10:30 AM - Maria Papadopoulou" FontSize="20" FontAttributes="Bold" TextColor="White" />
-                        <Label Text="Reason: Annual General Checkup" FontSize="14" TextColor="#D4D4D8" />
+                        <Label Text="{Binding DoctorNextPatientTime}" FontSize="20" FontAttributes="Bold" TextColor="White" />
+                        <Label Text="{Binding DoctorNextPatientDetails}" FontSize="14" TextColor="#D4D4D8" />
                         
                         <HorizontalStackLayout Spacing="10" Margin="0,15,0,0">
                             <Button Text="Write Diagnosis" BackgroundColor="#42A5F5" TextColor="White" CornerRadius="8" HeightRequest="40" FontAttributes="Bold" />

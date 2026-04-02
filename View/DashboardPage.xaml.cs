@@ -1,22 +1,27 @@
 ﻿using MAUI_app.Model;
 using MAUI_app.Services;
+using MAUI_app.Controller;
 
 namespace MAUI_app.View;
 
 public partial class DashboardPage : ContentPage
 {
     private readonly IAuthService _authService;
+    private readonly DashboardController _controller;
 
-    public DashboardPage(IAuthService authService)
+    public DashboardPage(IAuthService authService, DashboardController controller)
     {
         InitializeComponent();
         _authService = authService;
+        _controller = controller;
+        BindingContext = _controller;
     }
 
-    protected override void OnAppearing()
+    protected override async void OnAppearing()
     {
         base.OnAppearing();
         SetupDashboardBasedOnRole();
+        await _controller.InitializeAsync();
     }
 
     private void SetupDashboardBasedOnRole()
@@ -59,6 +64,11 @@ public partial class DashboardPage : ContentPage
             await border.ScaleTo(1.0, 100);
         }
         
+        await Shell.Current.GoToAsync("//appointments");
+    }
+    
+    private async void OnViewAllAppointmentsClicked(object sender, EventArgs e)
+    {
         await Shell.Current.GoToAsync("//appointments");
     }
 
