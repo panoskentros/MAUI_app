@@ -9,13 +9,15 @@
     <Grid RowDefinitions="Auto, *">
         <view:HeaderBanner x:Name="PageBanner" Grid.Row="0" />
 
-        <VerticalStackLayout Grid.Row="1" Padding="20" Spacing="15">
-            <Label Text="All Scheduled Appointments" 
+        <Grid Grid.Row="1" RowDefinitions="Auto, *" Padding="20" RowSpacing="15">
+            
+            <Label Grid.Row="0" 
+                   Text="All Scheduled Appointments" 
                    FontSize="22" 
                    FontAttributes="Bold" 
                    TextColor="#2C3E50" />
 
-            <CollectionView x:Name="AllAppointmentsList" ItemsSource="{Binding DailyAppointments}">
+            <CollectionView x:Name="AllAppointmentsList" Grid.Row="1" ItemsSource="{Binding DailyAppointments}">
                 
                 <CollectionView.ItemsLayout>
                     <LinearItemsLayout Orientation="Vertical" ItemSpacing="10" />
@@ -71,6 +73,6 @@
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
-        </VerticalStackLayout>
+        </Grid>
     </Grid>
 </ContentPage>
