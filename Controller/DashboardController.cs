@@ -59,6 +59,20 @@ public class DashboardController : INotifyPropertyChanged
         get => _moreAppointmentsText;
         set { _moreAppointmentsText = value; OnPropertyChanged(); }
     }
+    
+    private bool _doctorHasMorePatients;
+    public bool DoctorHasMorePatients
+    {
+        get => _doctorHasMorePatients;
+        set { _doctorHasMorePatients = value; OnPropertyChanged(); }
+    }
+
+    private string _doctorMorePatientsText;
+    public string DoctorMorePatientsText
+    {
+        get => _doctorMorePatientsText;
+        set { _doctorMorePatientsText = value; OnPropertyChanged(); }
+    }
 
     public DashboardController(IRepository<Appointment> repository, IAuthService authService)
     {
@@ -115,15 +129,32 @@ public class DashboardController : INotifyPropertyChanged
         }
         else if (user.Role == UserRole.Doctor)
         {
-            var nextPatient = allAppointments
-                .Where(a => a.AppointmentDate >= now)
+            var todaysPatients = allAppointments
+                .Where(a => a.AppointmentDate.Date == today.Date && a.AppointmentDate >= now)
                 .OrderBy(a => a.AppointmentDate)
-                .FirstOrDefault();
+                .ToList();
 
-            if (nextPatient != null)
+            if (todaysPatients.Any())
             {
+                var nextPatient = todaysPatients.First();
                 DoctorNextPatientTime = nextPatient.AppointmentDate.ToString("h:mm tt") + " - " + nextPatient.PatientName;
-                DoctorNextPatientDetails = "Reason: " + (string.IsNullOrWhiteSpace(nextPatient.MedicalNotes) ? "General Checkup" : nextPatient.MedicalNotes);
+                DoctorNextPatientDetails = "Reason: " + (string.IsNullOrWhiteSpace(nextPatient.MedicalNotes) ? "Standard Checkup" : nextPatient.MedicalNotes);
+
+                if (todaysPatients.Count > 1)
+                {
+                    DoctorHasMorePatients = true;
+                    DoctorMorePatientsText = $"See {todaysPatients.Count - 1} More Today";
+                }
+                else
+                {
+                    DoctorHasMorePatients = false;
+                }
+            }
+            else
+            {
+                DoctorNextPatientTime = "No more patients today";
+                DoctorNextPatientDetails = "Enjoy your break!";
+                DoctorHasMorePatients = false;
             }
         }
     }

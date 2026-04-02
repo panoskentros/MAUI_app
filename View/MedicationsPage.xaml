@@ -9,31 +9,30 @@
     <Grid RowDefinitions="Auto, *">
         <view:HeaderBanner x:Name="PageBanner" Grid.Row="0" />
 
-        <ScrollView Grid.Row="1">
-            <VerticalStackLayout Padding="20,10,20,30" Spacing="20">
-                <Label Text="Active Prescriptions" FontSize="20" FontAttributes="Bold" TextColor="#2C3E50" />
+        <Grid Grid.Row="1" RowDefinitions="Auto, *" Padding="20,10,20,30" RowSpacing="20">
+            
+            <Label Grid.Row="0" Text="Active Prescriptions" FontSize="20" FontAttributes="Bold" TextColor="#2C3E50" />
 
-                <CollectionView x:Name="MedicationsList">
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate>
-                            <Border BackgroundColor="White" Stroke="#E0E6ED" StrokeThickness="1" Padding="20" Margin="0,0,0,10">
-                                <Border.StrokeShape><RoundRectangle CornerRadius="12" /></Border.StrokeShape>
-                                <Border.Shadow><Shadow Brush="#000000" Offset="0,4" Radius="10" Opacity="0.05" /></Border.Shadow>
+            <CollectionView x:Name="MedicationsList" Grid.Row="1">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border BackgroundColor="White" Stroke="#E0E6ED" StrokeThickness="1" Padding="20" Margin="5,5,5,15">
+                            <Border.StrokeShape><RoundRectangle CornerRadius="12" /></Border.StrokeShape>
+                            <Border.Shadow><Shadow Brush="#000000" Offset="0,4" Radius="10" Opacity="0.05" /></Border.Shadow>
+                            
+                            <Grid ColumnDefinitions="Auto, *, Auto" RowDefinitions="Auto, Auto" ColumnSpacing="15">
+                                <Image Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Source="{Binding Icon}" HeightRequest="40" WidthRequest="40" VerticalOptions="Center"/>
                                 
-                                <Grid ColumnDefinitions="Auto, *, Auto" RowDefinitions="Auto, Auto" ColumnSpacing="15">
-                                    <Image Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Source="{Binding Icon}" HeightRequest="40" WidthRequest="40" VerticalOptions="Center"/>
-                                    
-                                    <Label Grid.Row="0" Grid.Column="1" Text="{Binding Name}" FontAttributes="Bold" FontSize="18" TextColor="#2C3E50" />
-                                    <Label Grid.Row="1" Grid.Column="1" Text="{Binding Instructions}" TextColor="#7F8C8D" FontSize="14" />
-                                    
-                                    <Button Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" Text="Refill" BackgroundColor="#E3F2FD" TextColor="#2980B9" CornerRadius="8" FontAttributes="Bold" VerticalOptions="Center" HeightRequest="35"/>
-                                </Grid>
-                            </Border>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
+                                <Label Grid.Row="0" Grid.Column="1" Text="{Binding Name}" FontAttributes="Bold" FontSize="18" TextColor="#2C3E50" />
+                                <Label Grid.Row="1" Grid.Column="1" Text="{Binding Instructions}" TextColor="#7F8C8D" FontSize="14" />
+                                
+                                <Button Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" Text="Refill" BackgroundColor="#E3F2FD" TextColor="#2980B9" CornerRadius="8" FontAttributes="Bold" VerticalOptions="Center" HeightRequest="35"/>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
 
-            </VerticalStackLayout>
-        </ScrollView>
+        </Grid>
     </Grid>
 </ContentPage>
