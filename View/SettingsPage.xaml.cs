@@ -7,23 +7,25 @@ namespace MAUI_app.View;
 public partial class SettingsPage : ContentPage
 {
     private SettingsController _controller;
+    private readonly IAuthService _authService;
 
     public SettingsPage(IAuthService authService)
     {
         InitializeComponent();
         _controller = new SettingsController();
-
-        if (authService.CurrentUser != null)
-        {
-            PageBanner.SetTitle("Settings");
-            PageBanner.SetWelcomeMessage(authService.CurrentUser.UserName);
-        }
+        _authService = authService;
     }
 
     protected override void OnAppearing()
     {
         base.OnAppearing();
         
+        if (_authService.CurrentUser != null)
+        {
+            PageBanner.SetTitle("Settings");
+            PageBanner.SetWelcomeMessage(_authService.CurrentUser.UserName);
+        }
+
         UserSettings preferences = _controller.GetCurrentUserPreferences();
         NotificationsSwitch.IsToggled = preferences.NotificationsEnabled;
     }

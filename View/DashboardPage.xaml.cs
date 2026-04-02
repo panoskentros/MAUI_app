@@ -82,4 +82,29 @@ public partial class DashboardPage : ContentPage
         
         await Shell.Current.GoToAsync("//medications");
     }
+    
+    private async void OnDoctorSeeMoreClicked(object sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync("//appointments");
+    }
+
+    private async void OnMyScheduleTapped(object sender, TappedEventArgs e)
+    {
+        if (sender is Border border)
+        {
+            await border.ScaleTo(0.95, 100);
+            await border.ScaleTo(1.0, 100);
+        }
+        await Shell.Current.GoToAsync("//appointments");
+    }
+
+    private async void OnSetAvailabilityTapped(object sender, TappedEventArgs e)
+    {
+        if (sender is Border border)
+        {
+            await border.ScaleTo(0.95, 100);
+            await border.ScaleTo(1.0, 100);
+        }
+        await Shell.Current.GoToAsync("//settings");
+    }
 }

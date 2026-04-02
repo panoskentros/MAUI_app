@@ -6,7 +6,6 @@ public class MedicationsController
 {
     public List<Medication> GetActivePrescriptions()
     {
-        // Mock database call
         return new List<Medication>
         {
             new Medication { Name = "Amoxicillin 500mg", Instructions = "Take 1 pill every 8 hours", Icon = "pill_icon.png" },
