@@ -1,3 +1,5 @@
+using FluentValidation;
+using MAUI_app.Model;
 using MAUI_app.Services;
 using MAUI_app.View;
 using MAUI_app.View.Interfaces;
@@ -8,6 +10,7 @@ public class LoginController
 {
     private readonly ILoginView _view;
     private readonly IAuthService _authService;
+    private IValidator<ApplicationUser> _validator;
 
     public LoginController(ILoginView view, IAuthService authService)
     {
@@ -17,11 +20,23 @@ public class LoginController
 
     public async Task LoginAsync(string usernameOrEmail, string password)
     {
-        if (string.IsNullOrWhiteSpace(usernameOrEmail) || string.IsNullOrWhiteSpace(password))
+        _view.ClearErrors(); 
+
+        bool hasError = false;
+
+        if (string.IsNullOrWhiteSpace(usernameOrEmail))
         {
-            await _view.ShowAlert("Validation Error", "All fields are required");
-            return;
+            _view.ShowFieldError("UsernameOrEmail", "Please enter your username or email");
+            hasError = true;
         }
+        
+        if (string.IsNullOrWhiteSpace(password))
+        {
+            _view.ShowFieldError("Password", "Please enter your password");
+            hasError = true;
+        }
+
+        if (hasError) return;
 
         _view.SetLoading(true);
     
@@ -36,7 +51,7 @@ public class LoginController
         }
         else
         {
-            await _view.ShowAlert("Login Failed", "Invalid username/email or password");
+            _view.ShowFieldError("Password", "Invalid username/email or password"); 
         }
     }
 

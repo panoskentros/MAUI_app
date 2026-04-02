@@ -1,5 +1,3 @@
-using MAUI_app.Model;
-
 namespace MAUI_app.View.Interfaces;
 
 public interface ILoginView
@@ -9,4 +7,6 @@ public interface ILoginView
     Task NavigateToDashboard();
     Task NavigateToRegister();
     void ClearFields();
+    void ClearErrors();
+    void ShowFieldError(string propertyName, string errorMessage);
 }

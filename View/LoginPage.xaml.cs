@@ -81,4 +81,25 @@ public partial class LoginPage : ContentPage, ILoginView
         UsernameOrEmailEntry.Text = string.Empty;
         PasswordEntry.Text = string.Empty;
     }
+    
+    public void ClearErrors()
+    {
+        UsernameError.IsVisible = false;
+        PasswordError.IsVisible = false;
+    }
+
+    public void ShowFieldError(string propertyName, string errorMessage)
+    {
+        switch (propertyName)
+        {   
+            case "UsernameOrEmail":
+                UsernameError.Text = errorMessage;
+                UsernameError.IsVisible = true;
+                break;
+            case "Password":
+                PasswordError.Text = errorMessage;
+                PasswordError.IsVisible = true;
+                break;
+        }
+    }
 }
