@@ -14,6 +14,7 @@ public partial class MessagesPage : ContentPage
 
         if (authService.CurrentUser != null)
         {
+            PageBanner.SetTitle("Messages");
             PageBanner.SetWelcomeMessage(authService.CurrentUser.UserName);
         }
     }
@@ -21,7 +22,6 @@ public partial class MessagesPage : ContentPage
     protected override void OnAppearing()
     {
         base.OnAppearing();
-        // MVC: Inject data from Controller into the View
         MessagesList.ItemsSource = _controller.GetInboxMessages();
     }
 }

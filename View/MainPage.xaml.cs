@@ -68,7 +68,7 @@ public partial class MainPage : ContentPage, IMainView
 
     public async Task NavigateToDashboard()
     {
-        await Shell.Current.GoToAsync("//dashboard");
+      await Shell.Current.GoToAsync("//dashboard");
     }
 
     public async Task NavigateToRegister()

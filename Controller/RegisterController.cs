@@ -3,6 +3,7 @@ using MAUI_app.Model;
 using MAUI_app.View;
 using MAUI_app.Services;
 using MAUI_app.View.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace MAUI_app.Controller;
 
@@ -47,9 +48,14 @@ public class RegisterController
             await _view.ShowAlert("Success", "Account created successfully!");
             await _view.NavigateBack();
         }
+        catch (DbUpdateException dbEx)
+        {
+            string realError = dbEx.InnerException != null ? dbEx.InnerException.Message : dbEx.Message;
+            await _view.ShowAlert("Database Error", realError);
+        }
         catch (Exception ex)
         {
-            await _view.ShowAlert("Error", "Registration failed: " + ex.Message);
+            await _view.ShowAlert("Error", "General Error: " + ex.Message);
         }
         finally 
         {

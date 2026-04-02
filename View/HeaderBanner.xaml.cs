@@ -6,8 +6,12 @@ public partial class HeaderBanner : ContentView
     {
         InitializeComponent();
     }
-
-    // We expose a public method so your page controllers can easily push the username here
+    
+    public void SetTitle(string newTitle)
+    {
+        BannerTitleLabel.Text = newTitle;
+    }
+    
     public void SetWelcomeMessage(string username)
     {
         if (!string.IsNullOrWhiteSpace(username))

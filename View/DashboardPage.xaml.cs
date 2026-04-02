@@ -1,58 +1,75 @@
-﻿using MAUI_app.Controller;
-using MAUI_app.Model;
+﻿using MAUI_app.Model;
 using MAUI_app.Services;
 
 namespace MAUI_app.View;
 
 public partial class DashboardPage : ContentPage
 {
-    private DashboardController _controller;
+    private readonly IAuthService _authService;
 
     public DashboardPage(IAuthService authService)
     {
         InitializeComponent();
-        _controller = new DashboardController();
-        
-        if (authService.CurrentUser != null)
-        {
-            PageBanner.SetWelcomeMessage(authService.CurrentUser.UserName);
-        }
+        _authService = authService;
     }
 
     protected override void OnAppearing()
     {
         base.OnAppearing();
-        LoadDashboardData();
+        SetupDashboardBasedOnRole();
     }
 
-    private void LoadDashboardData()
+    private void SetupDashboardBasedOnRole()
     {
-        string role = _controller.GetCurrentUserRole();
+        var user = _authService.CurrentUser;
+        if (user == null) return;
 
-        if (role == "Patient")
+        PatientView.IsVisible = false;
+        SecretaryView.IsVisible = false;
+        DoctorView.IsVisible = false;
+
+        if (user.Role == UserRole.Patient)
         {
-            PatientDashboardContainer.IsVisible = true;
-            DoctorDashboardContainer.IsVisible = false;
-
-            // Fill Patient Data
-            PatientNextApptLabel.Text = _controller.GetNextAppointmentPatient();
-            UnreadMessagesLabel.Text = _controller.GetUnreadMessagesCount().ToString();
+            PatientView.IsVisible = true;
+            
+            PageBanner.SetTitle("Patient Dashboard");
+            PageBanner.SetWelcomeMessage(user.UserName); 
         }
-        else if (role == "Doctor")
+        else if (user.Role == UserRole.Secretary)
         {
-            PatientDashboardContainer.IsVisible = false;
-            DoctorDashboardContainer.IsVisible = true;
-
-            // Fill Doctor Data
-            DoctorStatsLabel.Text = _controller.GetTodayStatsDoctor();
-            DoctorNextPatientLabel.Text = _controller.GetNextPatient();
+            SecretaryView.IsVisible = true;
+            
+            PageBanner.SetTitle("Clinic Control Center");
+            PageBanner.SetWelcomeMessage(user.UserName);
+        }
+        else if (user.Role == UserRole.Doctor)
+        {
+            DoctorView.IsVisible = true;
+            
+            PageBanner.SetTitle("Doctor Dashboard");
+            PageBanner.SetWelcomeMessage("Dr. " + user.UserName);
         }
     }
-
-    // A cool trick: Make the "Book" button jump to the Appointments tab!
-    private async void OnBookAppointmentClicked(object sender, EventArgs e)
+    
+    private async void OnBookAppointmentTapped(object sender, TappedEventArgs e)
     {
-        // "//appointments" is the Route you defined in AppShell.xaml
-        await Shell.Current.GoToAsync("//appointments"); 
+        if (sender is Border border)
+        {
+            await border.ScaleTo(0.95, 100);
+            await border.ScaleTo(1.0, 100);
+        }
+        
+        await Shell.Current.GoToAsync("//appointments");
+    }
+
+    private async void OnMedicalRecordsTapped(object sender, TappedEventArgs e)
+    {
+        if (sender is Border border)
+        {
+            await border.ScaleTo(0.95, 100);
+            await border.ScaleTo(1.0, 100);
+        }
+        
+        await Shell.Current.GoToAsync("//medications");
     }
 }

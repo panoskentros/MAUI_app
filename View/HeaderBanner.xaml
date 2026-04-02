@@ -2,7 +2,6 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MAUI_app.View.HeaderBanner">
-
     <Border StrokeThickness="0" Margin="0" Padding="20,40,20,30">
         <Border.Background>
             <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
@@ -13,15 +12,12 @@
         <Border.StrokeShape>
             <RoundRectangle CornerRadius="0,0,24,24" />
         </Border.StrokeShape>
-            
         <HorizontalStackLayout Spacing="15" VerticalOptions="Center">
             <Image Source="medical_logo.png" HeightRequest="50" WidthRequest="50" />
             <VerticalStackLayout VerticalOptions="Center">
-                <Label Text="Patient Dashboard" TextColor="#BBDEFB" FontSize="14" FontAttributes="Bold"/>
-                
+                <Label x:Name="BannerTitleLabel" Text="Patient Dashboard" TextColor="#BBDEFB" FontSize="14" FontAttributes="Bold"/>
                 <Label x:Name="WelcomeLabel" Text="Welcome!" TextColor="White" FontSize="24" FontAttributes="Bold"/>
             </VerticalStackLayout>
         </HorizontalStackLayout>
     </Border>
-    
 </ContentView>
