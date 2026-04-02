@@ -4,12 +4,12 @@ using MAUI_app.View.Interfaces;
 
 namespace MAUI_app.Controller;
 
-public class MainController
+public class LoginController
 {
-    private readonly IMainView _view;
+    private readonly ILoginView _view;
     private readonly IAuthService _authService;
 
-    public MainController(IMainView view, IAuthService authService)
+    public LoginController(ILoginView view, IAuthService authService)
     {
         _view = view;
         _authService = authService;
