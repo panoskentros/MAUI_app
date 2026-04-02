@@ -10,12 +10,12 @@ namespace MAUI_app.Controller;
 public class RegisterController
 {
     private readonly IRegisterView _view;
-    private readonly AppDbContext _context;
+    private IRepository<ApplicationUser> _repository;
 
-    public RegisterController(IRegisterView view, AppDbContext context)
+    public RegisterController(IRegisterView view, IRepository<ApplicationUser>  repository)
     {
         _view = view;
-        _context = context;
+        _repository = repository;
     }
 
     public async Task RegisterUserAsync(ApplicationUser user)
@@ -42,9 +42,7 @@ public class RegisterController
         {
             user.HashedPassword = PasswordHasher.HashPassword(user.HashedPassword);
             
-            await _context.Users.AddAsync(user);
-            await _context.SaveChangesAsync();
-            
+            await _repository.AddAsync(user,asDetached:true);
             await _view.ShowAlert("Success", "Account created successfully!");
             await _view.NavigateBack();
         }
