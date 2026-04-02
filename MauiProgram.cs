@@ -48,8 +48,8 @@ public static class MauiProgram
         builder.Services.AddTransient<DashboardPage>();
         builder.Services.AddTransient<AppointmentsPage>();
         builder.Services.AddTransient<AppointmentsController>();
+        builder.Services.AddTransient<DashboardController>();
         
-        // FLUENT VALIDATOR
         builder.Services.AddValidatorsFromAssemblyContaining<App>();
 #if DEBUG
         builder.Logging.AddDebug();

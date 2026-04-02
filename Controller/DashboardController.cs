@@ -1,32 +1,136 @@
-﻿namespace MAUI_app.Controller;
+﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using MAUI_app.Data;
+using MAUI_app.Model;
+using MAUI_app.Services;
 
-public class DashboardController
+namespace MAUI_app.Controller;
+
+public class DashboardController : INotifyPropertyChanged
 {
-    public string GetCurrentUserRole()
+    private readonly IRepository<Appointment> _repository;
+    private readonly IAuthService _authService;
+
+    private string _patientNextAppointmentDate = "No upcoming appointments";
+    public string PatientNextAppointmentDate
     {
-        // 🛑 FOR TESTING: Change to "Doctor" or "Secretary" to test the UI!
-        return "Patient"; 
+        get => _patientNextAppointmentDate;
+        set { _patientNextAppointmentDate = value; OnPropertyChanged(); }
     }
 
-    // Patient Summary Data
-    public string GetNextAppointmentPatient()
+    private string _patientNextAppointmentDetails = "Book a new appointment below";
+    public string PatientNextAppointmentDetails
     {
-        return "Tomorrow at 10:00 AM - Dr. Sarah Jenkins";
+        get => _patientNextAppointmentDetails;
+        set { _patientNextAppointmentDetails = value; OnPropertyChanged(); }
     }
 
-    public int GetUnreadMessagesCount()
+    private string _appointmentsTodayCount = "0";
+    public string AppointmentsTodayCount
     {
-        return 2;
+        get => _appointmentsTodayCount;
+        set { _appointmentsTodayCount = value; OnPropertyChanged(); }
     }
 
-    // Doctor Summary Data
-    public string GetTodayStatsDoctor()
+    private string _doctorNextPatientTime = "No more patients today";
+    public string DoctorNextPatientTime
     {
-        return "You have 6 appointments today";
+        get => _doctorNextPatientTime;
+        set { _doctorNextPatientTime = value; OnPropertyChanged(); }
     }
 
-    public string GetNextPatient()
+    private string _doctorNextPatientDetails = "Enjoy your break!";
+    public string DoctorNextPatientDetails
     {
-        return "10:00 AM - John Doe (Checkup)";
+        get => _doctorNextPatientDetails;
+        set { _doctorNextPatientDetails = value; OnPropertyChanged(); }
+    }
+    
+    private bool _hasMoreAppointments;
+    public bool HasMoreAppointments
+    {
+        get => _hasMoreAppointments;
+        set { _hasMoreAppointments = value; OnPropertyChanged(); }
+    }
+
+    private string _moreAppointmentsText;
+    public string MoreAppointmentsText
+    {
+        get => _moreAppointmentsText;
+        set { _moreAppointmentsText = value; OnPropertyChanged(); }
+    }
+
+    public DashboardController(IRepository<Appointment> repository, IAuthService authService)
+    {
+        _repository = repository;
+        _authService = authService;
+    }
+
+    public async Task InitializeAsync()
+    {
+        var user = _authService.CurrentUser;
+        if (user == null) return;
+
+        var result = await _repository.GetAllAsync();
+        if (!result.Success || result.Data == null) return;
+
+        var allAppointments = result.Data.ToList();
+        var now = DateTime.Now;
+        var today = DateTime.Today;
+
+        if (user.Role == UserRole.Patient)
+        {
+            var upcomingAppts = allAppointments
+                .Where(a => a.ApplicationUserId == user.Id && a.AppointmentDate >= now)
+                .OrderBy(a => a.AppointmentDate)
+                .ToList();
+
+            if (upcomingAppts.Any())
+            {
+                var nextAppt = upcomingAppts.First();
+                PatientNextAppointmentDate = nextAppt.AppointmentDate.ToString("dddd, MMM dd - h:mm tt");
+                PatientNextAppointmentDetails = "Reason: " + (string.IsNullOrWhiteSpace(nextAppt.MedicalNotes) ? "General Checkup" : nextAppt.MedicalNotes);
+                
+                if (upcomingAppts.Count > 1)
+                {
+                    HasMoreAppointments = true;
+                    MoreAppointmentsText = $"See {upcomingAppts.Count - 1} More";
+                }
+                else
+                {
+                    HasMoreAppointments = false;
+                }
+            }
+            else
+            {
+                PatientNextAppointmentDate = "No upcoming appointments";
+                PatientNextAppointmentDetails = "Book a new appointment below";
+                HasMoreAppointments = false;
+            }
+        }
+        else if (user.Role == UserRole.Secretary)
+        {
+            int count = allAppointments.Count(a => a.AppointmentDate.Date == today);
+            AppointmentsTodayCount = count.ToString();
+        }
+        else if (user.Role == UserRole.Doctor)
+        {
+            var nextPatient = allAppointments
+                .Where(a => a.AppointmentDate >= now)
+                .OrderBy(a => a.AppointmentDate)
+                .FirstOrDefault();
+
+            if (nextPatient != null)
+            {
+                DoctorNextPatientTime = nextPatient.AppointmentDate.ToString("h:mm tt") + " - " + nextPatient.PatientName;
+                DoctorNextPatientDetails = "Reason: " + (string.IsNullOrWhiteSpace(nextPatient.MedicalNotes) ? "General Checkup" : nextPatient.MedicalNotes);
+            }
+        }
+    }
+
+    public event PropertyChangedEventHandler PropertyChanged;
+    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }
