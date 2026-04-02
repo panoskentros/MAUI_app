@@ -12,9 +12,10 @@ public partial class AppShell : Shell
     {
         InitializeComponent();
         _authService = authService;
+        _authService.UserChanged += (s, e) => UpdateMenuBasedOnRole();
     }
     
-    public void UpdateMenuBasedOnRole()
+    private void UpdateMenuBasedOnRole()
     {
         if (_authService.CurrentUser == null) return;
 
