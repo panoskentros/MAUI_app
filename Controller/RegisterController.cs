@@ -2,6 +2,7 @@ using MAUI_app.Data;
 using MAUI_app.Model;
 using MAUI_app.View;
 using MAUI_app.Services;
+using MAUI_app.View.Interfaces;
 
 namespace MAUI_app.Controller;
 
@@ -24,13 +25,13 @@ public class RegisterController
             string.IsNullOrWhiteSpace(user.Email) || 
             string.IsNullOrWhiteSpace(user.HashedPassword))
         {
-            await _view.ShowAlert("Validation", "Please fill in all fields.");
+            await _view.ShowAlert("Validation", "Please fill in all fields");
             return;
         }
 
         if (user.HashedPassword != confirmPassword)
         {
-            await _view.ShowAlert("Validation", "Passwords do not match.");
+            await _view.ShowAlert("Validation", "Passwords do not match");
             return;
         }
 

@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:view="clr-namespace:MAUI_app.View"
+             x:Class="MAUI_app.View.AppointmentsPage"
+             BackgroundColor="#F4F6F8"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto, *">
+        <view:HeaderBanner x:Name="PageBanner" Grid.Row="0" />
+
+        <VerticalStackLayout Grid.Row="1" Padding="20" Spacing="15">
+            <Label Text="All Scheduled Appointments" 
+                   FontSize="22" 
+                   FontAttributes="Bold" 
+                   TextColor="#2C3E50" />
+
+            <CollectionView x:Name="AllAppointmentsList" 
+                            ItemsSource="{Binding DailyAppointments}">
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Margin="0,50">
+                        <Label Text="No appointments found in database." HorizontalTextAlignment="Center" TextColor="Gray"/>
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border Margin="0,0,0,12" BackgroundColor="White" Padding="15" Stroke="#E0E6ED">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="12" />
+                            </Border.StrokeShape>
+                            
+                            <Grid ColumnDefinitions="Auto, *, Auto">
+                                <Border Grid.Column="0" BackgroundColor="#EBF5FB" Padding="10,5" VerticalOptions="Center">
+                                    <Border.StrokeShape><RoundRectangle CornerRadius="8"/></Border.StrokeShape>
+                                    <Label Text="{Binding AppointmentDate, StringFormat='{0:HH:mm}'}" 
+                                           FontAttributes="Bold" />
+                                </Border>
+
+                                <VerticalStackLayout Grid.Column="1" Margin="15,0" VerticalOptions="Center">
+                                    <Label Text="{Binding PatientName}" FontAttributes="Bold" FontSize="16" />
+                                    <Label Text="{Binding AppointmentDate, StringFormat='{0:dd MMM yyyy}'}" FontSize="13" TextColor="Gray" />
+                                </VerticalStackLayout>
+
+                                <Label Grid.Column="2" Text="{Binding Status}" 
+                                       VerticalOptions="Center" HorizontalOptions="End"
+                                       FontSize="12" FontAttributes="Bold" TextColor="#27AE60" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

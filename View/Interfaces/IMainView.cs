@@ -1,6 +1,6 @@
 using MAUI_app.Model;
 
-namespace MAUI_app.View;
+namespace MAUI_app.View.Interfaces;
 
 public interface IMainView
 {

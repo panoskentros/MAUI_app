@@ -65,15 +65,16 @@
                             </Border.StrokeShape>
     
                             <Grid ColumnDefinitions="Auto, *">
-                                <Image Grid.Column="0"
+                                <Image Grid.Column="0" 
                                        Source="user_icon.png" 
                                        WidthRequest="22" 
                                        HeightRequest="22" 
                                        Margin="15,0,10,0" 
                                        VerticalOptions="Center" />
-               
+                
                                 <Entry x:Name="UsernameOrEmailEntry" 
                                        Grid.Column="1" 
+                                       Margin="0,0,4,0"
                                        Placeholder="Username or Email" 
                                        BackgroundColor="Transparent" 
                                        TextColor="Black" 
@@ -91,14 +92,9 @@
                                 <RoundRectangle CornerRadius="8" />
                             </Border.StrokeShape>
     
-                            <Grid ColumnDefinitions="Auto, *">
-                                <Image Grid.Column="0"
-                                       Source="key_icon.png" 
-                                       WidthRequest="22" 
-                                       HeightRequest="22" 
-                                       Margin="15,0,10,0" 
-                                       VerticalOptions="Center" />
-               
+                            <Grid ColumnDefinitions="Auto, *, Auto">
+                                <Image Grid.Column="0" Source="key_icon.png" WidthRequest="22" HeightRequest="22" Margin="15,0,10,0" VerticalOptions="Center" />
+                                
                                 <Entry x:Name="PasswordEntry" 
                                        Grid.Column="1" 
                                        Placeholder="Password" 
@@ -108,15 +104,43 @@
                                        ReturnType="Done" 
                                        VerticalOptions="Center"
                                        Completed="OnLoginClicked"/>
+                                
+                                <Image x:Name="TogglePasswordBtn" 
+                                       Grid.Column="2" 
+                                       Source="eye_slash_icon.png" 
+                                       WidthRequest="22" 
+                                       HeightRequest="22" 
+                                       Aspect="AspectFit"
+                                       Margin="0,0,15,0" 
+                                       VerticalOptions="Center">
+                                    <Image.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="OnTogglePasswordClicked" />
+                                    </Image.GestureRecognizers>
+                                </Image>
                             </Grid>
                         </Border>
-
-                        <ActivityIndicator x:Name="LoadingIndicator" IsRunning="False" IsVisible="False" Color="#0D47A1" HeightRequest="40" />
                         
-                        <Button x:Name="LoginBtn" Text="Sign In" Clicked="OnLoginClicked" BackgroundColor="#0D47A1" TextColor="White" HeightRequest="50" CornerRadius="12" FontAttributes="Bold" Margin="0,10,0,0"/>
+                        <Grid Margin="0,10,0,0" HeightRequest="50">
+                            <Button x:Name="LoginBtn" 
+                                    Text="Sign In" 
+                                    Clicked="OnLoginClicked" 
+                                    BackgroundColor="#0D47A1" 
+                                    TextColor="White" 
+                                    CornerRadius="12" 
+                                    FontAttributes="Bold" />
+                            <ActivityIndicator x:Name="LoadingIndicator" 
+                                               IsRunning="False" 
+                                               IsVisible="False" 
+                                               Color="White" 
+                                               HeightRequest="25" 
+                                               WidthRequest="25" 
+                                               HorizontalOptions="Center" 
+                                               VerticalOptions="Center" 
+                                               InputTransparent="True" />
+                        </Grid>
                         <Button x:Name="GoToRegisterBtn" Text="New Patient? Register Here" Clicked="OnGoToRegisterClicked" BackgroundColor="Transparent" TextColor="#0D47A1" HeightRequest="50" CornerRadius="12" FontAttributes="Bold" />
                         
-                        <Button x:Name="ExitBtn" Text="EXIT" Clicked="OnExitClicked" BackgroundColor="#FF3B30" TextColor="White" FontSize="11" HeightRequest="40" CornerRadius="12" HorizontalOptions="Center" WidthRequest="100" Margin="0,20,0,0" />
+                        <Button x:Name="ExitBtn" Text="EXIT" Clicked="OnExitClicked" BackgroundColor="#FF3B30" TextColor="White" FontSize="11" HeightRequest="40" CornerRadius="12" HorizontalOptions="Center" WidthRequest="100" Margin="0,5,0,0" />
                         
                     </VerticalStackLayout>
                 </Grid>
