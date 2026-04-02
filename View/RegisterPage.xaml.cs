@@ -12,11 +12,11 @@ public partial class RegisterPage : ContentPage, IRegisterView
     private readonly RegisterController _controller;
     private ApplicationUser _model;
 
-    public RegisterPage(AppDbContext appDbContext)
+    public RegisterPage(IRepository<ApplicationUser> repository)
     {
         InitializeComponent();
         
-        _controller = new RegisterController(this, appDbContext);
+        _controller = new RegisterController(this, repository);
         _model = new ApplicationUser();
         BindingContext = _model;
     }
