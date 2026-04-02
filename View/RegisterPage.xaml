@@ -23,7 +23,7 @@
                     HorizontalOptions="Center"
                     MaximumWidthRequest="900"
                     WidthRequest="900"
-                    HeightRequest="600">
+                    HeightRequest="625">
                 
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="24" />
@@ -34,7 +34,8 @@
                 
                 <Grid ColumnDefinitions="*, *">
                     
-                    <VerticalStackLayout Grid.Column="0" Spacing="15" Padding="40" VerticalOptions="Center">
+                    <ScrollView Grid.Column="0" VerticalOptions="Fill">
+                        <VerticalStackLayout Spacing="15" Padding="40" VerticalOptions="Center">
                         
                         <Label x:Name="WelcomeLabel" Text="Join Us Today" FontSize="28" FontAttributes="Bold" TextColor="#1C1C1E" HorizontalOptions="Center" />
                         <Label x:Name="StatusLabel" Text="Create an account to book appointments and access your medical history" FontSize="14" TextColor="#8E8E93" HorizontalOptions="Center" HorizontalTextAlignment="Center" Margin="0,0,0,15"/>
@@ -111,6 +112,7 @@
                         <Button x:Name="BackToLoginBtn" Text="Back to Login" Clicked="OnBackToLoginClicked" BackgroundColor="Transparent" TextColor="#0D47A1" HeightRequest="50" CornerRadius="12" FontAttributes="Bold" />
                         
                     </VerticalStackLayout>
+                    </ScrollView>
 
                     <Grid Grid.Column="1">
                         <Image Source="hospital_hero.png" Aspect="AspectFill" />
