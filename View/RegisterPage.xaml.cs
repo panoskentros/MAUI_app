@@ -1,4 +1,5 @@
 using System;
+using FluentValidation;
 using MAUI_app.Controller;
 using MAUI_app.Data;
 using MAUI_app.Model;
@@ -12,11 +13,11 @@ public partial class RegisterPage : ContentPage, IRegisterView
     private readonly RegisterController _controller;
     private ApplicationUser _model;
 
-    public RegisterPage(IRepository<ApplicationUser> repository)
+    public RegisterPage(IRepository<ApplicationUser> repository, IValidator<ApplicationUser> validator)
     {
         InitializeComponent();
         
-        _controller = new RegisterController(this, repository);
+        _controller = new RegisterController(this, repository, validator);
         _model = new ApplicationUser();
         BindingContext = _model;
     }
@@ -70,6 +71,38 @@ public partial class RegisterPage : ContentPage, IRegisterView
     {
         await DisplayAlert(title, message, "OK");
     }
+    
+    public void ClearErrors()
+    {
+        UsernameError.IsVisible = false;
+        EmailError.IsVisible = false;
+        PasswordError.IsVisible = false;
+        ConfirmPasswordError.IsVisible = false;
+    }
+
+    public void ShowFieldError(string propertyName, string errorMessage)
+    {
+        switch (propertyName)
+        {
+            case "UserName":
+                UsernameError.Text = errorMessage;
+                UsernameError.IsVisible = true;
+                break;
+            case "Email":
+                EmailError.Text = errorMessage;
+                EmailError.IsVisible = true;
+                break;
+            case "HashedPassword":
+                PasswordError.Text = errorMessage;
+                PasswordError.IsVisible = true;
+                break;
+            case "ConfirmPassword":
+                ConfirmPasswordError.Text = errorMessage;
+                ConfirmPasswordError.IsVisible = true;
+                break;
+        }
+    }
+    
 
     public async Task NavigateBack()
     {
@@ -83,5 +116,11 @@ public partial class RegisterPage : ContentPage, IRegisterView
     private async void OnConfirmPasswordCompleted(object sender, EventArgs e)
     {
         await _controller.RegisterUserAsync(_model);
+    }
+    public void ClearFields()
+    {
+        _model = new ApplicationUser();
+        ConfirmPassword.Text = string.Empty;
+        BindingContext = _model;
     }
 }

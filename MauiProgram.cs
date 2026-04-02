@@ -4,6 +4,7 @@ using MAUI_app.Services;
 using MAUI_app.View;
 using Microsoft.Extensions.Logging;
 using CommunityToolkit.Maui;
+using FluentValidation;
 using MAUI_app.Controller;
 
 #if WINDOWS
@@ -42,11 +43,14 @@ public static class MauiProgram
         builder.Services.AddSingleton<IAuthService, AuthService>();
         builder.Services.AddScoped(typeof(IRepository<>), typeof(PostgreRepository<>));
         builder.Services.AddDbContext<AppDbContext>();
-        builder.Services.AddTransient<MainPage>();
+        builder.Services.AddTransient<LoginPage>();
         builder.Services.AddTransient<RegisterPage>();
         builder.Services.AddTransient<DashboardPage>();
         builder.Services.AddTransient<AppointmentsPage>();
         builder.Services.AddTransient<AppointmentsController>();
+        
+        // FLUENT VALIDATOR
+        builder.Services.AddValidatorsFromAssemblyContaining<App>();
 #if DEBUG
         builder.Logging.AddDebug();
 #endif

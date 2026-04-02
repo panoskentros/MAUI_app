@@ -6,4 +6,7 @@ public interface IRegisterView
     Task ShowAlert(string title, string message);
     Task NavigateBack();
     string GetConfirmPassword();
+    void ClearFields();
+    void ClearErrors();
+    void ShowFieldError(string propertyName, string errorMessage);
 }

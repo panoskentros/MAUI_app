@@ -1,3 +1,4 @@
+using FluentValidation;
 using MAUI_app.Data;
 using MAUI_app.Model;
 using MAUI_app.View;
@@ -11,38 +12,46 @@ public class RegisterController
 {
     private readonly IRegisterView _view;
     private IRepository<ApplicationUser> _repository;
+    private IValidator<ApplicationUser> _validator;
 
-    public RegisterController(IRegisterView view, IRepository<ApplicationUser>  repository)
+    public RegisterController(IRegisterView view, IRepository<ApplicationUser>  repository,IValidator<ApplicationUser> validator)
     {
         _view = view;
         _repository = repository;
+        _validator = validator;
     }
 
     public async Task RegisterUserAsync(ApplicationUser user)
-    {
+    { 
+        _view.ClearErrors();
+        
         var confirmPassword = _view.GetConfirmPassword();
-
-        if (string.IsNullOrWhiteSpace(user.UserName) || 
-            string.IsNullOrWhiteSpace(user.Email) || 
-            string.IsNullOrWhiteSpace(user.HashedPassword))
-        {
-            await _view.ShowAlert("Validation", "Please fill in all fields");
-            return;
-        }
-
+        
         if (user.HashedPassword != confirmPassword)
         {
-            await _view.ShowAlert("Validation", "Passwords do not match");
+            _view.ShowFieldError(nameof(ApplicationUser.HashedPassword), "Passwords do not match");
             return;
         }
-
-        _view.SetLoading(true);
         
+        var validationResult = await _validator.ValidateAsync(user);
+
+        if (!validationResult.IsValid)
+        {
+           
+            foreach (var error in validationResult.Errors)
+            {
+                _view.ShowFieldError(error.PropertyName, error.ErrorMessage);
+            }
+            return;
+        }
+        _view.SetLoading(true);
         try 
         {
             user.HashedPassword = PasswordHasher.HashPassword(user.HashedPassword);
-            
             await _repository.AddAsync(user,asDetached:true);
+            
+            _view.ClearFields();
+            _view.ClearErrors();
             await _view.ShowAlert("Success", "Account created successfully!");
             await _view.NavigateBack();
         }

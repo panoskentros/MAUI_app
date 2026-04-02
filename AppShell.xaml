@@ -121,7 +121,7 @@
     </Shell.FlyoutFooter>
 
     <ShellContent Title="Login"
-                  ContentTemplate="{DataTemplate view:MainPage}"
+                  ContentTemplate="{DataTemplate view:LoginPage}"
                   Route="LoginPage"
                   FlyoutItemIsVisible="False" />
 

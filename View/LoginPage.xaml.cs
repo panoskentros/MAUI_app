@@ -6,15 +6,15 @@ using MAUI_app.View.Interfaces;
 
 namespace MAUI_app.View;
 
-public partial class MainPage : ContentPage, IMainView
+public partial class LoginPage : ContentPage, ILoginView
 {
-    private readonly MainController _controller;
+    private readonly LoginController _controller;
     private readonly RegisterPage _registerPage;
-    public MainPage(IAuthService authService,RegisterPage registerPage)
+    public LoginPage(IAuthService authService,RegisterPage registerPage)
     {
         InitializeComponent();
         
-        _controller = new MainController(this, authService);
+        _controller = new LoginController(this, authService);
         _registerPage = registerPage;
     }
 

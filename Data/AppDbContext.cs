@@ -19,9 +19,20 @@ public class AppDbContext : DbContext
         {
             entity.HasIndex(u => u.UserName).IsUnique();
             entity.HasIndex(u => u.Email).IsUnique();
+
+            entity.Property(u => u.Id)
+                .UseIdentityByDefaultColumn();
         });
-        modelBuilder.Entity<Appointment>()
-            .HasIndex(a => new { a.AppointmentDate })
-            .IsUnique();
+        
+        modelBuilder.Entity<Appointment>(entity =>
+        {
+            entity.HasKey(a => a.Id);
+
+            entity.Property(a => a.Id)
+                .UseIdentityByDefaultColumn();
+
+            entity.HasIndex(a => a.AppointmentDate)
+                .IsUnique();
+        });
     }
 }

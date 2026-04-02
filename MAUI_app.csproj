@@ -38,6 +38,8 @@
         <PackageReference Include="BCrypt.Net-Next" Version="4.1.0" />
         <PackageReference Include="CommunityToolkit.Maui" Version="9.0.0" />
         <PackageReference Include="Duende.IdentityModel.OidcClient" Version="7.1.0" />
+        <PackageReference Include="FluentValidation" Version="12.1.1" />
+        <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.14">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -53,13 +55,13 @@
     </ItemGroup>
 
     <ItemGroup>
-      <MauiXaml Update="View\MainPage.xaml">
+      <MauiXaml Update="View\LoginPage.xaml">
         <SubType>Designer</SubType>
       </MauiXaml>
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Update="View\MainPage.xaml.cs">
+      <Compile Update="View\LoginPage.xaml.cs">
         <DependentUpon>MainPage.xaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
