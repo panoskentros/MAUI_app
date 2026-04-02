@@ -25,15 +25,12 @@ public class AuthService : IAuthService
         _userRepository = userRepository;
     }
     public bool IsLoggedIn => CurrentUser != null;
-    private void OnUserChanged()
-    {
-        UserChanged?.Invoke(this, EventArgs.Empty);
-    }
+    private void OnUserChanged() => UserChanged?.Invoke(this, EventArgs.Empty);
 
     
     public async Task<ApplicationUser?> LoginAsync(string usernameOrEmail, string password)
     {
-        var user = await _userRepository.GetQueryable()
+        var user = await _userRepository.GetQueryable().AsNoTracking()
             .FirstOrDefaultAsync(u => u.UserName == usernameOrEmail || u.Email == usernameOrEmail);
 
         if (user == null) return null;
@@ -43,7 +40,7 @@ public class AuthService : IAuthService
         if (isValid)
         {
             CurrentUser = user; 
-            UserChanged?.Invoke(this, EventArgs.Empty);
+            OnUserChanged();
             return user;
         }
 
