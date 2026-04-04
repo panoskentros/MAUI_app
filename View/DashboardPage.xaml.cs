@@ -22,7 +22,7 @@ public partial class DashboardPage : ContentPage
         await _controller.InitializeAsync();
     }
 
-    private async void OnBookAppointmentTapped(object sender, TappedEventArgs e)
+    private async void OnBookAppointmentTapped(object sender, EventArgs e)
     {
         if (sender is Border border)
         {

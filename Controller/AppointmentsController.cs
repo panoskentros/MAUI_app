@@ -18,6 +18,41 @@ public class AppointmentsController : INotifyPropertyChanged
         get => _dailyAppointments;
         set { _dailyAppointments = value; OnPropertyChanged(); }
     }
+    
+    private bool _isPatientViewVisible;
+    public bool IsPatientViewVisible
+    {
+        get => _isPatientViewVisible;
+        set { _isPatientViewVisible = value; OnPropertyChanged(); }
+    }
+
+    private bool _isSecretaryViewVisible;
+    public bool IsSecretaryViewVisible
+    {
+        get => _isSecretaryViewVisible;
+        set { _isSecretaryViewVisible = value; OnPropertyChanged(); }
+    }
+
+    private bool _isDoctorViewVisible;
+    public bool IsDoctorViewVisible
+    {
+        get => _isDoctorViewVisible;
+        set { _isDoctorViewVisible = value; OnPropertyChanged(); }
+    }
+    
+    private string _bannerTitle = string.Empty;
+    public string BannerTitle
+    {
+        get => _bannerTitle;
+        set { _bannerTitle = value; OnPropertyChanged(); }
+    }
+
+    private string _bannerWelcomeMessage = string.Empty;
+    public string BannerWelcomeMessage
+    {
+        get => _bannerWelcomeMessage;
+        set { _bannerWelcomeMessage = value; OnPropertyChanged(); }
+    }
 
     public AppointmentsController(IAppointmentService appointmentService, IUserService userService)
     {
@@ -29,16 +64,36 @@ public class AppointmentsController : INotifyPropertyChanged
     {
         var user = _userService.CurrentUser;
         if (user == null) return;
+        
+        IsPatientViewVisible = user.Role == UserRole.Patient;
+        IsSecretaryViewVisible = user.Role == UserRole.Secretary;
+        IsDoctorViewVisible = user.Role == UserRole.Doctor;
+
+        if (IsPatientViewVisible)
+        {
+            BannerTitle = "Appointments";
+            BannerWelcomeMessage = user.UserName;
+        }
+        else if (IsSecretaryViewVisible)
+        {
+            BannerTitle = "Clinic Appointments";
+            BannerWelcomeMessage = user.UserName;
+        }
+        else if (IsDoctorViewVisible)
+        {
+            BannerTitle = "Daily Schedule";
+            BannerWelcomeMessage = "Dr. " + user.UserName;
+        }
 
         List<Appointment> appointments;
 
-        if (user.Role == UserRole.Patient)
+        if (IsPatientViewVisible)
         {
             appointments = await _appointmentService.GetUpcomingAppointmentsForPatientAsync(user.Id);
         }
-        else if (user.Role == UserRole.Secretary)
+        else if (IsSecretaryViewVisible)
         {
-            appointments = await _appointmentService.GetUpcomingAppointmentsForClinicAsync();
+            appointments = await _appointmentService.GetUpcomingAppointmentsForClinicAsync(); 
         }
         else 
         {
