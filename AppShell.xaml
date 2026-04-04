@@ -133,10 +133,6 @@
         <ShellContent Route="appointments" ContentTemplate="{DataTemplate view:MyAppointmentsPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Book New" Icon="calendar_plus_solid.png">
-        <ShellContent Route="book" ContentTemplate="{DataTemplate view:BookAppointmentPage}" />
-    </FlyoutItem>
-
     <FlyoutItem x:Name="MedicalRecordsItem" Title="Medical Records" Icon="pill_icon.png" Shell.NavBarIsVisible="False">
         <ShellContent Route="medications" ContentTemplate="{DataTemplate view:MedicationsPage}" /> 
     </FlyoutItem>

@@ -18,6 +18,7 @@ public static class MauiProgram
 {
     public static MauiApp CreateMauiApp()
     {
+        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
@@ -50,6 +51,8 @@ public static class MauiProgram
         builder.Services.AddTransient<RegisterPage>();
         builder.Services.AddTransient<DashboardPage>();
         builder.Services.AddTransient<MyAppointmentsPage>();
+        builder.Services.AddTransient<BookAppointmentController>();
+        builder.Services.AddTransient<BookAppointmentPage>();
         builder.Services.AddTransient<AppointmentsController>();
         builder.Services.AddTransient<DashboardController>();
         builder.Services.AddTransient<MedicationsController>();

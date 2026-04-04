@@ -46,6 +46,20 @@ public class UserService : IUserService
 
         return Result<ApplicationUser>.Fail("Invalid username/email or password");
     }
+    
+    public async Task<List<ApplicationUser>> GetAllDoctorsAsync()
+    {
+        return await _userRepository.GetQueryable().AsNoTracking()
+            .Where(u => u.Role == UserRole.Doctor)
+            .ToListAsync();
+    }
+    
+    public async Task<List<ApplicationUser>> GetAllPatientsAsync()
+    {
+        return await _userRepository.GetQueryable().AsNoTracking()
+            .Where(u => u.Role == UserRole.Patient)
+            .ToListAsync();
+    }
 
     public async Task<IResult> RegisterAsync(ApplicationUser user)
     {

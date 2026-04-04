@@ -97,7 +97,7 @@ public class AppointmentsController : INotifyPropertyChanged
         }
         else 
         {
-            appointments = await _appointmentService.GetTodaysPatientsForDoctorAsync();
+            appointments = await _appointmentService.GetTodaysPatientsForDoctorAsync(user.Id);
         }
 
         DailyAppointments = new ObservableCollection<Appointment>(appointments);

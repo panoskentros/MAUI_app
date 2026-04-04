@@ -9,6 +9,8 @@ public interface IUserService
     bool IsLoggedIn { get; }
     event EventHandler? UserChanged;
     Task<IResult<ApplicationUser>> LoginAsync(string usernameOrEmail, string password);
+    Task<List<ApplicationUser>> GetAllDoctorsAsync();
+    Task<List<ApplicationUser>> GetAllPatientsAsync();
     Task<IResult> RegisterAsync(ApplicationUser user);
     void Logout();
 }

@@ -164,7 +164,7 @@ public class DashboardController : INotifyPropertyChanged
             BannerTitle = "Doctor Dashboard";
             BannerWelcomeMessage = "Dr. " + user.UserName;
 
-            var todaysPatients = await _appointmentService.GetTodaysPatientsForDoctorAsync();
+            var todaysPatients = await _appointmentService.GetTodaysPatientsForDoctorAsync(user.Id);
 
             if (todaysPatients.Any())
             {

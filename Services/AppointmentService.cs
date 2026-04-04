@@ -31,11 +31,15 @@ public class AppointmentService : IAppointmentService
             .CountAsync(a => a.AppointmentDate.Date == today);
     }
 
-    public async Task<List<Appointment>> GetTodaysPatientsForDoctorAsync()
+    public async Task<List<Appointment>> GetTodaysPatientsForDoctorAsync(int doctorId)
     {
-        var today = DateTime.Today;
+        var today = DateTime.Today; 
+        var tomorrow = today.AddDays(1);
+
         return await _appointmentRepo.GetQueryable().AsNoTracking()
-            .Where(a => a.AppointmentDate.Date == today)
+            .Where(a => a.DoctorId == doctorId &&
+                        a.AppointmentDate >= today && 
+                        a.AppointmentDate < tomorrow)
             .OrderBy(a => a.AppointmentDate)
             .ToListAsync();
     }
@@ -47,5 +51,10 @@ public class AppointmentService : IAppointmentService
             .Where(a => a.AppointmentDate >= today)
             .OrderBy(a => a.AppointmentDate)
             .ToListAsync();
+    }
+    
+    public async Task CreateAppointmentAsync(Appointment newAppointment)
+    {
+        await _appointmentRepo.AddAsync(newAppointment);
     }
 }

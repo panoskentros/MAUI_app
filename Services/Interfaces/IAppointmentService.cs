@@ -6,6 +6,7 @@ public interface IAppointmentService
 {
     Task<List<Appointment>> GetUpcomingAppointmentsForPatientAsync(int userId);
     Task<int> GetTodaysAppointmentCountAsync();
-    Task<List<Appointment>> GetTodaysPatientsForDoctorAsync();
+    Task<List<Appointment>> GetTodaysPatientsForDoctorAsync(int doctorId);
     Task<List<Appointment>> GetUpcomingAppointmentsForClinicAsync();
+    Task CreateAppointmentAsync(Appointment newAppointment);
 }

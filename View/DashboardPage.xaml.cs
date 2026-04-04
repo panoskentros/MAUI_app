@@ -30,7 +30,8 @@ public partial class DashboardPage : ContentPage
             await border.ScaleTo(1.0, 100);
         }
         
-        await Shell.Current.GoToAsync("//appointments");
+        var bookPage = Handler.MauiContext.Services.GetService<BookAppointmentPage>();
+        await Navigation.PushAsync(bookPage);
     }
     
     private async void OnViewAllAppointmentsClicked(object sender, EventArgs e)

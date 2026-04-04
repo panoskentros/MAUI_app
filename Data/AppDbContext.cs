@@ -24,12 +24,11 @@ public class AppDbContext : DbContext
                 if (property.ClrType == typeof(DateTime) || property.ClrType == typeof(DateTime?))
                 {
                     property.SetValueConverter(new Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<DateTime, DateTime>(
-                        // When saving TO the database: Convert any local/unspecified time to UTC 
-                        v => v.Kind == DateTimeKind.Utc ? v : v.ToUniversalTime(), 
-                
-                        // When reading FROM the database: Explicitly mark the incoming value 
-                        // as UTC so C# knows how to handle it correctly without crashing.
-                        v => DateTime.SpecifyKind(v, DateTimeKind.Utc)));          
+                        // 1. When saving: Strip any timezone info and save the raw number
+                        v => DateTime.SpecifyKind(v, DateTimeKind.Unspecified), 
+            
+                        // 2. When reading: Keep it as a raw number (Unspecified)
+                        v => DateTime.SpecifyKind(v, DateTimeKind.Unspecified)));          
                 }
             }
         }
