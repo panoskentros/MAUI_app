@@ -9,7 +9,7 @@ namespace MAUI_app.Controller;
 public class DashboardController : INotifyPropertyChanged
 {
     private readonly IRepository<Appointment> _repository;
-    private readonly IAuthService _authService;
+    private readonly IUserService _userService;
 
     private string _patientNextAppointmentDate = "No upcoming appointments";
     public string PatientNextAppointmentDate
@@ -74,15 +74,15 @@ public class DashboardController : INotifyPropertyChanged
         set { _doctorMorePatientsText = value; OnPropertyChanged(); }
     }
 
-    public DashboardController(IRepository<Appointment> repository, IAuthService authService)
+    public DashboardController(IRepository<Appointment> repository, IUserService userService)
     {
         _repository = repository;
-        _authService = authService;
+        _userService = userService;
     }
 
     public async Task InitializeAsync()
     {
-        var user = _authService.CurrentUser;
+        var user = _userService.CurrentUser;
         if (user == null) return;
 
         var result = await _repository.GetAllAsync();

@@ -14,11 +14,11 @@ public partial class RegisterPage : ContentPage, IRegisterView
     private readonly RegisterController _controller;
     private ApplicationUser _model;
 
-    public RegisterPage(IAuthService  authService)
+    public RegisterPage(IUserService  userService)
     {
         InitializeComponent();
         
-        _controller = new RegisterController(this,authService);
+        _controller = new RegisterController(this,userService);
         _model = new ApplicationUser();
         BindingContext = _model;
     }

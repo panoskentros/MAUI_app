@@ -6,21 +6,21 @@ namespace MAUI_app.View;
 public partial class MedicationsPage : ContentPage
 {
     private readonly MedicationsController _controller;
-    private readonly IAuthService _authService;
+    private readonly IUserService _userService;
     
-    public MedicationsPage(MedicationsController controller, IAuthService authService)
+    public MedicationsPage(MedicationsController controller, IUserService userService)
     {
         InitializeComponent();
         
         _controller = controller;
-        _authService = authService;
+        _userService = userService;
     }
 
     protected override void OnAppearing()
     {
         base.OnAppearing();
         
-        var user = _authService.CurrentUser;
+        var user = _userService.CurrentUser;
         if (user != null)
         {
             PageBanner.SetTitle("Medical Records");

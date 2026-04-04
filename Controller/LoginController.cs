@@ -7,12 +7,12 @@ namespace MAUI_app.Controller;
 public class LoginController
 {
     private readonly ILoginView _view;
-    private readonly IAuthService _authService;
+    private readonly IUserService _userService;
 
-    public LoginController(ILoginView view, IAuthService authService)
+    public LoginController(ILoginView view, IUserService userService)
     {
         _view = view;
-        _authService = authService;
+        _userService = userService;
     }
 
     public async Task LoginAsync(string usernameOrEmail, string password)
@@ -37,7 +37,7 @@ public class LoginController
 
         _view.SetLoading(true);
     
-        var result = await _authService.LoginAsync(usernameOrEmail, password);
+        var result = await _userService.LoginAsync(usernameOrEmail, password);
     
         _view.SetLoading(false);
 
@@ -57,7 +57,7 @@ public class LoginController
     public async Task LogoutAsync()
     {
         _view.SetLoading(true);
-        _authService.Logout();
+        _userService.Logout();
         await Task.Delay(300);
         _view.SetLoading(false);
         _view.ClearFields();
