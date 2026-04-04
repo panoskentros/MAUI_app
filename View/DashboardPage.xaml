@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:view="clr-namespace:MAUI_app.View"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="MAUI_app.View.DashboardPage"
              BackgroundColor="#F5F5F7"
@@ -9,12 +8,24 @@
 
     <Grid RowDefinitions="Auto, *">
         
-        <view:HeaderBanner x:Name="PageBanner" Grid.Row="0" />
+        <VerticalStackLayout Grid.Row="0" BackgroundColor="#0D47A1" Padding="20,40,20,20">
+            <Label Text="{Binding BannerWelcomeMessage}" 
+                   TextColor="#BBDEFB" 
+                   FontSize="14" 
+                   FontAttributes="Bold" 
+                   TextTransform="Uppercase" />
+            
+            <Label Text="{Binding BannerTitle}" 
+                   TextColor="White" 
+                   FontSize="28" 
+                   FontAttributes="Bold" 
+                   Margin="0,5,0,0" />
+        </VerticalStackLayout>
 
         <ScrollView Grid.Row="1" Margin="20,10,20,0">
             <VerticalStackLayout Spacing="20" Padding="0,0,0,30">
                 
-                <VerticalStackLayout x:Name="PatientView" Spacing="20" IsVisible="False">
+                <VerticalStackLayout x:Name="PatientView" Spacing="20" IsVisible="{Binding IsPatientViewVisible}">
 
                 <Border BackgroundColor="#0D47A1" StrokeThickness="0" Padding="20">
                     <Border.StrokeShape><RoundRectangle CornerRadius="16" /></Border.StrokeShape>
@@ -82,7 +93,7 @@
 
             </VerticalStackLayout>
             
-            <VerticalStackLayout x:Name="SecretaryView" Spacing="20" IsVisible="False">
+            <VerticalStackLayout x:Name="SecretaryView" Spacing="20" IsVisible="{Binding IsSecretaryViewVisible}">
 
                 <Border BackgroundColor="#F2F2F7" StrokeThickness="0" HeightRequest="50">
                     <Border.StrokeShape><RoundRectangle CornerRadius="8" /></Border.StrokeShape>
@@ -115,7 +126,7 @@
 
             </VerticalStackLayout>
 
-            <VerticalStackLayout x:Name="DoctorView" Spacing="20" IsVisible="False">
+            <VerticalStackLayout x:Name="DoctorView" Spacing="20" IsVisible="{Binding IsDoctorViewVisible}">
 
                 <Border BackgroundColor="White" Stroke="#E0E6ED" StrokeThickness="1" Padding="20">
                     <Border.StrokeShape><RoundRectangle CornerRadius="16" /></Border.StrokeShape>
