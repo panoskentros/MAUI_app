@@ -10,7 +10,7 @@ namespace MAUI_app.Controller;
 public class AppointmentsController : INotifyPropertyChanged
 {
     private readonly IRepository<Appointment> _repository;
-    private readonly IAuthService _authService;
+    private readonly IUserService _userService;
     
     private ObservableCollection<Appointment> _dailyAppointments = new();
     public ObservableCollection<Appointment> DailyAppointments
@@ -19,15 +19,15 @@ public class AppointmentsController : INotifyPropertyChanged
         set { _dailyAppointments = value; OnPropertyChanged(); }
     }
 
-    public AppointmentsController(IRepository<Appointment> repository, IAuthService authService)
+    public AppointmentsController(IRepository<Appointment> repository, IUserService userService)
     {
         _repository = repository;
-        _authService = authService;
+        _userService = userService;
     }
 
     public async Task InitializeAsync()
     {
-        var user = _authService.CurrentUser;
+        var user = _userService.CurrentUser;
         if (user == null) return;
 
         IResult<IEnumerable<Appointment>> result;

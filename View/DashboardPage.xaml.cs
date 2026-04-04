@@ -6,10 +6,10 @@ namespace MAUI_app.View;
 
 public partial class DashboardPage : ContentPage
 {
-    private readonly IAuthService _authService;
+    private readonly IUserService _authService;
     private readonly DashboardController _controller;
 
-    public DashboardPage(IAuthService authService, DashboardController controller)
+    public DashboardPage(IUserService authService, DashboardController controller)
     {
         InitializeComponent();
         _authService = authService;
