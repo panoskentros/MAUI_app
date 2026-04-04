@@ -1,5 +1,6 @@
 ﻿using MAUI_app.Model;
 using MAUI_app.Services;
+using MAUI_app.Services.Interfaces;
 using Microsoft.Maui.Controls;
 
 namespace MAUI_app;

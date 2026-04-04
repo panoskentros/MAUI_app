@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using CommunityToolkit.Maui;
 using FluentValidation;
 using MAUI_app.Controller;
+using MAUI_app.Services.Interfaces;
 
 #if WINDOWS
 using Microsoft.Maui.LifecycleEvents;
@@ -41,6 +42,8 @@ public static class MauiProgram
 #endif
         builder.Services.AddSingleton<AppShell>();
         builder.Services.AddSingleton<IUserService, UserService>();
+        builder.Services.AddSingleton<IAppointmentService, AppointmentService>();
+        
         builder.Services.AddScoped(typeof(IRepository<>), typeof(PostgreRepository<>));
         builder.Services.AddDbContext<AppDbContext>();
         builder.Services.AddTransient<LoginPage>();
