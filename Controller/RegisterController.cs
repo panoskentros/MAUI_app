@@ -8,12 +8,12 @@ namespace MAUI_app.Controller;
 public class RegisterController
 {
     private readonly IRegisterView _view;
-    private readonly IAuthService _authService;
+    private readonly IUserService _userService;
 
-    public RegisterController(IRegisterView view, IAuthService authService)
+    public RegisterController(IRegisterView view, IUserService userService)
     {
         _view = view;
-        _authService = authService;
+        _userService = userService;
     }
 
     public async Task RegisterUserAsync(ApplicationUser user)
@@ -28,7 +28,7 @@ public class RegisterController
 
         _view.SetLoading(true);
 
-        var registerResult = await _authService.RegisterAsync(user);
+        var registerResult = await _userService.RegisterAsync(user);
 
         _view.SetLoading(false);
 

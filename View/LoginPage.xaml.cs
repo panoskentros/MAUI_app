@@ -10,11 +10,11 @@ public partial class LoginPage : ContentPage, ILoginView
 {
     private readonly LoginController _controller;
     private readonly RegisterPage _registerPage;
-    public LoginPage(IAuthService authService,RegisterPage registerPage)
+    public LoginPage(IUserService userService,RegisterPage registerPage)
     {
         InitializeComponent();
         
-        _controller = new LoginController(this, authService);
+        _controller = new LoginController(this, userService);
         _registerPage = registerPage;
     }
 

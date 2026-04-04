@@ -6,20 +6,20 @@ namespace MAUI_app;
 
 public partial class AppShell : Shell
 {
-    private readonly IAuthService _authService;
+    private readonly IUserService _userService;
 
-    public AppShell(IAuthService  authService)
+    public AppShell(IUserService  userService)
     {
         InitializeComponent();
-        _authService = authService;
-        _authService.UserChanged += (s, e) => UpdateMenuBasedOnRole();
+        _userService = userService;
+        _userService.UserChanged += (s, e) => UpdateMenuBasedOnRole();
     }
     
     private void UpdateMenuBasedOnRole()
     {
-        if (_authService.CurrentUser == null) return;
+        if (_userService.CurrentUser == null) return;
 
-        var role = _authService.CurrentUser.Role;
+        var role = _userService.CurrentUser.Role;
 
         ScheduleItem.FlyoutItemIsVisible = false;
         AvailabilityItem.FlyoutItemIsVisible = false;
@@ -38,7 +38,7 @@ public partial class AppShell : Shell
     private async void OnSignOutTapped(object sender, TappedEventArgs e)
     {
         Current.FlyoutIsPresented = false;
-        _authService.Logout();
+        _userService.Logout();
         await Current.GoToAsync("//LoginPage");
     }
 }

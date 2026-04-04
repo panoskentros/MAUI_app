@@ -9,14 +9,14 @@ namespace MAUI_app.View;
 public partial class AppointmentsPage : ContentPage, IAppointmentsView
 {
     private readonly AppointmentsController _controller;
-    private readonly IAuthService _authService;
+    private readonly IUserService _userService;
 
-    public AppointmentsPage(AppointmentsController controller, IAuthService authService)
+    public AppointmentsPage(AppointmentsController controller, IUserService userService)
     {
         InitializeComponent();
         
         _controller = controller;
-        _authService = authService;
+        _userService = userService;
         BindingContext = _controller; 
     }
 
@@ -24,7 +24,7 @@ public partial class AppointmentsPage : ContentPage, IAppointmentsView
     {
         base.OnAppearing();
         
-        var user = _authService.CurrentUser;
+        var user = _userService.CurrentUser;
         if (user != null)
         {
             if (user.Role == UserRole.Doctor)
