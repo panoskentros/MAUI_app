@@ -49,7 +49,7 @@ public static class MauiProgram
         builder.Services.AddTransient<LoginPage>();
         builder.Services.AddTransient<RegisterPage>();
         builder.Services.AddTransient<DashboardPage>();
-        builder.Services.AddTransient<AppointmentsPage>();
+        builder.Services.AddTransient<MyAppointmentsPage>();
         builder.Services.AddTransient<AppointmentsController>();
         builder.Services.AddTransient<DashboardController>();
         builder.Services.AddTransient<MedicationsController>();

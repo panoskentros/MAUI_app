@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:view="clr-namespace:MAUI_app.View"
-             x:Class="MAUI_app.View.AppointmentsPage"
+             x:Class="MAUI_app.View.MyAppointmentsPage"
              BackgroundColor="#F4F6F8"
              Shell.NavBarIsVisible="False">
 

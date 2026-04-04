@@ -7,12 +7,12 @@ using MAUI_app.View.Interfaces;
 
 namespace MAUI_app.View;
 
-public partial class AppointmentsPage : ContentPage, IAppointmentsView
+public partial class MyAppointmentsPage : ContentPage, IAppointmentsView
 {
     private readonly AppointmentsController _controller;
     private readonly IUserService _userService;
 
-    public AppointmentsPage(AppointmentsController controller, IUserService userService)
+    public MyAppointmentsPage(AppointmentsController controller, IUserService userService)
     {
         InitializeComponent();
         
