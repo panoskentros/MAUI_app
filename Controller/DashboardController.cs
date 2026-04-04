@@ -72,8 +72,44 @@ public class DashboardController : INotifyPropertyChanged
         set { _doctorMorePatientsText = value; OnPropertyChanged(); }
     }
 
+    private bool _isPatientViewVisible;
+    public bool IsPatientViewVisible
+    {
+        get => _isPatientViewVisible;
+        set { _isPatientViewVisible = value; OnPropertyChanged(); }
+    }
+
+    private bool _isSecretaryViewVisible;
+    public bool IsSecretaryViewVisible
+    {
+        get => _isSecretaryViewVisible;
+        set { _isSecretaryViewVisible = value; OnPropertyChanged(); }
+    }
+
+    private bool _isDoctorViewVisible;
+    public bool IsDoctorViewVisible
+    {
+        get => _isDoctorViewVisible;
+        set { _isDoctorViewVisible = value; OnPropertyChanged(); }
+    }
+
+    private string _bannerTitle = string.Empty;
+    public string BannerTitle
+    {
+        get => _bannerTitle;
+        set { _bannerTitle = value; OnPropertyChanged(); }
+    }
+
+    private string _bannerWelcomeMessage = string.Empty;
+    public string BannerWelcomeMessage
+    {
+        get => _bannerWelcomeMessage;
+        set { _bannerWelcomeMessage = value; OnPropertyChanged(); }
+    }
+
     private readonly IAppointmentService _appointmentService;
     private readonly IUserService _userService;
+
     public DashboardController(IAppointmentService appointmentService, IUserService userService)
     {
         _appointmentService = appointmentService;
@@ -85,8 +121,15 @@ public class DashboardController : INotifyPropertyChanged
         var user = _userService.CurrentUser;
         if (user == null) return;
 
-        if (user.Role == UserRole.Patient)
+        IsPatientViewVisible = user.Role == UserRole.Patient;
+        IsSecretaryViewVisible = user.Role == UserRole.Secretary;
+        IsDoctorViewVisible = user.Role == UserRole.Doctor;
+
+        if (IsPatientViewVisible)
         {
+            BannerTitle = "Patient Dashboard";
+            BannerWelcomeMessage = user.UserName;
+
             var upcomingAppts = await _appointmentService.GetUpcomingAppointmentsForPatientAsync(user.Id);
 
             if (upcomingAppts.Any())
@@ -108,13 +151,19 @@ public class DashboardController : INotifyPropertyChanged
                 HasMoreAppointments = false;
             }
         }
-        else if (user.Role == UserRole.Secretary)
+        else if (IsSecretaryViewVisible)
         {
+            BannerTitle = "Clinic Control Center";
+            BannerWelcomeMessage = user.UserName;
+
             int count = await _appointmentService.GetTodaysAppointmentCountAsync();
             AppointmentsTodayCount = count.ToString();
         }
-        else if (user.Role == UserRole.Doctor)
+        else if (IsDoctorViewVisible)
         {
+            BannerTitle = "Doctor Dashboard";
+            BannerWelcomeMessage = "Dr. " + user.UserName;
+
             var todaysPatients = await _appointmentService.GetTodaysPatientsForDoctorAsync();
 
             if (todaysPatients.Any())
@@ -139,7 +188,7 @@ public class DashboardController : INotifyPropertyChanged
     }
 
     public event PropertyChangedEventHandler PropertyChanged;
-    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "")
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
