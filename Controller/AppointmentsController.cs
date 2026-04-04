@@ -1,15 +1,15 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using MAUI_app.Data;
 using MAUI_app.Model;
 using MAUI_app.Services;
+using MAUI_app.Services.Interfaces;
 
 namespace MAUI_app.Controller;
 
 public class AppointmentsController : INotifyPropertyChanged
 {
-    private readonly IRepository<Appointment> _repository;
+    private readonly IAppointmentService _appointmentService;
     private readonly IUserService _userService;
     
     private ObservableCollection<Appointment> _dailyAppointments = new();
@@ -19,9 +19,9 @@ public class AppointmentsController : INotifyPropertyChanged
         set { _dailyAppointments = value; OnPropertyChanged(); }
     }
 
-    public AppointmentsController(IRepository<Appointment> repository, IUserService userService)
+    public AppointmentsController(IAppointmentService appointmentService, IUserService userService)
     {
-        _repository = repository;
+        _appointmentService = appointmentService;
         _userService = userService;
     }
 
@@ -30,51 +30,26 @@ public class AppointmentsController : INotifyPropertyChanged
         var user = _userService.CurrentUser;
         if (user == null) return;
 
-        IResult<IEnumerable<Appointment>> result;
+        List<Appointment> appointments;
 
         if (user.Role == UserRole.Patient)
         {
-            result = await _repository.GetAllAsync(a => a.ApplicationUserId == user.Id);
-            
-            if (result.Success && result.Data != null)
-            {
-                var patientAppts = result.Data
-                    .Where(a => a.AppointmentDate >= DateTime.Today)
-                    .OrderBy(a => a.AppointmentDate)
-                    .ToList();
-                DailyAppointments = new ObservableCollection<Appointment>(patientAppts);
-            }
+            appointments = await _appointmentService.GetUpcomingAppointmentsForPatientAsync(user.Id);
         }
         else if (user.Role == UserRole.Secretary)
         {
-            result = await _repository.GetAllAsync();
-            
-            if (result.Success && result.Data != null)
-            {
-                var clinicAppts = result.Data
-                    .Where(a => a.AppointmentDate >= DateTime.Today)
-                    .OrderBy(a => a.AppointmentDate)
-                    .ToList();
-                DailyAppointments = new ObservableCollection<Appointment>(clinicAppts);
-            }
+            appointments = await _appointmentService.GetUpcomingAppointmentsForClinicAsync();
         }
-        else if (user.Role == UserRole.Doctor)
+        else 
         {
-            result = await _repository.GetAllAsync();
-            
-            if (result.Success && result.Data != null)
-            {
-                var todaysAppts = result.Data
-                    .Where(a => a.AppointmentDate.Date == DateTime.Today.Date)
-                    .OrderBy(a => a.AppointmentDate)
-                    .ToList();
-                DailyAppointments = new ObservableCollection<Appointment>(todaysAppts);
-            }
+            appointments = await _appointmentService.GetTodaysPatientsForDoctorAsync();
         }
+
+        DailyAppointments = new ObservableCollection<Appointment>(appointments);
     }
 
-    public event PropertyChangedEventHandler PropertyChanged;
-    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    public event PropertyChangedEventHandler? PropertyChanged;
+    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "")
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }

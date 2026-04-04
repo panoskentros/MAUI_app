@@ -3,14 +3,12 @@ using System.Runtime.CompilerServices;
 using MAUI_app.Data;
 using MAUI_app.Model;
 using MAUI_app.Services;
+using MAUI_app.Services.Interfaces;
 
 namespace MAUI_app.Controller;
 
 public class DashboardController : INotifyPropertyChanged
 {
-    private readonly IRepository<Appointment> _repository;
-    private readonly IUserService _userService;
-
     private string _patientNextAppointmentDate = "No upcoming appointments";
     public string PatientNextAppointmentDate
     {
@@ -74,9 +72,11 @@ public class DashboardController : INotifyPropertyChanged
         set { _doctorMorePatientsText = value; OnPropertyChanged(); }
     }
 
-    public DashboardController(IRepository<Appointment> repository, IUserService userService)
+    private readonly IAppointmentService _appointmentService;
+    private readonly IUserService _userService;
+    public DashboardController(IAppointmentService appointmentService, IUserService userService)
     {
-        _repository = repository;
+        _appointmentService = appointmentService;
         _userService = userService;
     }
 
@@ -85,19 +85,9 @@ public class DashboardController : INotifyPropertyChanged
         var user = _userService.CurrentUser;
         if (user == null) return;
 
-        var result = await _repository.GetAllAsync();
-        if (!result.Success || result.Data == null) return;
-
-        var allAppointments = result.Data.ToList();
-        var now = DateTime.Now;
-        var today = DateTime.Today;
-
         if (user.Role == UserRole.Patient)
         {
-            var upcomingAppts = allAppointments
-                .Where(a => a.ApplicationUserId == user.Id && a.AppointmentDate >= now)
-                .OrderBy(a => a.AppointmentDate)
-                .ToList();
+            var upcomingAppts = await _appointmentService.GetUpcomingAppointmentsForPatientAsync(user.Id);
 
             if (upcomingAppts.Any())
             {
@@ -105,14 +95,10 @@ public class DashboardController : INotifyPropertyChanged
                 PatientNextAppointmentDate = nextAppt.AppointmentDate.ToString("dddd, MMM dd - h:mm tt");
                 PatientNextAppointmentDetails = "Reason: " + (string.IsNullOrWhiteSpace(nextAppt.MedicalNotes) ? "General Checkup" : nextAppt.MedicalNotes);
                 
-                if (upcomingAppts.Count > 1)
+                HasMoreAppointments = upcomingAppts.Count > 1;
+                if (HasMoreAppointments)
                 {
-                    HasMoreAppointments = true;
                     MoreAppointmentsText = $"See {upcomingAppts.Count - 1} More";
-                }
-                else
-                {
-                    HasMoreAppointments = false;
                 }
             }
             else
@@ -124,15 +110,12 @@ public class DashboardController : INotifyPropertyChanged
         }
         else if (user.Role == UserRole.Secretary)
         {
-            int count = allAppointments.Count(a => a.AppointmentDate.Date == today);
+            int count = await _appointmentService.GetTodaysAppointmentCountAsync();
             AppointmentsTodayCount = count.ToString();
         }
         else if (user.Role == UserRole.Doctor)
         {
-            var todaysPatients = allAppointments
-                .Where(a => a.AppointmentDate.Date == today.Date && a.AppointmentDate >= now)
-                .OrderBy(a => a.AppointmentDate)
-                .ToList();
+            var todaysPatients = await _appointmentService.GetTodaysPatientsForDoctorAsync();
 
             if (todaysPatients.Any())
             {
@@ -140,14 +123,10 @@ public class DashboardController : INotifyPropertyChanged
                 DoctorNextPatientTime = nextPatient.AppointmentDate.ToString("h:mm tt") + " - " + nextPatient.PatientName;
                 DoctorNextPatientDetails = "Reason: " + (string.IsNullOrWhiteSpace(nextPatient.MedicalNotes) ? "Standard Checkup" : nextPatient.MedicalNotes);
 
-                if (todaysPatients.Count > 1)
+                DoctorHasMorePatients = todaysPatients.Count > 1;
+                if (DoctorHasMorePatients)
                 {
-                    DoctorHasMorePatients = true;
                     DoctorMorePatientsText = $"See {todaysPatients.Count - 1} More Today";
-                }
-                else
-                {
-                    DoctorHasMorePatients = false;
                 }
             }
             else

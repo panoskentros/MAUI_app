@@ -1,19 +1,10 @@
 using FluentValidation;
 using MAUI_app.Data;
 using MAUI_app.Model;
+using MAUI_app.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace MAUI_app.Services;
-
-public interface IUserService
-{
-    ApplicationUser? CurrentUser { get; }
-    bool IsLoggedIn { get; }
-    event EventHandler? UserChanged;
-    Task<IResult<ApplicationUser>> LoginAsync(string usernameOrEmail, string password);
-    Task<IResult> RegisterAsync(ApplicationUser user);
-    void Logout();
-}
 
 public class UserService : IUserService
 {
