@@ -160,9 +160,9 @@ public class BookAppointmentController : INotifyPropertyChanged
 
         var newAppointment = new Appointment
         {
-            ApplicationUserId = (IsSecretaryViewVisible || IsDoctorViewVisible) ? SelectedPatient.Id : currentUser.Id, 
+            ApplicationUserId = correctPatientId, 
             DoctorId = SelectedDoctor.Id,       
-            PatientName = (IsSecretaryViewVisible || IsDoctorViewVisible) ? SelectedPatient.UserName : currentUser.UserName,
+            PatientName = correctPatientName,
             AppointmentDate = cleanDate,
             MedicalNotes = this.MedicalNotes,
             Status = "Scheduled"

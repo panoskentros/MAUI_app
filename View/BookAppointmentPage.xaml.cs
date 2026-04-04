@@ -1,24 +1,21 @@
 using MAUI_app.Controller;
-using MAUI_app.Data;
-using MAUI_app.Model;
-using MAUI_app.Services;
 using MAUI_app.Services.Interfaces;
 using MAUI_app.View.Interfaces;
 
 namespace MAUI_app.View;
 
-public partial class BookAppointmentPage  : ContentPage, IAppointmentsView
+public partial class BookAppointmentPage  : IAppointmentsView
 {
     private readonly BookAppointmentController _controller;
     private readonly IUserService _userService;
 
-    public BookAppointmentPage(BookAppointmentController controller, IUserService userService)
+    public BookAppointmentPage(BookAppointmentController controller)
     {
         InitializeComponent();
         
         _controller = controller;
-        _userService = userService;
-        BindingContext = _controller; 
+        _controller = controller;
+        BindingContext = _controller;
     }
     
     protected override async void OnAppearing()
