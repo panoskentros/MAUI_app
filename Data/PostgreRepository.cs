@@ -38,7 +38,7 @@ public class PostgreRepository<T> : IRepository<T> where T : class
           query = query.Include(include);
 
        var entities = await query.ToListAsync(cancellationToken);
-       return Result<IEnumerable<T>>.Ok(entities);
+       return Result<IEnumerable<T>>.Ok(entities,String.Empty);
     }
     
     public async Task<IResult<IEnumerable<T>>> GetAllAsync(
@@ -60,7 +60,7 @@ public class PostgreRepository<T> : IRepository<T> where T : class
 
        var entities = await query.ToListAsync(cancellationToken);
     
-       return Result<IEnumerable<T>>.Ok(entities);
+       return Result<IEnumerable<T>>.Ok(entities, String.Empty);
     }
 
     public async Task<IResult<T>> GetByIdAsync(
@@ -107,7 +107,7 @@ public class PostgreRepository<T> : IRepository<T> where T : class
 
        return entity == null
           ? Result<T>.Fail($"Entity with {keyName} = {id} not found.")
-          : Result<T>.Ok(entity);
+          : Result<T>.Ok(entity,string.Empty);
     }
 
     public async Task<IResult<T>?> GetByIdAsync(object[] keyValues)
@@ -142,7 +142,7 @@ public class PostgreRepository<T> : IRepository<T> where T : class
 
         var entity = _dbSet.FirstOrDefault(lambda);
 
-        return Result<T>.Ok(entity);
+        return Result<T>.Ok(entity,String.Empty);
     }
 
     public async Task<IResult<T>> AddAsync(T entity, CancellationToken cancellationToken = default, bool asDetached = false)
@@ -286,7 +286,7 @@ public class PostgreRepository<T> : IRepository<T> where T : class
 
        return entity == null
           ? Result<T>.Fail($"Entity with ID {id} not found.")
-          : Result<T>.Ok(entity);
+          : Result<T>.Ok(entity,String.Empty);
     }
     
     public async Task<int> CountAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
