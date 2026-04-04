@@ -15,8 +15,20 @@
         <HorizontalStackLayout Spacing="15" VerticalOptions="Center">
             <Image Source="medical_logo.png" HeightRequest="50" WidthRequest="50" />
             <VerticalStackLayout VerticalOptions="Center">
-                <Label x:Name="BannerTitleLabel" Text="Patient Dashboard" TextColor="#BBDEFB" FontSize="14" FontAttributes="Bold"/>
-                <Label x:Name="WelcomeLabel" Text="Welcome!" TextColor="White" FontSize="24" FontAttributes="Bold"/>
+                
+                <Label x:Name="BannerTitleLabel" 
+                       Text="{Binding BannerTitle}" 
+                       TextColor="#BBDEFB" 
+                       FontSize="14" 
+                       FontAttributes="Bold"
+                       TextTransform="Uppercase"/>
+                
+                <Label x:Name="WelcomeLabel" 
+                       Text="{Binding BannerWelcomeMessage, StringFormat='Welcome, {0}!'}" 
+                       TextColor="White" 
+                       FontSize="24" 
+                       FontAttributes="Bold"/>
+                       
             </VerticalStackLayout>
         </HorizontalStackLayout>
     </Border>

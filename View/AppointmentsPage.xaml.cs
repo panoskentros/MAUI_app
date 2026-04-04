@@ -24,18 +24,6 @@ public partial class AppointmentsPage : ContentPage, IAppointmentsView
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        
-        var user = _userService.CurrentUser;
-        if (user != null)
-        {
-            if (user.Role == UserRole.Doctor)
-                PageBanner.SetTitle("Daily Schedule"); 
-            else
-                PageBanner.SetTitle("Appointments");
-
-            PageBanner.SetWelcomeMessage(user.Role == UserRole.Doctor ? "Dr. " + user.UserName : user.UserName);
-        }
-
         await _controller.InitializeAsync();
     }
 }
