@@ -3,6 +3,7 @@ using FluentValidation;
 using MAUI_app.Controller;
 using MAUI_app.Data;
 using MAUI_app.Model;
+using MAUI_app.Services;
 using MAUI_app.View.Interfaces;
 
 namespace MAUI_app.View;
@@ -13,11 +14,11 @@ public partial class RegisterPage : ContentPage, IRegisterView
     private readonly RegisterController _controller;
     private ApplicationUser _model;
 
-    public RegisterPage(IRepository<ApplicationUser> repository, IValidator<ApplicationUser> validator)
+    public RegisterPage(IAuthService  authService)
     {
         InitializeComponent();
         
-        _controller = new RegisterController(this, repository, validator);
+        _controller = new RegisterController(this,authService);
         _model = new ApplicationUser();
         BindingContext = _model;
     }
