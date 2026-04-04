@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MAUI_app.Services;
 
-public interface IAuthService
+public interface IUserService
 {
     ApplicationUser? CurrentUser { get; }
     bool IsLoggedIn { get; }
@@ -15,7 +15,7 @@ public interface IAuthService
     void Logout();
 }
 
-public class UserService : IAuthService
+public class UserService : IUserService
 {
     private readonly IRepository<ApplicationUser> _userRepository;
     private readonly IValidator<ApplicationUser> _validator;
