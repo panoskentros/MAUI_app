@@ -8,7 +8,7 @@ public class Appointment
     public string PatientName { get; set; }
     public DateTime AppointmentDate { get; set; }
     public string Status { get; set; } 
-    public string MedicalNotes { get; set; } 
+    public string? MedicalNotes { get; set; } 
     
     [Column("ApplicationUserId")]
     public int ApplicationUserId { get; set; }
