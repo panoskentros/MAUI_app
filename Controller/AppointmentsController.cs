@@ -100,7 +100,22 @@ public class AppointmentsController : INotifyPropertyChanged
             appointments = await _appointmentService.GetTodaysPatientsForDoctorAsync(user.Id);
         }
 
-        DailyAppointments = new ObservableCollection<Appointment>(appointments);
+        var allDoctors = await _userService.GetAllDoctorsAsync();
+        DailyAppointments.Clear();
+        foreach (var appt in appointments)
+        {
+            if (IsPatientViewVisible)
+            {
+                var doctor = allDoctors.FirstOrDefault(d => d.Id == appt.DoctorId);
+                appt.DisplayName = doctor != null ? "Dr. " + doctor.UserName : "Unknown Doctor";
+            }
+            else
+            {
+                appt.DisplayName = appt.PatientName;
+            }
+
+            DailyAppointments.Add(appt);
+        }
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
