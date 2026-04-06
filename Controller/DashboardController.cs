@@ -7,7 +7,7 @@ using MAUI_app.Services.Interfaces;
 
 namespace MAUI_app.Controller;
 
-public class DashboardController : INotifyPropertyChanged
+public class DashboardController : BaseController
 {
     private string _patientNextAppointmentDate = "No upcoming appointments";
     public string PatientNextAppointmentDate
@@ -72,45 +72,10 @@ public class DashboardController : INotifyPropertyChanged
         set { _doctorMorePatientsText = value; OnPropertyChanged(); }
     }
 
-    private bool _isPatientViewVisible;
-    public bool IsPatientViewVisible
-    {
-        get => _isPatientViewVisible;
-        set { _isPatientViewVisible = value; OnPropertyChanged(); }
-    }
-
-    private bool _isSecretaryViewVisible;
-    public bool IsSecretaryViewVisible
-    {
-        get => _isSecretaryViewVisible;
-        set { _isSecretaryViewVisible = value; OnPropertyChanged(); }
-    }
-
-    private bool _isDoctorViewVisible;
-    public bool IsDoctorViewVisible
-    {
-        get => _isDoctorViewVisible;
-        set { _isDoctorViewVisible = value; OnPropertyChanged(); }
-    }
-
-    private string _bannerTitle = string.Empty;
-    public string BannerTitle
-    {
-        get => _bannerTitle;
-        set { _bannerTitle = value; OnPropertyChanged(); }
-    }
-
-    private string _bannerWelcomeMessage = string.Empty;
-    public string BannerWelcomeMessage
-    {
-        get => _bannerWelcomeMessage;
-        set { _bannerWelcomeMessage = value; OnPropertyChanged(); }
-    }
-
     private readonly IAppointmentService _appointmentService;
     private readonly IUserService _userService;
 
-    public DashboardController(IAppointmentService appointmentService, IUserService userService)
+    public DashboardController(IAppointmentService appointmentService, IUserService userService) : base(userService)
     {
         _appointmentService = appointmentService;
         _userService = userService;
@@ -127,8 +92,7 @@ public class DashboardController : INotifyPropertyChanged
 
         if (IsPatientViewVisible)
         {
-            BannerTitle = "Patient Dashboard";
-            BannerWelcomeMessage = user.UserName;
+            SetupBanner("Patient Dashboard", true);
 
             var upcomingAppts = await _appointmentService.GetUpcomingAppointmentsForPatientAsync(user.Id);
 
@@ -153,16 +117,14 @@ public class DashboardController : INotifyPropertyChanged
         }
         else if (IsSecretaryViewVisible)
         {
-            BannerTitle = "Clinic Control Center";
-            BannerWelcomeMessage = user.UserName;
+            SetupBanner("Clinic Control Center", true);
 
             int count = await _appointmentService.GetTodaysAppointmentCountAsync();
             AppointmentsTodayCount = count.ToString();
         }
         else if (IsDoctorViewVisible)
         {
-            BannerTitle = "Doctor Dashboard";
-            BannerWelcomeMessage = "Dr. " + user.UserName;
+            SetupBanner("Doctor Dashboard", true);
 
             var todaysPatients = await _appointmentService.GetTodaysPatientsForDoctorAsync(user.Id);
 

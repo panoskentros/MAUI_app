@@ -1,12 +1,21 @@
 ﻿using MAUI_app.Model;
+using MAUI_app.Services.Interfaces;
 
 namespace MAUI_app.Controller;
 
-public class SettingsController
+public class SettingsController : BaseController
 {
+    public SettingsController(IUserService userService) : base(userService)
+    {
+    }
+
+    public void InitializeAsync()
+    {
+        SetupBanner("Settings", true);
+    }
+
     public UserSettings GetCurrentUserPreferences()
     {
-        // Mock database call to get the user's saved preferences
         return new UserSettings
         {
             NotificationsEnabled = true
@@ -15,6 +24,5 @@ public class SettingsController
 
     public void SaveUserPreferences(UserSettings settings)
     {
-        // Here you would save the changes back to your database!
     }
 }

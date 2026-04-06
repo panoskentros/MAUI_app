@@ -6,50 +6,15 @@ using MAUI_app.Services.Interfaces;
 
 namespace MAUI_app.Controller;
 
-public class BookAppointmentController : INotifyPropertyChanged
+public class BookAppointmentController : BaseController
 {
     private readonly IAppointmentService _appointmentService; 
     private readonly IUserService _userService;
     
-    public BookAppointmentController(IAppointmentService appointmentService, IUserService userService)
+    public BookAppointmentController(IAppointmentService appointmentService, IUserService userService) : base(userService)
     {
         _appointmentService = appointmentService;
         _userService = userService;
-    }
-    
-    private string _bannerTitle = string.Empty;
-    public string BannerTitle
-    {
-        get => _bannerTitle;
-        set { _bannerTitle = value; OnPropertyChanged(); }
-    }
-
-    private string _bannerWelcomeMessage = string.Empty;
-    public string BannerWelcomeMessage
-    {
-        get => _bannerWelcomeMessage;
-        set { _bannerWelcomeMessage = value; OnPropertyChanged(); }
-    }
-    
-    private bool _isPatientViewVisible;
-    public bool IsPatientViewVisible
-    {
-        get => _isPatientViewVisible;
-        set { _isPatientViewVisible = value; OnPropertyChanged(); }
-    }
-
-    private bool _isSecretaryViewVisible;
-    public bool IsSecretaryViewVisible
-    {
-        get => _isSecretaryViewVisible;
-        set { _isSecretaryViewVisible = value; OnPropertyChanged(); }
-    }
-
-    private bool _isDoctorViewVisible;
-    public bool IsDoctorViewVisible
-    {
-        get => _isDoctorViewVisible;
-        set { _isDoctorViewVisible = value; OnPropertyChanged(); }
     }
     
     public ObservableCollection<ApplicationUser> AvailableDoctors { get; set; } = new();
@@ -91,13 +56,6 @@ public class BookAppointmentController : INotifyPropertyChanged
         set { _medicalNotes = value; OnPropertyChanged(); }
     }
 
-    private string _patientNameInput;
-    public string PatientNameInput
-    {
-        get => _patientNameInput;
-        set { _patientNameInput = value; OnPropertyChanged(); }
-    }
-
     public async Task InitializeAsync()
     {
         var user = _userService.CurrentUser;
@@ -109,18 +67,15 @@ public class BookAppointmentController : INotifyPropertyChanged
         
         if (IsPatientViewVisible)
         {
-            BannerTitle = "Book Appointment";
-            BannerWelcomeMessage = "Schedule a Visit";
+            SetupBanner("Book Appointment", false, "Schedule a Visit");
         }
         else if (IsSecretaryViewVisible)
         {
-            BannerTitle = "Clinic Reception";
-            BannerWelcomeMessage = "Book Walk-in / Call-in";
+            SetupBanner("Clinic Reception", false, "Book Walk-in / Call-in");
         }
         else if (IsDoctorViewVisible)
         {
-            BannerTitle = "Doctor Tools";
-            BannerWelcomeMessage = "Schedule Follow-up";
+            SetupBanner("Doctor Tools", false, "Schedule Follow-up");
         }
         
         var doctors = await _userService.GetAllDoctorsAsync(); 
@@ -143,8 +98,6 @@ public class BookAppointmentController : INotifyPropertyChanged
 
     public async Task<bool> SaveAppointmentAsync()
     {
-        if (SelectedDoctor == null) return false;
-        
         if ((IsSecretaryViewVisible || IsDoctorViewVisible) && SelectedPatient == null) return false;
 
         var currentUser = _userService.CurrentUser;
@@ -154,21 +107,25 @@ public class BookAppointmentController : INotifyPropertyChanged
             combined.Year, combined.Month, combined.Day, 
             combined.Hour, combined.Minute, 0, 
             DateTimeKind.Unspecified);
-        
-        int correctPatientId = IsPatientViewVisible ? currentUser.Id : SelectedPatient.Id;
-        string correctPatientName = IsPatientViewVisible ? currentUser.UserName : SelectedPatient.UserName;
 
-        var newAppointment = new Appointment
+        if (currentUser != null)
         {
-            ApplicationUserId = correctPatientId, 
-            DoctorId = SelectedDoctor.Id,       
-            PatientName = correctPatientName,
-            AppointmentDate = cleanDate,
-            MedicalNotes = this.MedicalNotes,
-            Status = "Scheduled"
-        };
+            int correctPatientId = IsPatientViewVisible ? currentUser.Id : SelectedPatient.Id;
+            string correctPatientName = IsPatientViewVisible ? currentUser.UserName : SelectedPatient.UserName;
+
+            var newAppointment = new Appointment
+            {
+                ApplicationUserId = correctPatientId, 
+                DoctorId = SelectedDoctor.Id,       
+                PatientName = correctPatientName,
+                AppointmentDate = cleanDate,
+                MedicalNotes = this.MedicalNotes,
+                Status = "Scheduled"
+            };
         
-        await _appointmentService.CreateAppointmentAsync(newAppointment); 
+            await _appointmentService.CreateAppointmentAsync(newAppointment);
+        }
+
         return true;
     }
 

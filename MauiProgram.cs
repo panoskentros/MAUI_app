@@ -56,6 +56,11 @@ public static class MauiProgram
         builder.Services.AddTransient<AppointmentsController>();
         builder.Services.AddTransient<DashboardController>();
         builder.Services.AddTransient<MedicationsController>();
+        builder.Services.AddTransient<MedicationsPage>();
+        builder.Services.AddTransient<MessagesController>();
+        builder.Services.AddTransient<MessagesPage>();
+        builder.Services.AddTransient<SettingsController>();
+        builder.Services.AddTransient<SettingsPage>();
         
         builder.Services.AddValidatorsFromAssemblyContaining<App>();
 #if DEBUG
