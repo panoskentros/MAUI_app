@@ -9,6 +9,8 @@ namespace MAUI_app.Controller;
 
 public class DashboardController : BaseController
 {
+    private readonly IAppointmentService _appointmentService;
+    
     private string _patientNextAppointmentDate = "No upcoming appointments";
     public string PatientNextAppointmentDate
     {
@@ -72,13 +74,9 @@ public class DashboardController : BaseController
         set { _doctorMorePatientsText = value; OnPropertyChanged(); }
     }
 
-    private readonly IAppointmentService _appointmentService;
-    private readonly IUserService _userService;
-
     public DashboardController(IAppointmentService appointmentService, IUserService userService) : base(userService)
     {
         _appointmentService = appointmentService;
-        _userService = userService;
     }
 
     public async Task InitializeAsync()
@@ -92,7 +90,7 @@ public class DashboardController : BaseController
 
         if (IsPatientViewVisible)
         {
-            SetupBanner("Patient Dashboard", true);
+            SetupBanner("Patient Dashboard");
 
             var upcomingAppts = await _appointmentService.GetUpcomingAppointmentsForPatientAsync(user.Id);
 
@@ -117,14 +115,14 @@ public class DashboardController : BaseController
         }
         else if (IsSecretaryViewVisible)
         {
-            SetupBanner("Clinic Control Center", true);
+            SetupBanner("Clinic Control Center");
 
             int count = await _appointmentService.GetTodaysAppointmentCountAsync();
             AppointmentsTodayCount = count.ToString();
         }
         else if (IsDoctorViewVisible)
         {
-            SetupBanner("Doctor Dashboard", true);
+            SetupBanner("Doctor Dashboard");
 
             var todaysPatients = await _appointmentService.GetTodaysPatientsForDoctorAsync(user.Id);
 
@@ -147,11 +145,5 @@ public class DashboardController : BaseController
                 DoctorHasMorePatients = false;
             }
         }
-    }
-
-    public event PropertyChangedEventHandler PropertyChanged;
-    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "")
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

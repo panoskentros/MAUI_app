@@ -76,10 +76,4 @@ public class AppointmentsController : BaseController
             DailyAppointments.Add(appt);
         }
     }
-
-    public event PropertyChangedEventHandler? PropertyChanged;
-    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "")
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
 }

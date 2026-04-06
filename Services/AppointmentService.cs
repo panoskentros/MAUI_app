@@ -33,13 +33,10 @@ public class AppointmentService : IAppointmentService
 
     public async Task<List<Appointment>> GetTodaysPatientsForDoctorAsync(int doctorId)
     {
-        var today = DateTime.Today; 
-        var tomorrow = today.AddDays(1);
+        var rightNow = DateTime.Now; 
 
         return await _appointmentRepo.GetQueryable().AsNoTracking()
-            .Where(a => a.DoctorId == doctorId &&
-                        a.AppointmentDate >= today && 
-                        a.AppointmentDate < tomorrow)
+            .Where(a => a.DoctorId == doctorId && a.AppointmentDate >= rightNow)
             .OrderBy(a => a.AppointmentDate)
             .ToListAsync();
     }

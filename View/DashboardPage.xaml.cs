@@ -1,11 +1,8 @@
-﻿using MAUI_app.Model;
-using MAUI_app.Services;
-using MAUI_app.Controller;
-using MAUI_app.Services.Interfaces;
+﻿using MAUI_app.Controller;
 
 namespace MAUI_app.View;
 
-public partial class DashboardPage : ContentPage
+public partial class DashboardPage
 {
     private readonly DashboardController _controller;
 
