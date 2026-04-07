@@ -7,15 +7,13 @@ namespace MAUI_app.View;
 public partial class BookAppointmentPage  : IBookAppointmentView
 {
     private readonly BookAppointmentController _controller;
-    private readonly IUserService _userService;
     private IBookAppointmentView bookAppointmentView;
 
-    public BookAppointmentPage(BookAppointmentController controller)
+    public BookAppointmentPage(IUserService _userService,IAppointmentService _appointmentService)
     {
         InitializeComponent();
         
-        _controller = controller;
-        _controller = controller;
+        _controller = new BookAppointmentController(this, _appointmentService,_userService);
         BindingContext = _controller;
     }
     
