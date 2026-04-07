@@ -12,7 +12,7 @@ public class BookAppointmentController : BaseController
     private readonly IAppointmentService _appointmentService; 
     private readonly IUserService _userService;
     private readonly IBookAppointmentView _bookAppointmentsView;
-    public BookAppointmentController(IAppointmentService appointmentService, IUserService userService,IBookAppointmentView bookAppointmentsView) : base(userService)
+    public BookAppointmentController(IBookAppointmentView bookAppointmentsView, IAppointmentService appointmentService, IUserService userService) : base(userService)
     {
         _appointmentService = appointmentService;
         _userService = userService;
