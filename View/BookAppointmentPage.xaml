@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:view="clr-namespace:MAUI_app.View"
+             x:Class="MAUI_app.View.BookAppointmentPage"
+             BackgroundColor="#F5F5F7"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto, *">
+        
+        <view:HeaderBanner Grid.Row="0" />
+
+        <ScrollView Grid.Row="1" Margin="20,20,20,0">
+            <VerticalStackLayout Spacing="20" Padding="0,0,0,40">
+
+                <VerticalStackLayout IsVisible="{Binding IsSecretaryViewVisible}" Spacing="5">
+                    <Label Text="Select Patient" FontSize="14" FontAttributes="Bold" TextColor="#1C1C1E" />
+                    <Border BackgroundColor="White" Stroke="#E0E6ED" StrokeThickness="1">
+                        <Border.StrokeShape><RoundRectangle CornerRadius="8" /></Border.StrokeShape>
+                        <Picker ItemsSource="{Binding AvailablePatients}"
+                                ItemDisplayBinding="{Binding UserName}"
+                                SelectedItem="{Binding SelectedPatient}"
+                                Title="Choose a patient..."
+                                TextColor="Black"
+                                TitleColor="Gray"
+                                Margin="10,0" />
+                    </Border>
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="Select Doctor" FontSize="14" FontAttributes="Bold" TextColor="#1C1C1E" />
+                    <Border BackgroundColor="White" Stroke="#E0E6ED" StrokeThickness="1">
+                        <Border.StrokeShape><RoundRectangle CornerRadius="8" /></Border.StrokeShape>
+                        <Picker ItemsSource="{Binding AvailableDoctors}"
+                                ItemDisplayBinding="{Binding UserName}"
+                                SelectedItem="{Binding SelectedDoctor}"
+                                Title="Choose a doctor..."
+                                TextColor="Black"
+                                TitleColor="Gray"
+                                Margin="10,0" />
+                    </Border>
+                </VerticalStackLayout>
+
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
+                    
+                    <VerticalStackLayout Grid.Column="0" Spacing="5">
+                        <Label Text="Date" FontSize="14" FontAttributes="Bold" TextColor="#1C1C1E" />
+                        <Border BackgroundColor="White" Stroke="#E0E6ED" StrokeThickness="1">
+                            <Border.StrokeShape><RoundRectangle CornerRadius="8" /></Border.StrokeShape>
+                            <DatePicker Date="{Binding AppointmentDate}" Margin="10,0" TextColor="Black"/>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Grid.Column="1" Spacing="5">
+                        <Label Text="Time" FontSize="14" FontAttributes="Bold" TextColor="#1C1C1E" />
+                        <Border BackgroundColor="White" Stroke="#E0E6ED" StrokeThickness="1">
+                            <Border.StrokeShape><RoundRectangle CornerRadius="8" /></Border.StrokeShape>
+                            <TimePicker Time="{Binding AppointmentTime}" Margin="10,0" TextColor="Black"/>
+                        </Border>
+                    </VerticalStackLayout>
+                    
+                </Grid>
+
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="Reason for Visit (Optional)" FontSize="14" FontAttributes="Bold" TextColor="#1C1C1E" />
+                    <Border BackgroundColor="White" Stroke="#E0E6ED" StrokeThickness="1">
+                        <Border.StrokeShape><RoundRectangle CornerRadius="8" /></Border.StrokeShape>
+                        <Editor Text="{Binding MedicalNotes}" Placeholder="E.g., Checkup, back pain..." HeightRequest="100" Margin="10,5" TextColor="Black"/>
+                    </Border>
+                </VerticalStackLayout>
+
+                <Button Text="Confirm Appointment"
+                        Clicked="OnSaveClicked"
+                        BackgroundColor="#0D47A1"
+                        TextColor="White"
+                        HeightRequest="50"
+                        CornerRadius="12"
+                        FontAttributes="Bold"
+                        Margin="0,20,0,0" />
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

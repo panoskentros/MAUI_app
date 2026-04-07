@@ -1,11 +1,8 @@
-﻿using MAUI_app.Model;
-using MAUI_app.Services;
-using MAUI_app.Controller;
-using MAUI_app.Services.Interfaces;
+﻿using MAUI_app.Controller;
 
 namespace MAUI_app.View;
 
-public partial class DashboardPage : ContentPage
+public partial class DashboardPage
 {
     private readonly DashboardController _controller;
 
@@ -30,7 +27,8 @@ public partial class DashboardPage : ContentPage
             await border.ScaleTo(1.0, 100);
         }
         
-        await Shell.Current.GoToAsync("//appointments");
+        var bookPage = Handler.MauiContext.Services.GetService<BookAppointmentPage>();
+        await Navigation.PushAsync(bookPage);
     }
     
     private async void OnViewAllAppointmentsClicked(object sender, EventArgs e)

@@ -8,26 +8,55 @@ namespace MAUI_app.Services;
 
 public class UserService : IUserService
 {
-    private readonly IRepository<ApplicationUser> _userRepository;
+    private readonly AppDbContext _context;
     private readonly IValidator<ApplicationUser> _validator;
     
     public ApplicationUser? CurrentUser { get; private set; }
     
     public event EventHandler? UserChanged;
     
-    public UserService(IRepository<ApplicationUser> userRepository, IValidator<ApplicationUser> validator)
+    public UserService(AppDbContext dbContext, IValidator<ApplicationUser> validator)
     {
-        _userRepository = userRepository;
+        _context = dbContext;
         _validator = validator;
     }
     
     public bool IsLoggedIn => CurrentUser != null;
     
     private void OnUserChanged() => UserChanged?.Invoke(this, EventArgs.Empty);
+    public async Task<List<ApplicationUser>> GetAllDoctorsAsync()
+    {
+        return await _context.Set<ApplicationUser>().AsNoTracking()
+            .Where(u => u.Role == UserRole.Doctor)
+            .ToListAsync();
+    }
+    
+    public async Task<ApplicationUser?> GetDoctorByIdAsync(int doctorId)
+    {
+        return await _context.Set<ApplicationUser>()
+            .AsNoTracking()
+            .FirstOrDefaultAsync(u => u.Role == UserRole.Doctor && u.Id == doctorId);
+    }
+    
+    public async Task<List<ApplicationUser>> GetAllPatientsAsync()
+    {
+        return await 
+            _context.Set<ApplicationUser>()
+            .AsNoTracking()
+            .Where(u => u.Role == UserRole.Patient)
+            .ToListAsync();
+    }
+    public async Task<ApplicationUser?> GetPatientByIdAsync(int doctorId)
+    {
+        return await 
+            _context.Set<ApplicationUser>()
+            .AsNoTracking()
+            .FirstOrDefaultAsync(u => u.Role == UserRole.Patient && u.Id == doctorId);
+    }
 
     public async Task<IResult<ApplicationUser>> LoginAsync(string usernameOrEmail, string password)
     {
-        var user = await _userRepository.GetQueryable().AsNoTracking()
+        var user = await _context.Set<ApplicationUser>().AsNoTracking()
             .FirstOrDefaultAsync(u => u.UserName == usernameOrEmail || u.Email == usernameOrEmail);
 
         if (user == null)
@@ -46,7 +75,6 @@ public class UserService : IUserService
 
         return Result<ApplicationUser>.Fail("Invalid username/email or password");
     }
-
     public async Task<IResult> RegisterAsync(ApplicationUser user)
     {
         var validationResult = await _validator.ValidateAsync(user);
@@ -59,7 +87,10 @@ public class UserService : IUserService
         try
         {
             user.HashedPassword = PasswordHasher.HashPassword(user.HashedPassword);
-            await _userRepository.AddAsync(user, asDetached: true);
+            await _context.AddAsync(user);
+            await _context.SaveChangesAsync();
+            _context.ChangeTracker.Clear();
+            
             return Result.Ok(string.Empty);
         }
         catch (Exception ex)

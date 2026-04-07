@@ -24,7 +24,7 @@
                        TextTransform="Uppercase"/>
                 
                 <Label x:Name="WelcomeLabel" 
-                       Text="{Binding BannerWelcomeMessage, StringFormat='Welcome, {0}!'}" 
+                       Text="{Binding BannerWelcomeMessage}" 
                        TextColor="White" 
                        FontSize="24" 
                        FontAttributes="Bold"/>

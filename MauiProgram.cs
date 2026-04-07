@@ -18,6 +18,7 @@ public static class MauiProgram
 {
     public static MauiApp CreateMauiApp()
     {
+        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
@@ -43,16 +44,21 @@ public static class MauiProgram
         builder.Services.AddSingleton<AppShell>();
         builder.Services.AddSingleton<IUserService, UserService>();
         builder.Services.AddSingleton<IAppointmentService, AppointmentService>();
-        
-        builder.Services.AddScoped(typeof(IRepository<>), typeof(PostgreRepository<>));
         builder.Services.AddDbContext<AppDbContext>();
         builder.Services.AddTransient<LoginPage>();
         builder.Services.AddTransient<RegisterPage>();
         builder.Services.AddTransient<DashboardPage>();
-        builder.Services.AddTransient<AppointmentsPage>();
+        builder.Services.AddTransient<MyAppointmentsPage>();
+        builder.Services.AddTransient<BookAppointmentController>();
+        builder.Services.AddTransient<BookAppointmentPage>();
         builder.Services.AddTransient<AppointmentsController>();
         builder.Services.AddTransient<DashboardController>();
         builder.Services.AddTransient<MedicationsController>();
+        builder.Services.AddTransient<MedicationsPage>();
+        builder.Services.AddTransient<MessagesController>();
+        builder.Services.AddTransient<MessagesPage>();
+        builder.Services.AddTransient<SettingsController>();
+        builder.Services.AddTransient<SettingsPage>();
         
         builder.Services.AddValidatorsFromAssemblyContaining<App>();
 #if DEBUG

@@ -1,9 +1,19 @@
 ﻿using MAUI_app.Model;
+using MAUI_app.Services.Interfaces;
 
 namespace MAUI_app.Controller;
 
-public class MedicationsController
+public class MedicationsController : BaseController
 {
+    public MedicationsController(IUserService userService) : base(userService)
+    {
+    }
+    
+    public void InitializeAsync()
+    {
+        SetupBanner("Medical Records", true);
+    }
+    
     public List<Medication> GetActivePrescriptions()
     {
         return new List<Medication>

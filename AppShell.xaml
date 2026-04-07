@@ -129,8 +129,8 @@
         <ShellContent Route="dashboard" ContentTemplate="{DataTemplate view:DashboardPage}" />
     </FlyoutItem>
 
-    <FlyoutItem x:Name="AppointmentsItem" Title="Appointments" Icon="calendar_icon.png" Shell.NavBarIsVisible="False">
-        <ShellContent Route="appointments" ContentTemplate="{DataTemplate view:AppointmentsPage}" />
+    <FlyoutItem Title="My Appointments" Icon="book_medical_solid.png">
+        <ShellContent Route="appointments" ContentTemplate="{DataTemplate view:MyAppointmentsPage}" />
     </FlyoutItem>
 
     <FlyoutItem x:Name="MedicalRecordsItem" Title="Medical Records" Icon="pill_icon.png" Shell.NavBarIsVisible="False">

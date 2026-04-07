@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:view="clr-namespace:MAUI_app.View"
-             x:Class="MAUI_app.View.AppointmentsPage"
+             x:Class="MAUI_app.View.MyAppointmentsPage"
              BackgroundColor="#F4F6F8"
              Shell.NavBarIsVisible="False">
 
@@ -53,7 +53,7 @@
                                 </Border>
 
                                 <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="5">
-                                    <Label Text="{Binding PatientName}" FontSize="18" FontAttributes="Bold" TextColor="#2C3E50" />
+                                    <Label Text="{Binding DisplayName}" FontSize="18" FontAttributes="Bold" TextColor="#2C3E50" />
                                     
                                     <HorizontalStackLayout Spacing="6">
                                         <BoxView Color="#BDC3C7" WidthRequest="4" HeightRequest="4" CornerRadius="2" VerticalOptions="Center"/>

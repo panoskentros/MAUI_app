@@ -37,8 +37,6 @@
                                 <Label Text="Notifications" FontSize="16" FontAttributes="Bold" TextColor="#2C3E50" />
                                 <Label Text="Receive alerts for appointments" FontSize="13" TextColor="#7F8C8D" />
                             </VerticalStackLayout>
-                            
-                            <Switch x:Name="NotificationsSwitch" Grid.Column="1" OnColor="#27AE60" VerticalOptions="Center" Toggled="OnNotificationToggled" />
                         </Grid>
                         
                         <BoxView HeightRequest="1" Color="#F0F3F4" Margin="20,0" />
