@@ -44,8 +44,6 @@ public static class MauiProgram
         builder.Services.AddSingleton<AppShell>();
         builder.Services.AddSingleton<IUserService, UserService>();
         builder.Services.AddSingleton<IAppointmentService, AppointmentService>();
-        
-        builder.Services.AddScoped(typeof(IRepository<>), typeof(PostgreRepository<>));
         builder.Services.AddDbContext<AppDbContext>();
         builder.Services.AddTransient<LoginPage>();
         builder.Services.AddTransient<RegisterPage>();

@@ -1,3 +1,4 @@
+using MAUI_app.Data;
 using MAUI_app.Model;
 
 namespace MAUI_app.Services.Interfaces;
@@ -8,5 +9,5 @@ public interface IAppointmentService
     Task<int> GetTodaysAppointmentCountAsync();
     Task<List<Appointment>> GetTodaysPatientsForDoctorAsync(int doctorId);
     Task<List<Appointment>> GetUpcomingAppointmentsForClinicAsync();
-    Task CreateAppointmentAsync(Appointment newAppointment);
+    Task<IResult<Appointment>> CreateAppointmentAsync(Appointment appointment);
 }

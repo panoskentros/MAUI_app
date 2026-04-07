@@ -4,10 +4,11 @@ using MAUI_app.View.Interfaces;
 
 namespace MAUI_app.View;
 
-public partial class BookAppointmentPage  : IAppointmentsView
+public partial class BookAppointmentPage  : IBookAppointmentView
 {
     private readonly BookAppointmentController _controller;
     private readonly IUserService _userService;
+    private IBookAppointmentView bookAppointmentView;
 
     public BookAppointmentPage(BookAppointmentController controller)
     {
@@ -37,5 +38,9 @@ public partial class BookAppointmentPage  : IAppointmentsView
         {
             await DisplayAlert("Error", "Please make sure you have selected a Doctor", "OK");
         }
+    }
+    public async Task ShowAlert(string title, string message,string cancelMsg="OK")
+    {
+        await DisplayAlert(title, message, cancelMsg);
     }
 }

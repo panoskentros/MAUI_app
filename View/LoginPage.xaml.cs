@@ -62,9 +62,9 @@ public partial class LoginPage : ContentPage, ILoginView
         LoginBtn.Text = isLoading ? "" : "Sign In";
     }
 
-    public async Task ShowAlert(string title, string message)
+    public async Task ShowAlert(string title, string message,string cancelMsg="OK")
     {
-        await DisplayAlert(title, message, "OK");
+        await DisplayAlert(title, message,cancelMsg);
     }
 
     public async Task NavigateToDashboard()

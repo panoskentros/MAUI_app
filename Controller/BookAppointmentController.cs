@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using MAUI_app.Model;
 using MAUI_app.Services.Interfaces;
+using MAUI_app.View.Interfaces;
 
 namespace MAUI_app.Controller;
 
@@ -10,11 +11,12 @@ public class BookAppointmentController : BaseController
 {
     private readonly IAppointmentService _appointmentService; 
     private readonly IUserService _userService;
-    
-    public BookAppointmentController(IAppointmentService appointmentService, IUserService userService) : base(userService)
+    private readonly IBookAppointmentView _bookAppointmentsView;
+    public BookAppointmentController(IAppointmentService appointmentService, IUserService userService,IBookAppointmentView bookAppointmentsView) : base(userService)
     {
         _appointmentService = appointmentService;
         _userService = userService;
+        _bookAppointmentsView = bookAppointmentsView;
     }
     
     public ObservableCollection<ApplicationUser> AvailableDoctors { get; set; } = new();
@@ -123,7 +125,12 @@ public class BookAppointmentController : BaseController
                 Status = "Scheduled"
             };
         
-            await _appointmentService.CreateAppointmentAsync(newAppointment);
+            var result = await _appointmentService.CreateAppointmentAsync(newAppointment);
+            if (!result.Success)
+            {
+                await _bookAppointmentsView.ShowAlert("Validation Error", result.Message,"OK");
+                return false;
+            }
         }
 
         return true;
