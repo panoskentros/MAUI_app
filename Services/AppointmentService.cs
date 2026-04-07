@@ -52,6 +52,6 @@ public class AppointmentService : IAppointmentService
     
     public async Task CreateAppointmentAsync(Appointment newAppointment)
     {
-        await _appointmentRepo.AddAsync(newAppointment);
+        await _appointmentRepo.AddAsync(newAppointment,asDetached:true);
     }
 }

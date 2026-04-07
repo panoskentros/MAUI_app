@@ -54,11 +54,24 @@ public class UserService : IUserService
             .ToListAsync();
     }
     
+    public async Task<ApplicationUser?> GetDoctorByIdAsync(int doctorId)
+    {
+        return await _userRepository.GetQueryable()
+            .AsNoTracking()
+            .FirstOrDefaultAsync(u => u.Role == UserRole.Doctor && u.Id == doctorId);
+    }
+    
     public async Task<List<ApplicationUser>> GetAllPatientsAsync()
     {
         return await _userRepository.GetQueryable().AsNoTracking()
             .Where(u => u.Role == UserRole.Patient)
             .ToListAsync();
+    }
+    public async Task<ApplicationUser?> GetPatientByIdAsync(int doctorId)
+    {
+        return await _userRepository.GetQueryable()
+            .AsNoTracking()
+            .FirstOrDefaultAsync(u => u.Role == UserRole.Patient && u.Id == doctorId);
     }
 
     public async Task<IResult> RegisterAsync(ApplicationUser user)
