@@ -10,12 +10,26 @@ public partial class MessagesPage : ContentPage
     {
         InitializeComponent();
         _controller = controller;
-        BindingContext = _controller;
+        Title = "Inbox";
     }
 
     protected override void OnAppearing()
     {
         base.OnAppearing();
-        _controller.InitializeAsync();
+        LoadMessages();
+    }
+
+    private void LoadMessages()
+    {
+        var result = _controller.GetInboxMessages();
+        
+        if (result.Success)
+        {
+            MessagesList.ItemsSource = result.Data;
+        }
+        else
+        {
+            DisplayAlert("Error", result.Message, "OK");
+        }
     }
 }

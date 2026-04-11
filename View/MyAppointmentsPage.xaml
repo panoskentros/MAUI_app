@@ -17,7 +17,7 @@
                    FontAttributes="Bold" 
                    TextColor="#2C3E50" />
 
-            <CollectionView x:Name="AllAppointmentsList" Grid.Row="1" ItemsSource="{Binding DailyAppointments}">
+            <CollectionView x:Name="AllAppointmentsList" Grid.Row="1">
                 
                 <CollectionView.ItemsLayout>
                     <LinearItemsLayout Orientation="Vertical" ItemSpacing="10" />

@@ -10,12 +10,27 @@ public partial class MedicationsPage : ContentPage
     {
         InitializeComponent();
         _controller = controller;
-        BindingContext = _controller;
+        
+        Title = "Medical Records";
     }
 
     protected override void OnAppearing()
     {
         base.OnAppearing();
-        _controller.InitializeAsync();
+        LoadData();
+    }
+
+    private void LoadData()
+    {
+        var result = _controller.GetActivePrescriptions();
+        
+        if (result.Success)
+        {
+            MedicationsList.ItemsSource = result.Data;
+        }
+        else
+        {
+            DisplayAlert("Error", result.Message, "OK");
+        }
     }
 }

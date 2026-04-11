@@ -1,28 +1,31 @@
 ﻿using MAUI_app.Model;
-using MAUI_app.Services.Interfaces;
+using MAUI_app.Data;
 
 namespace MAUI_app.Controller;
 
-public class SettingsController : BaseController
+public class SettingsController
 {
-    public SettingsController(IUserService userService) : base(userService)
+    public SettingsController()
     {
     }
 
-    public void InitializeAsync()
+    public Result<UserSettings> GetCurrentUserPreferences()
     {
-        SetupBanner("Settings", true);
-    }
-
-    public UserSettings GetCurrentUserPreferences()
-    {
-        return new UserSettings
+        var settings = new UserSettings
         {
             NotificationsEnabled = true
         };
+
+        return Result<UserSettings>.Ok(settings, "Settings loaded");
     }
 
-    public void SaveUserPreferences(UserSettings settings)
+    public Result SaveUserPreferences(UserSettings settings)
     {
+        if (settings == null)
+        {
+            return Result.Fail("Invalid settings data");
+        }
+
+        return Result.Ok("Settings saved successfully");
     }
 }

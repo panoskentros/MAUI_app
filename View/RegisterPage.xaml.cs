@@ -1,32 +1,93 @@
 using System;
-using FluentValidation;
 using MAUI_app.Controller;
-using MAUI_app.Data;
 using MAUI_app.Model;
-using MAUI_app.Services;
 using MAUI_app.Services.Interfaces;
-using MAUI_app.View.Interfaces;
 
 namespace MAUI_app.View;
 
-public partial class RegisterPage : ContentPage, IRegisterView
+public partial class RegisterPage : ContentPage
 {
-    
     private readonly RegisterController _controller;
-    private ApplicationUser _model;
 
-    public RegisterPage(IUserService  userService)
+    public RegisterPage(IUserService userService)
     {
         InitializeComponent();
-        
-        _controller = new RegisterController(this,userService);
-        _model = new ApplicationUser();
-        BindingContext = _model;
+        _controller = new RegisterController(userService);
     }
 
     private async void OnRegisterClicked(object? sender, EventArgs e)
     {
-        await _controller.RegisterUserAsync(_model);
+        UsernameError.IsVisible = false;
+        EmailError.IsVisible = false;
+        PasswordError.IsVisible = false;
+        ConfirmPasswordError.IsVisible = false;
+
+        bool hasError = false;
+
+        if (string.IsNullOrWhiteSpace(UsernameEntry.Text))
+        {
+            UsernameError.Text = "Username is required";
+            UsernameError.IsVisible = true;
+            hasError = true;
+        }
+
+        if (string.IsNullOrWhiteSpace(EmailEntry.Text))
+        {
+            EmailError.Text = "Email is required";
+            EmailError.IsVisible = true;
+            hasError = true;
+        }
+
+        if (string.IsNullOrWhiteSpace(PasswordEntry.Text))
+        {
+            PasswordError.Text = "Password is required";
+            PasswordError.IsVisible = true;
+            hasError = true;
+        }
+
+        if (PasswordEntry.Text != ConfirmPassword.Text)
+        {
+            ConfirmPasswordError.Text = "Passwords do not match";
+            ConfirmPasswordError.IsVisible = true;
+            hasError = true;
+        }
+
+        if (hasError) return;
+
+        LoadingIndicator.IsVisible = true;
+        LoadingIndicator.IsRunning = true;
+        RegisterBtn.IsEnabled = false;
+        BackToLoginBtn.IsEnabled = false;
+        RegisterBtn.Text = "";
+
+        var newUser = new ApplicationUser
+        {
+            UserName = UsernameEntry.Text,
+            Email = EmailEntry.Text,
+            HashedPassword = PasswordEntry.Text
+        };
+
+        var result = await _controller.RegisterUserAsync(newUser);
+
+        LoadingIndicator.IsVisible = false;
+        LoadingIndicator.IsRunning = false;
+        RegisterBtn.IsEnabled = true;
+        BackToLoginBtn.IsEnabled = true;
+        RegisterBtn.Text = "Complete Registration";
+
+        if (result.Success)
+        {
+            await DisplayAlert("Success", "Registration successful. Please log in.", "OK");
+            UsernameEntry.Text = string.Empty;
+            EmailEntry.Text = string.Empty;
+            PasswordEntry.Text = string.Empty;
+            ConfirmPassword.Text = string.Empty;
+            await Navigation.PopAsync();
+        }
+        else
+        {
+            await DisplayAlert("Registration Failed", result.Message, "OK");
+        }
     }
 
     private async void OnBackToLoginClicked(object? sender, EventArgs e)
@@ -36,7 +97,8 @@ public partial class RegisterPage : ContentPage, IRegisterView
     
     private bool _isRegPasswordHidden = true;
     private bool _isConfirmPasswordHidden = true;
-    private async void OnToggleRegPasswordClicked(object sender, TappedEventArgs e)
+    
+    private async void OnToggleRegPasswordClicked(object? sender, TappedEventArgs e)
     {
         if (sender is Image eyeIcon)
         {
@@ -48,7 +110,7 @@ public partial class RegisterPage : ContentPage, IRegisterView
         }
     }
 
-    private async void OnToggleConfirmPasswordClicked(object sender, TappedEventArgs e)
+    private async void OnToggleConfirmPasswordClicked(object? sender, TappedEventArgs e)
     {
         if (sender is Image eyeIcon)
         {
@@ -60,69 +122,8 @@ public partial class RegisterPage : ContentPage, IRegisterView
         }
     }
 
-    public void SetLoading(bool isLoading)
+    private void OnConfirmPasswordCompleted(object? sender, EventArgs e)
     {
-        LoadingIndicator.IsVisible = isLoading;
-        LoadingIndicator.IsRunning = isLoading;
-        RegisterBtn.IsEnabled = !isLoading;
-        BackToLoginBtn.IsEnabled = !isLoading;
-        RegisterBtn.Text = isLoading ? "" : "Complete Registration";
-    }
-
-    public async Task ShowAlert(string title, string message)
-    {
-        await DisplayAlert(title, message, "OK");
-    }
-    
-    public void ClearErrors()
-    {
-        UsernameError.IsVisible = false;
-        EmailError.IsVisible = false;
-        PasswordError.IsVisible = false;
-        ConfirmPasswordError.IsVisible = false;
-    }
-
-    public void ShowFieldError(string propertyName, string errorMessage)
-    {
-        switch (propertyName)
-        {
-            case "UserName":
-                UsernameError.Text = errorMessage;
-                UsernameError.IsVisible = true;
-                break;
-            case "Email":
-                EmailError.Text = errorMessage;
-                EmailError.IsVisible = true;
-                break;
-            case "HashedPassword":
-                PasswordError.Text = errorMessage;
-                PasswordError.IsVisible = true;
-                break;
-            case "ConfirmPassword":
-                ConfirmPasswordError.Text = errorMessage;
-                ConfirmPasswordError.IsVisible = true;
-                break;
-        }
-    }
-    
-
-    public async Task NavigateBack()
-    {
-        await Navigation.PopAsync();
-    }
-
-    public string GetConfirmPassword()
-    {
-        return ConfirmPassword.Text ?? string.Empty;
-    }
-    private async void OnConfirmPasswordCompleted(object sender, EventArgs e)
-    {
-        await _controller.RegisterUserAsync(_model);
-    }
-    public void ClearFields()
-    {
-        _model = new ApplicationUser();
-        ConfirmPassword.Text = string.Empty;
-        BindingContext = _model;
+        OnRegisterClicked(sender, e);
     }
 }

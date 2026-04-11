@@ -1,66 +1,38 @@
 using System.Threading.Tasks;
+using MAUI_app.Data;
 using MAUI_app.Services;
 using MAUI_app.Services.Interfaces;
-using MAUI_app.View.Interfaces;
 
 namespace MAUI_app.Controller;
 
 public class LoginController
 {
-    private readonly ILoginView _view;
     private readonly IUserService _userService;
 
-    public LoginController(ILoginView view, IUserService userService)
+    public LoginController(IUserService userService)
     {
-        _view = view;
         _userService = userService;
     }
 
-    public async Task LoginAsync(string usernameOrEmail, string password)
+    public async Task<Result> LoginAsync(string usernameOrEmail, string password)
     {
-        _view.ClearErrors(); 
-
-        bool hasError = false;
-
-        if (string.IsNullOrWhiteSpace(usernameOrEmail))
+        if (string.IsNullOrWhiteSpace(usernameOrEmail) || string.IsNullOrWhiteSpace(password))
         {
-            _view.ShowFieldError("UsernameOrEmail", "Please enter your username or email");
-            hasError = true;
-        }
-        
-        if (string.IsNullOrWhiteSpace(password))
-        {
-            _view.ShowFieldError("Password", "Please enter your password");
-            hasError = true;
+            return Result.Fail("Please enter both username/email and password");
         }
 
-        if (hasError) return;
+        var serviceResult = await _userService.LoginAsync(usernameOrEmail, password);
 
-        _view.SetLoading(true);
-    
-        var result = await _userService.LoginAsync(usernameOrEmail, password);
-    
-        _view.SetLoading(false);
+        if (serviceResult.Success)
+        {
+            return Result.Ok(serviceResult.Message);
+        }
 
-        if (result.Success)
-        {
-            _view.ClearFields();
-            await _view.NavigateToDashboard();
-        }
-        else
-        {
-            _view.ShowFieldError("Password", result.Message ?? "Login failed"); 
-        }
+        return Result.Fail(serviceResult.Message);
     }
-
-    public async Task GoToRegisterAsync() => await _view.NavigateToRegister();
-
-    public async Task LogoutAsync()
+    public Result Logout()
     {
-        _view.SetLoading(true);
         _userService.Logout();
-        await Task.Delay(300);
-        _view.SetLoading(false);
-        _view.ClearFields();
+        return Result.Ok("Logged out successfully");
     }
 }

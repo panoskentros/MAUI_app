@@ -3,37 +3,81 @@ using MAUI_app.Controller;
 using MAUI_app.Model;
 using MAUI_app.Services;
 using MAUI_app.Services.Interfaces;
-using MAUI_app.View.Interfaces;
 
 namespace MAUI_app.View;
 
-public partial class LoginPage : ContentPage, ILoginView
+public partial class LoginPage : ContentPage
 {
     private readonly LoginController _controller;
     private readonly RegisterPage _registerPage;
-    public LoginPage(IUserService userService,RegisterPage registerPage)
+
+    public LoginPage(IUserService userService, RegisterPage registerPage)
     {
         InitializeComponent();
         
-        _controller = new LoginController(this, userService);
+        _controller = new LoginController(userService);
         _registerPage = registerPage;
     }
 
     private async void OnLoginClicked(object sender, EventArgs e)
     {
+        UsernameError.IsVisible = false;
+        PasswordError.IsVisible = false;
+
         string usernameOrEmail = UsernameOrEmailEntry.Text;
         string password = PasswordEntry.Text;
-        await _controller.LoginAsync(usernameOrEmail, password);
+
+        bool hasLocalError = false;
+
+        if (string.IsNullOrWhiteSpace(usernameOrEmail))
+        {
+            UsernameError.Text = "Please enter your username or email";
+            UsernameError.IsVisible = true;
+            hasLocalError = true;
+        }
+
+        if (string.IsNullOrWhiteSpace(password))
+        {
+            PasswordError.Text = "Please enter your password";
+            PasswordError.IsVisible = true;
+            hasLocalError = true;
+        }
+
+        if (hasLocalError) return;
+
+        LoadingIndicator.IsRunning = true;
+        LoadingIndicator.IsVisible = true;
+        LoginBtn.IsEnabled = false;
+        LoginBtn.Text = "";
+
+        var result = await _controller.LoginAsync(usernameOrEmail, password);
+
+        LoadingIndicator.IsRunning = false;
+        LoadingIndicator.IsVisible = false;
+        LoginBtn.IsEnabled = true;
+        LoginBtn.Text = "Sign In";
+
+        if (result.Success)
+        {
+            UsernameOrEmailEntry.Text = string.Empty;
+            PasswordEntry.Text = string.Empty;
+            await Shell.Current.GoToAsync("//dashboard");
+        }
+        else
+        {
+            PasswordError.Text = result.Message;
+            PasswordError.IsVisible = true;
+        }
     }
     
     private async void OnGoToRegisterClicked(object sender, EventArgs e)
     {
-        await _controller.GoToRegisterAsync();
+        await Navigation.PushAsync(_registerPage);
     }
 
-    private async void OnLogoutClickedAsync(object sender, EventArgs e)
+    private  void OnLogoutClicked(object sender, EventArgs e)
     {
-        await _controller.LogoutAsync();
+        _controller.Logout();
     }
 
     private void OnExitClicked(object sender, EventArgs e)
@@ -42,6 +86,7 @@ public partial class LoginPage : ContentPage, ILoginView
     }
     
     private bool _isPasswordHidden = true;
+    
     private async void OnTogglePasswordClicked(object sender, TappedEventArgs e)
     {
         if (sender is Image eyeIcon)
@@ -51,56 +96,6 @@ public partial class LoginPage : ContentPage, ILoginView
             eyeIcon.Source = _isPasswordHidden ? "eye_slash_icon.png" : "eye_icon.png";
             await eyeIcon.ScaleTo(0.8, 100);
             await eyeIcon.ScaleTo(1.0, 100);
-        }
-    }
-
-    public void SetLoading(bool isLoading)
-    {
-        LoadingIndicator.IsRunning = isLoading;
-        LoadingIndicator.IsVisible = isLoading;
-        LoginBtn.IsEnabled = !isLoading;
-        LoginBtn.Text = isLoading ? "" : "Sign In";
-    }
-
-    public async Task ShowAlert(string title, string message,string cancelMsg="OK")
-    {
-        await DisplayAlert(title, message,cancelMsg);
-    }
-
-    public async Task NavigateToDashboard()
-    {
-      await Shell.Current.GoToAsync("//dashboard");
-    }
-
-    public async Task NavigateToRegister()
-    {
-        await Navigation.PushAsync(_registerPage);
-    }
-
-    public void ClearFields()
-    {
-        UsernameOrEmailEntry.Text = string.Empty;
-        PasswordEntry.Text = string.Empty;
-    }
-    
-    public void ClearErrors()
-    {
-        UsernameError.IsVisible = false;
-        PasswordError.IsVisible = false;
-    }
-
-    public void ShowFieldError(string propertyName, string errorMessage)
-    {
-        switch (propertyName)
-        {   
-            case "UsernameOrEmail":
-                UsernameError.Text = errorMessage;
-                UsernameError.IsVisible = true;
-                break;
-            case "Password":
-                PasswordError.Text = errorMessage;
-                PasswordError.IsVisible = true;
-                break;
         }
     }
 }

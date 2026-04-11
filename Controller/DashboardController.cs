@@ -1,149 +1,52 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using MAUI_app.Data;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using MAUI_app.Model;
-using MAUI_app.Services;
 using MAUI_app.Services.Interfaces;
+using MAUI_app.Data;
 
 namespace MAUI_app.Controller;
 
-public class DashboardController : BaseController
+public class DashboardController
 {
     private readonly IAppointmentService _appointmentService;
-    
-    private string _patientNextAppointmentDate = "No upcoming appointments";
-    public string PatientNextAppointmentDate
-    {
-        get => _patientNextAppointmentDate;
-        set { _patientNextAppointmentDate = value; OnPropertyChanged(); }
-    }
+    private readonly IUserService _userService;
 
-    private string _patientNextAppointmentDetails = "Book a new appointment below";
-    public string PatientNextAppointmentDetails
-    {
-        get => _patientNextAppointmentDetails;
-        set { _patientNextAppointmentDetails = value; OnPropertyChanged(); }
-    }
-
-    private string _appointmentsTodayCount = "0";
-    public string AppointmentsTodayCount
-    {
-        get => _appointmentsTodayCount;
-        set { _appointmentsTodayCount = value; OnPropertyChanged(); }
-    }
-
-    private string _doctorNextPatientTime = "No more patients today";
-    public string DoctorNextPatientTime
-    {
-        get => _doctorNextPatientTime;
-        set { _doctorNextPatientTime = value; OnPropertyChanged(); }
-    }
-
-    private string _doctorNextPatientDetails = "Enjoy your break!";
-    public string DoctorNextPatientDetails
-    {
-        get => _doctorNextPatientDetails;
-        set { _doctorNextPatientDetails = value; OnPropertyChanged(); }
-    }
-    
-    private bool _hasMoreAppointments;
-    public bool HasMoreAppointments
-    {
-        get => _hasMoreAppointments;
-        set { _hasMoreAppointments = value; OnPropertyChanged(); }
-    }
-
-    private string _moreAppointmentsText;
-    public string MoreAppointmentsText
-    {
-        get => _moreAppointmentsText;
-        set { _moreAppointmentsText = value; OnPropertyChanged(); }
-    }
-    
-    private bool _doctorHasMorePatients;
-    public bool DoctorHasMorePatients
-    {
-        get => _doctorHasMorePatients;
-        set { _doctorHasMorePatients = value; OnPropertyChanged(); }
-    }
-
-    private string _doctorMorePatientsText;
-    public string DoctorMorePatientsText
-    {
-        get => _doctorMorePatientsText;
-        set { _doctorMorePatientsText = value; OnPropertyChanged(); }
-    }
-
-    public DashboardController(IAppointmentService appointmentService, IUserService userService) : base(userService)
+    public DashboardController(IAppointmentService appointmentService, IUserService userService)
     {
         _appointmentService = appointmentService;
+        _userService = userService;
     }
 
-    public async Task InitializeAsync()
+    public async Task<Result<DashboardData>> GetDashboardDataAsync()
     {
         var user = _userService.CurrentUser;
-        if (user == null) return;
+        if (user == null) return Result<DashboardData>.Fail("User not found.");
 
-        IsPatientViewVisible = user.Role == UserRole.Patient;
-        IsSecretaryViewVisible = user.Role == UserRole.Secretary;
-        IsDoctorViewVisible = user.Role == UserRole.Doctor;
+        var data = new DashboardData { Role = user.Role };
 
-        if (IsPatientViewVisible)
+        switch (user.Role)
         {
-            SetupBanner("Patient Dashboard");
-
-            var upcomingAppts = await _appointmentService.GetUpcomingAppointmentsForPatientAsync(user.Id);
-
-            if (upcomingAppts.Any())
-            {
-                var nextAppt = upcomingAppts.First();
-                PatientNextAppointmentDate = nextAppt.AppointmentDate.ToString("dddd, MMM dd - h:mm tt");
-                PatientNextAppointmentDetails = "Reason: " + (string.IsNullOrWhiteSpace(nextAppt.MedicalNotes) ? "General Checkup" : nextAppt.MedicalNotes);
+            case UserRole.Patient:
+                data.Appointments = await _appointmentService.GetUpcomingAppointmentsForPatientAsync(user.Id);
+                break;
                 
-                HasMoreAppointments = upcomingAppts.Count > 1;
-                if (HasMoreAppointments)
-                {
-                    MoreAppointmentsText = $"See {upcomingAppts.Count - 1} More";
-                }
-            }
-            else
-            {
-                PatientNextAppointmentDate = "No upcoming appointments";
-                PatientNextAppointmentDetails = "Book a new appointment below";
-                HasMoreAppointments = false;
-            }
+            case UserRole.Secretary:
+                data.TodaysCount = await _appointmentService.GetTodaysAppointmentCountAsync();
+                break;
+                
+            case UserRole.Doctor:
+                data.Appointments = await _appointmentService.GetTodaysPatientsForDoctorAsync(user.Id);
+                break;
         }
-        else if (IsSecretaryViewVisible)
-        {
-            SetupBanner("Clinic Control Center");
 
-            int count = await _appointmentService.GetTodaysAppointmentCountAsync();
-            AppointmentsTodayCount = count.ToString();
-        }
-        else if (IsDoctorViewVisible)
-        {
-            SetupBanner("Doctor Dashboard");
-
-            var todaysPatients = await _appointmentService.GetTodaysPatientsForDoctorAsync(user.Id);
-
-            if (todaysPatients.Any())
-            {
-                var nextPatient = todaysPatients.First();
-                DoctorNextPatientTime = nextPatient.AppointmentDate.ToString("h:mm tt") + " - " + nextPatient.PatientName;
-                DoctorNextPatientDetails = "Reason: " + (string.IsNullOrWhiteSpace(nextPatient.MedicalNotes) ? "Standard Checkup" : nextPatient.MedicalNotes);
-
-                DoctorHasMorePatients = todaysPatients.Count > 1;
-                if (DoctorHasMorePatients)
-                {
-                    DoctorMorePatientsText = $"See {todaysPatients.Count - 1} More Today";
-                }
-            }
-            else
-            {
-                DoctorNextPatientTime = "No more patients today";
-                DoctorNextPatientDetails = "Enjoy your break!";
-                DoctorHasMorePatients = false;
-            }
-        }
+        return Result<DashboardData>.Ok(data, "Data loaded");
     }
+}
+
+public class DashboardData
+{
+    public List<Appointment> Appointments { get; set; } = new();
+    public int TodaysCount { get; set; }
+    public UserRole Role { get; set; }
 }

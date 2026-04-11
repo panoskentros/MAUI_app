@@ -1,9 +1,10 @@
-﻿using MAUI_app.Controller;
-using MAUI_app.View.Interfaces;
+﻿using System.Threading.Tasks;
+using MAUI_app.Controller;
+using Microsoft.Maui.Controls;
 
 namespace MAUI_app.View;
 
-public partial class MyAppointmentsPage : IAppointmentsView
+public partial class MyAppointmentsPage : ContentPage
 {
     private readonly AppointmentsController _controller;
 
@@ -11,12 +12,25 @@ public partial class MyAppointmentsPage : IAppointmentsView
     {
         InitializeComponent();
         _controller = controller;
-        BindingContext = _controller; 
     }
 
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        await _controller.InitializeAsync();
+        await LoadAppointmentsAsync();
+    }
+
+    private async Task LoadAppointmentsAsync()
+    {
+        var result = await _controller.GetDashboardDataAsync(); 
+        
+        if (result.Success)
+        {
+            AllAppointmentsList.ItemsSource = result.Data;
+        }
+        else
+        {
+            await DisplayAlert("Error", result.Message, "OK");
+        }
     }
 }

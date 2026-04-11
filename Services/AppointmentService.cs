@@ -60,7 +60,7 @@ public class AppointmentService : IAppointmentService
             .ToListAsync();
     }
     
-    public async Task<IResult<Appointment>> CreateAppointmentAsync(Appointment appointment)
+    public async Task<Result<Appointment>> CreateAppointmentAsync(Appointment appointment)
     {
         var validationResult = await _validator.ValidateAsync(appointment);
         if (!validationResult.IsValid)
