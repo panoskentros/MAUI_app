@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
-using MAUI_app.Services;
+using MAUI_app.Data;
 using MAUI_app.Services.Interfaces;
-using MAUI_app.View.Interfaces;
+using MAUI_app.View.interfaces;
 
 namespace MAUI_app.Controller;
 
@@ -9,6 +9,7 @@ public class LoginController
 {
     private readonly ILoginView _view;
     private readonly IUserService _userService;
+    private bool _isPasswordHidden = true;
 
     public LoginController(ILoginView view, IUserService userService)
     {
@@ -16,51 +17,62 @@ public class LoginController
         _userService = userService;
     }
 
-    public async Task LoginAsync(string usernameOrEmail, string password)
+    public async Task HandleLoginAsync(string usernameOrEmail, string password)
     {
-        _view.ClearErrors(); 
+        _view.SetUsernameError(string.Empty, false);
+        _view.SetPasswordError(string.Empty, false);
 
-        bool hasError = false;
+        bool hasLocalError = false;
 
         if (string.IsNullOrWhiteSpace(usernameOrEmail))
         {
-            _view.ShowFieldError("UsernameOrEmail", "Please enter your username or email");
-            hasError = true;
+            _view.SetUsernameError("Please enter your username or email", true);
+            hasLocalError = true;
         }
-        
+
         if (string.IsNullOrWhiteSpace(password))
         {
-            _view.ShowFieldError("Password", "Please enter your password");
-            hasError = true;
+            _view.SetPasswordError("Please enter your password", true);
+            hasLocalError = true;
         }
 
-        if (hasError) return;
+        if (hasLocalError) return;
 
-        _view.SetLoading(true);
-    
-        var result = await _userService.LoginAsync(usernameOrEmail, password);
-    
-        _view.SetLoading(false);
+        _view.SetLoadingState(true);
 
-        if (result.Success)
+        var serviceResult = await _userService.LoginAsync(usernameOrEmail, password);
+
+        _view.SetLoadingState(false);
+
+        if (serviceResult.Success)
         {
-            _view.ClearFields();
-            await _view.NavigateToDashboard();
+            _view.ClearInputs();
+            await _view.NavigateToDashboardAsync();
         }
         else
         {
-            _view.ShowFieldError("Password", result.Message ?? "Login failed"); 
+            _view.SetPasswordError(serviceResult.Message, true);
         }
     }
 
-    public async Task GoToRegisterAsync() => await _view.NavigateToRegister();
-
-    public async Task LogoutAsync()
+    public async Task HandleGoToRegisterClickedAsync()
     {
-        _view.SetLoading(true);
+        await _view.NavigateToRegisterAsync();
+    }
+
+    public void HandleLogout()
+    {
         _userService.Logout();
-        await Task.Delay(300);
-        _view.SetLoading(false);
-        _view.ClearFields();
+    }
+
+    public void HandleExit()
+    {
+        _view.QuitApplication();
+    }
+
+    public void HandleTogglePasswordClicked()
+    {
+        _isPasswordHidden = !_isPasswordHidden;
+        _view.UpdatePasswordVisibilityState(_isPasswordHidden);
     }
 }

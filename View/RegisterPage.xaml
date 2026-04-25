@@ -41,7 +41,6 @@
                         <Label x:Name="StatusLabel" Text="Create an account to book appointments and access your medical history" FontSize="14" TextColor="#8E8E93" HorizontalOptions="Center" HorizontalTextAlignment="Center" Margin="0,0,0,15"/>
 
                         <Entry x:Name="UsernameEntry" 
-                               Text="{Binding UserName}" 
                                Placeholder="Full Name / Username" 
                                HeightRequest="50" 
                                BackgroundColor="#F2F2F7" 
@@ -50,7 +49,6 @@
                         <Label x:Name="UsernameError" TextColor="#D32F2F" FontSize="12" IsVisible="False" Margin="5,-10,0,0" />
 
                         <Entry x:Name="EmailEntry" 
-                               Text="{Binding Email}" 
                                Placeholder="Email Address" 
                                Keyboard="Email" 
                                HeightRequest="50" 
@@ -62,7 +60,7 @@
                         <Border BackgroundColor="#F2F2F7" StrokeThickness="0" HeightRequest="50">
                             <Border.StrokeShape><RoundRectangle CornerRadius="8" /></Border.StrokeShape>
                             <Grid ColumnDefinitions="*, Auto">
-                                <Entry x:Name="PasswordEntry" Grid.Column="0" Text="{Binding HashedPassword}" Placeholder="Password" IsPassword="True" BackgroundColor="Transparent" TextColor="Black" ReturnType="Next" />
+                                <Entry x:Name="PasswordEntry" Grid.Column="0" Placeholder="Password" IsPassword="True" BackgroundColor="Transparent" TextColor="Black" ReturnType="Next" />
                                 
                                 <Image Grid.Column="1" Source="eye_slash_icon.png" WidthRequest="22" HeightRequest="22" Aspect="AspectFit" Margin="0,0,15,0" VerticalOptions="Center">
                                     <Image.GestureRecognizers>

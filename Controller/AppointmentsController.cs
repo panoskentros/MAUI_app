@@ -1,79 +1,67 @@
-﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using MAUI_app.Model;
 using MAUI_app.Services.Interfaces;
+using MAUI_app.View.interfaces;
+using MAUI_app.Data;
 
 namespace MAUI_app.Controller;
 
-public class AppointmentsController : BaseController
+public class AppointmentsController
 {
+    private readonly IAppointmentsView _view;
     private readonly IAppointmentService _appointmentService;
-    
-    private ObservableCollection<Appointment> _dailyAppointments = new();
-    public ObservableCollection<Appointment> DailyAppointments
-    {
-        get => _dailyAppointments;
-        set { _dailyAppointments = value; OnPropertyChanged(); }
-    }
+    private readonly IUserService _userService;
 
-    public AppointmentsController(IAppointmentService appointmentService, IUserService userService) : base(userService)
+    public AppointmentsController(
+        IAppointmentsView view, 
+        IAppointmentService appointmentService, 
+        IUserService userService)
     {
+        _view = view;
         _appointmentService = appointmentService;
+        _userService = userService;
     }
 
-    public async Task InitializeAsync()
+    public async Task InitializeDataAsync()
     {
         var user = _userService.CurrentUser;
-        if (user == null) return;
-        
-        IsPatientViewVisible = user.Role == UserRole.Patient;
-        IsSecretaryViewVisible = user.Role == UserRole.Secretary;
-        IsDoctorViewVisible = user.Role == UserRole.Doctor;
-
-        if (IsPatientViewVisible)
+        if (user == null)
         {
-            SetupBanner("Appointments");
-        }
-        else if (IsSecretaryViewVisible)
-        {
-            SetupBanner("Clinic Appointments");
-        }
-        else if (IsDoctorViewVisible)
-        {
-            SetupBanner("Daily Schedule");
+            await _view.ShowErrorAsync("User not logged in");
+            return;
         }
 
         List<Appointment> appointments;
 
-        if (IsPatientViewVisible)
+        if (user.Role == UserRole.Patient)
         {
             appointments = await _appointmentService.GetUpcomingAppointmentsForPatientAsync(user.Id);
+            var allDoctors = await _userService.GetAllDoctorsAsync();
+            
+            foreach (var appt in appointments)
+            {
+                var doctor = allDoctors.FirstOrDefault(d => d.Id == appt.DoctorId);
+                appt.DisplayName = doctor != null ? $"Dr. {doctor.UserName}" : "Unknown Doctor";
+            }
         }
-        else if (IsSecretaryViewVisible)
+        else if (user.Role == UserRole.Secretary)
         {
-            appointments = await _appointmentService.GetUpcomingAppointmentsForClinicAsync(); 
+            appointments = await _appointmentService.GetUpcomingAppointmentsForClinicAsync();
+            foreach (var appt in appointments) 
+            {
+                appt.DisplayName = appt.PatientName;
+            }
         }
         else 
         {
             appointments = await _appointmentService.GetTodaysPatientsForDoctorAsync(user.Id);
-        }
-
-        var allDoctors = await _userService.GetAllDoctorsAsync();
-        DailyAppointments.Clear();
-        foreach (var appt in appointments)
-        {
-            if (IsPatientViewVisible)
-            {
-                var doctor = allDoctors.FirstOrDefault(d => d.Id == appt.DoctorId);
-                appt.DisplayName = doctor != null ? "Dr. " + doctor.UserName : "Unknown Doctor";
-            }
-            else
+            foreach (var appt in appointments) 
             {
                 appt.DisplayName = appt.PatientName;
             }
-
-            DailyAppointments.Add(appt);
         }
+        _view.SetAppointments(appointments);
     }
 }

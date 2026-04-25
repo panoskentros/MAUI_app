@@ -1,6 +1,12 @@
-namespace MAUI_app.View.Interfaces;
+using MAUI_app.Model;
+
+namespace MAUI_app.View.interfaces;
 
 public interface IBookAppointmentView
 {
-    Task ShowAlert(string title, string message,string cancelMsg);
+    void SetDoctors(List<ApplicationUser> doctors);
+    void SetPatients(List<ApplicationUser> patients);
+    void ShowPatientSelection(bool isVisible);
+    Task ShowAlertAsync(string title, string message);
+    Task NavigateBackAsync();
 }

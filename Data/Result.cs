@@ -1,7 +1,7 @@
 namespace MAUI_app.Data;
 
 
-public sealed class Result : IResult
+public sealed class Result
 {
     public bool Success { get; init; }
     public string Message { get; init; } = string.Empty;
@@ -13,7 +13,7 @@ public sealed class Result : IResult
         new() { Success = false, Message = message };
 }
 
-public sealed class Result<T> : IResult<T>
+public sealed class Result<T>
 {
     public bool Success { get; init; }
     public string Message { get; init; } = string.Empty;

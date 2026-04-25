@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Threading.Tasks;
+using Microsoft.Maui.Controls;
 using MAUI_app.Controller;
-using MAUI_app.Model;
-using MAUI_app.Services;
 using MAUI_app.Services.Interfaces;
-using MAUI_app.View.Interfaces;
+using MAUI_app.View.interfaces;
 
 namespace MAUI_app.View;
 
@@ -11,96 +11,90 @@ public partial class LoginPage : ContentPage, ILoginView
 {
     private readonly LoginController _controller;
     private readonly RegisterPage _registerPage;
-    public LoginPage(IUserService userService,RegisterPage registerPage)
+
+    public LoginPage(IUserService userService, RegisterPage registerPage)
     {
         InitializeComponent();
         
-        _controller = new LoginController(this, userService);
         _registerPage = registerPage;
+        _controller = new LoginController(this, userService);
     }
 
     private async void OnLoginClicked(object sender, EventArgs e)
     {
-        string usernameOrEmail = UsernameOrEmailEntry.Text;
-        string password = PasswordEntry.Text;
-        await _controller.LoginAsync(usernameOrEmail, password);
+        await _controller.HandleLoginAsync(UsernameOrEmailEntry.Text, PasswordEntry.Text);
     }
     
     private async void OnGoToRegisterClicked(object sender, EventArgs e)
     {
-        await _controller.GoToRegisterAsync();
+        await _controller.HandleGoToRegisterClickedAsync();
     }
 
-    private async void OnLogoutClickedAsync(object sender, EventArgs e)
+    private void OnLogoutClicked(object sender, EventArgs e)
     {
-        await _controller.LogoutAsync();
+        _controller.HandleLogout();
     }
 
     private void OnExitClicked(object sender, EventArgs e)
     {
-        Application.Current?.Quit();
+        _controller.HandleExit();
     }
     
-    private bool _isPasswordHidden = true;
     private async void OnTogglePasswordClicked(object sender, TappedEventArgs e)
     {
         if (sender is Image eyeIcon)
         {
-            _isPasswordHidden = !_isPasswordHidden;
-            PasswordEntry.IsPassword = _isPasswordHidden;
-            eyeIcon.Source = _isPasswordHidden ? "eye_slash_icon.png" : "eye_icon.png";
+            _controller.HandleTogglePasswordClicked();
+            
+            eyeIcon.Source = PasswordEntry.IsPassword ? "eye_slash_icon.png" : "eye_icon.png";
             await eyeIcon.ScaleTo(0.8, 100);
             await eyeIcon.ScaleTo(1.0, 100);
         }
     }
 
-    public void SetLoading(bool isLoading)
+    public void SetUsernameError(string message, bool isVisible)
+    {
+        UsernameError.Text = message;
+        UsernameError.IsVisible = isVisible;
+    }
+
+    public void SetPasswordError(string message, bool isVisible)
+    {
+        PasswordError.Text = message;
+        PasswordError.IsVisible = isVisible;
+    }
+
+    public void SetLoadingState(bool isLoading)
     {
         LoadingIndicator.IsRunning = isLoading;
         LoadingIndicator.IsVisible = isLoading;
         LoginBtn.IsEnabled = !isLoading;
-        LoginBtn.Text = isLoading ? "" : "Sign In";
+        LoginBtn.Text = isLoading ? string.Empty : "Sign In";
     }
 
-    public async Task ShowAlert(string title, string message,string cancelMsg="OK")
-    {
-        await DisplayAlert(title, message,cancelMsg);
-    }
-
-    public async Task NavigateToDashboard()
-    {
-      await Shell.Current.GoToAsync("//dashboard");
-    }
-
-    public async Task NavigateToRegister()
-    {
-        await Navigation.PushAsync(_registerPage);
-    }
-
-    public void ClearFields()
+    public void ClearInputs()
     {
         UsernameOrEmailEntry.Text = string.Empty;
         PasswordEntry.Text = string.Empty;
     }
-    
-    public void ClearErrors()
+
+    public void UpdatePasswordVisibilityState(bool isHidden)
     {
-        UsernameError.IsVisible = false;
-        PasswordError.IsVisible = false;
+        PasswordEntry.IsPassword = isHidden;
     }
 
-    public void ShowFieldError(string propertyName, string errorMessage)
+    public async Task NavigateToDashboardAsync()
     {
-        switch (propertyName)
-        {   
-            case "UsernameOrEmail":
-                UsernameError.Text = errorMessage;
-                UsernameError.IsVisible = true;
-                break;
-            case "Password":
-                PasswordError.Text = errorMessage;
-                PasswordError.IsVisible = true;
-                break;
-        }
+        await Shell.Current.GoToAsync("//dashboard");
+    }
+
+    public async Task NavigateToRegisterAsync()
+    {
+        await Navigation.PushAsync(_registerPage);
+    }
+
+    public void QuitApplication()
+    {
+        Application.Current?.Quit();
     }
 }

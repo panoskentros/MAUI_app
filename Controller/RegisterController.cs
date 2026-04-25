@@ -1,8 +1,7 @@
 using System.Threading.Tasks;
 using MAUI_app.Model;
-using MAUI_app.Services;
 using MAUI_app.Services.Interfaces;
-using MAUI_app.View.Interfaces;
+using MAUI_app.View.interfaces;
 
 namespace MAUI_app.Controller;
 
@@ -10,6 +9,8 @@ public class RegisterController
 {
     private readonly IRegisterView _view;
     private readonly IUserService _userService;
+    private bool _isPasswordHidden = true;
+    private bool _isConfirmPasswordHidden = true;
 
     public RegisterController(IRegisterView view, IUserService userService)
     {
@@ -17,31 +18,80 @@ public class RegisterController
         _userService = userService;
     }
 
-    public async Task RegisterUserAsync(ApplicationUser user)
-    { 
-        _view.ClearErrors();
-        
-        if (user.HashedPassword != _view.GetConfirmPassword())
+    public async Task HandleRegisterAsync(string username, string email, string password, string confirmPassword)
+    {
+        _view.SetUsernameError(string.Empty, false);
+        _view.SetEmailError(string.Empty, false);
+        _view.SetPasswordError(string.Empty, false);
+        _view.SetConfirmPasswordError(string.Empty, false);
+
+        bool hasError = false;
+
+        if (string.IsNullOrWhiteSpace(username))
         {
-            _view.ShowFieldError(nameof(ApplicationUser.HashedPassword), "Passwords do not match");
-            return;
+            _view.SetUsernameError("Username is required", true);
+            hasError = true;
         }
 
-        _view.SetLoading(true);
+        if (string.IsNullOrWhiteSpace(email))
+        {
+            _view.SetEmailError("Email is required", true);
+            hasError = true;
+        }
 
-        var registerResult = await _userService.RegisterAsync(user);
+        if (string.IsNullOrWhiteSpace(password))
+        {
+            _view.SetPasswordError("Password is required", true);
+            hasError = true;
+        }
 
-        _view.SetLoading(false);
+        if (password != confirmPassword)
+        {
+            _view.SetConfirmPasswordError("Passwords do not match", true);
+            hasError = true;
+        }
+
+        if (hasError) return;
+
+        _view.SetLoadingState(true);
+
+        var newUser = new ApplicationUser
+        {
+            UserName = username,
+            Email = email,
+            HashedPassword = password
+        };
+
+        var registerResult = await _userService.RegisterAsync(newUser);
+
+        _view.SetLoadingState(false);
 
         if (registerResult.Success)
         {
-            _view.ClearFields();
-            await _view.ShowAlert("Success", "Account created successfully!");
-            await _view.NavigateBack();
+            await _view.ShowAlertAsync("Success", "Registration successful. Please log in.");
+            _view.ClearInputs();
+            await _view.NavigateBackAsync();
         }
         else
         {
-            await _view.ShowAlert("Registration Failed", registerResult.Message);
+            await _view.ShowAlertAsync("Registration Failed", registerResult.Message ?? "Registration failed");
         }
+    }
+
+    public async Task HandleBackToLoginAsync()
+    {
+        await _view.NavigateBackAsync();
+    }
+
+    public void HandleTogglePasswordClicked()
+    {
+        _isPasswordHidden = !_isPasswordHidden;
+        _view.UpdatePasswordVisibilityState(_isPasswordHidden);
+    }
+
+    public void HandleToggleConfirmPasswordClicked()
+    {
+        _isConfirmPasswordHidden = !_isConfirmPasswordHidden;
+        _view.UpdateConfirmPasswordVisibilityState(_isConfirmPasswordHidden);
     }
 }

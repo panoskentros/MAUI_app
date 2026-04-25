@@ -1,138 +1,95 @@
-﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using MAUI_app.Model;
 using MAUI_app.Services.Interfaces;
-using MAUI_app.View.Interfaces;
+using MAUI_app.View.interfaces;
 
 namespace MAUI_app.Controller;
 
-public class BookAppointmentController : BaseController
+public class BookAppointmentController
 {
-    private readonly IAppointmentService _appointmentService; 
+    private readonly IBookAppointmentView _view;
+    private readonly IAppointmentService _appointmentService;
     private readonly IUserService _userService;
-    private readonly IBookAppointmentView _bookAppointmentsView;
-    public BookAppointmentController(IBookAppointmentView bookAppointmentsView, IAppointmentService appointmentService, IUserService userService) : base(userService)
+
+    public BookAppointmentController(
+        IBookAppointmentView view, 
+        IAppointmentService appointmentService, 
+        IUserService userService)
     {
+        _view = view;
         _appointmentService = appointmentService;
         _userService = userService;
-        _bookAppointmentsView = bookAppointmentsView;
-    }
-    
-    public ObservableCollection<ApplicationUser> AvailableDoctors { get; set; } = new();
-
-    private ApplicationUser _selectedDoctor;
-    public ApplicationUser SelectedDoctor
-    {
-        get => _selectedDoctor;
-        set { _selectedDoctor = value; OnPropertyChanged(); }
-    }
-    
-    public ObservableCollection<ApplicationUser> AvailablePatients { get; set; } = new();
-
-    private ApplicationUser _selectedPatient;
-    public ApplicationUser SelectedPatient
-    {
-        get => _selectedPatient;
-        set { _selectedPatient = value; OnPropertyChanged(); }
     }
 
-    private DateTime _appointmentDate = DateTime.Today.AddDays(1);
-    public DateTime AppointmentDate
-    {
-        get => _appointmentDate;
-        set { _appointmentDate = value; OnPropertyChanged(); }
-    }
-
-    private TimeSpan _appointmentTime = new TimeSpan(9, 0, 0); // Default to 9:00 AM
-    public TimeSpan AppointmentTime
-    {
-        get => _appointmentTime;
-        set { _appointmentTime = value; OnPropertyChanged(); }
-    }
-
-    private string _medicalNotes;
-    public string MedicalNotes
-    {
-        get => _medicalNotes;
-        set { _medicalNotes = value; OnPropertyChanged(); }
-    }
-
-    public async Task InitializeAsync()
+    public async Task OnViewAppearing()
     {
         var user = _userService.CurrentUser;
         if (user == null) return;
+
+        bool isStaff = user.Role == UserRole.Secretary || user.Role == UserRole.Doctor;
         
-        IsPatientViewVisible = user.Role == UserRole.Patient;
-        IsSecretaryViewVisible = user.Role == UserRole.Secretary;
-        IsDoctorViewVisible = user.Role == UserRole.Doctor;
-        
-        if (IsPatientViewVisible)
-        {
-            SetupBanner("Book Appointment", false, "Schedule a Visit");
-        }
-        else if (IsSecretaryViewVisible)
-        {
-            SetupBanner("Clinic Reception", false, "Book Walk-in / Call-in");
-        }
-        else if (IsDoctorViewVisible)
-        {
-            SetupBanner("Doctor Tools", false, "Schedule Follow-up");
-        }
-        
-        var doctors = await _userService.GetAllDoctorsAsync(); 
-        AvailableDoctors.Clear();
-        foreach (var doc in doctors) 
-        {
-            AvailableDoctors.Add(doc);
-        }
-        
-        if (IsSecretaryViewVisible || IsDoctorViewVisible)
+        _view.ShowPatientSelection(isStaff);
+
+        var doctors = await _userService.GetAllDoctorsAsync();
+        _view.SetDoctors(doctors);
+
+        if (isStaff)
         {
             var patients = await _userService.GetAllPatientsAsync();
-            AvailablePatients.Clear();
-            foreach (var p in patients) 
-            {
-                AvailablePatients.Add(p);
-            }
+            _view.SetPatients(patients);
         }
     }
 
-    public async Task<bool> SaveAppointmentAsync()
+    public async Task SaveAppointment(
+        ApplicationUser selectedDoctor, 
+        ApplicationUser selectedPatient, 
+        DateTime date, 
+        TimeSpan time, 
+        string notes)
     {
-        if ((IsSecretaryViewVisible || IsDoctorViewVisible) && SelectedPatient == null) return false;
-
         var currentUser = _userService.CurrentUser;
-        
-        DateTime combined = AppointmentDate.Date + AppointmentTime;
-        DateTime cleanDate = new DateTime(
-            combined.Year, combined.Month, combined.Day, 
-            combined.Hour, combined.Minute, 0, 
-            DateTimeKind.Unspecified);
-
-        if (currentUser != null)
+        if (currentUser == null) 
         {
-            int correctPatientId = IsPatientViewVisible ? currentUser.Id : SelectedPatient.Id;
-            string correctPatientName = IsPatientViewVisible ? currentUser.UserName : SelectedPatient.UserName;
-
-            var newAppointment = new Appointment
-            {
-                ApplicationUserId = correctPatientId, 
-                DoctorId = SelectedDoctor.Id,       
-                PatientName = correctPatientName,
-                AppointmentDate = cleanDate,
-                MedicalNotes = this.MedicalNotes,
-                Status = "Scheduled"
-            };
-        
-            var result = await _appointmentService.CreateAppointmentAsync(newAppointment);
-            if (!result.Success)
-            {
-                await _bookAppointmentsView.ShowAlert("Validation Error", result.Message,"OK");
-                return false;
-            }
+            await _view.ShowAlertAsync("Error", "User not authenticated.");
+            return;
         }
 
-        return true;
+        bool isStaff = currentUser.Role == UserRole.Secretary || currentUser.Role == UserRole.Doctor;
+        
+        if (isStaff && selectedPatient == null) 
+        {
+            await _view.ShowAlertAsync("Error", "Please select a patient.");
+            return;
+        }
+
+        DateTime combined = date.Date + time;
+        DateTime cleanDate = new DateTime(combined.Year, combined.Month, combined.Day, combined.Hour, combined.Minute, 0);
+
+        int patientId = isStaff ? selectedPatient.Id : currentUser.Id;
+        string patientName = isStaff ? selectedPatient.UserName : currentUser.UserName;
+
+        var newAppointment = new Appointment
+        {
+            ApplicationUserId = patientId,
+            DoctorId = selectedDoctor.Id,
+            PatientName = patientName,
+            AppointmentDate = cleanDate,
+            MedicalNotes = notes,
+            Status = "Scheduled"
+        };
+
+        var serviceResult = await _appointmentService.CreateAppointmentAsync(newAppointment);
+
+        if (serviceResult.Success)
+        {
+            await _view.ShowAlertAsync("Success", "Appointment saved successfully.");
+            await _view.NavigateBackAsync();
+        }
+        else
+        {
+            await _view.ShowAlertAsync("Error", serviceResult.Message);
+        }
     }
 }

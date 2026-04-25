@@ -2,8 +2,8 @@ using MAUI_app.Model;
 
 namespace MAUI_app.View.interfaces;
 
-public interface IAppointmentsView
+public interface IMedicationsView
 {
-    void SetAppointments(List<Appointment> appointments);
+    void SetMedications(List<Medication> medications);
     Task ShowErrorAsync(string message);
 }

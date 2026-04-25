@@ -54,7 +54,7 @@ public class UserService : IUserService
             .FirstOrDefaultAsync(u => u.Role == UserRole.Patient && u.Id == doctorId);
     }
 
-    public async Task<IResult<ApplicationUser>> LoginAsync(string usernameOrEmail, string password)
+    public async Task<Result<ApplicationUser>> LoginAsync(string usernameOrEmail, string password)
     {
         var user = await _context.Set<ApplicationUser>().AsNoTracking()
             .FirstOrDefaultAsync(u => u.UserName == usernameOrEmail || u.Email == usernameOrEmail);
@@ -75,7 +75,7 @@ public class UserService : IUserService
 
         return Result<ApplicationUser>.Fail("Invalid username/email or password");
     }
-    public async Task<IResult> RegisterAsync(ApplicationUser user)
+    public async Task<Result> RegisterAsync(ApplicationUser user)
     {
         var validationResult = await _validator.ValidateAsync(user);
         if (!validationResult.IsValid)

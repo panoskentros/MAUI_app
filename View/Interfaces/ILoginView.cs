@@ -1,12 +1,13 @@
-namespace MAUI_app.View.Interfaces;
+namespace MAUI_app.View.interfaces;
 
 public interface ILoginView
 {
-    void SetLoading(bool isLoading);
-    Task ShowAlert(string title, string message, string cancelMsg);
-    Task NavigateToDashboard();
-    Task NavigateToRegister();
-    void ClearFields();
-    void ClearErrors();
-    void ShowFieldError(string propertyName, string errorMessage);
+    void SetUsernameError(string message, bool isVisible);
+    void SetPasswordError(string message, bool isVisible);
+    void SetLoadingState(bool isLoading);
+    void ClearInputs();
+    void UpdatePasswordVisibilityState(bool isHidden);
+    Task NavigateToDashboardAsync();
+    Task NavigateToRegisterAsync();
+    void QuitApplication();
 }

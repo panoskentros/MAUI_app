@@ -1,44 +1,43 @@
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.Maui.Controls;
 using MAUI_app.Controller;
+using MAUI_app.Model;
 using MAUI_app.Services.Interfaces;
-using MAUI_app.View.Interfaces;
+using MAUI_app.View.interfaces;
 
 namespace MAUI_app.View;
 
-public partial class BookAppointmentPage  : IBookAppointmentView
+public partial class BookAppointmentPage : ContentPage, IBookAppointmentView
 {
     private readonly BookAppointmentController _controller;
-    private IBookAppointmentView bookAppointmentView;
 
-    public BookAppointmentPage(IUserService _userService,IAppointmentService _appointmentService)
+    public BookAppointmentPage(IUserService userService, IAppointmentService appointmentService)
     {
         InitializeComponent();
-        
-        _controller = new BookAppointmentController(this, _appointmentService,_userService);
-        BindingContext = _controller;
+        _controller = new BookAppointmentController(this, appointmentService, userService);
     }
-    
+
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        await _controller.InitializeAsync();
+        await _controller.OnViewAppearing();
     }
-    
+
     private async void OnSaveClicked(object sender, EventArgs e)
     {
-        bool success = await _controller.SaveAppointmentAsync();
-        
-        if (success)
-        {
-            await DisplayAlert("Success", "Appointment booked successfully!", "OK");
-            await Navigation.PopAsync(); 
-        }
-        else
-        {
-            await DisplayAlert("Error", "Please make sure you have selected a Doctor", "OK");
-        }
+        await _controller.SaveAppointment(
+            DoctorPicker.SelectedItem as ApplicationUser,
+            PatientPicker.SelectedItem as ApplicationUser,
+            ApptDatePicker.Date,
+            ApptTimePicker.Time,
+            NotesEditor.Text);
     }
-    public async Task ShowAlert(string title, string message,string cancelMsg="OK")
-    {
-        await DisplayAlert(title, message, cancelMsg);
-    }
+
+    public void SetDoctors(List<ApplicationUser> doctors) => DoctorPicker.ItemsSource = doctors;
+    public void SetPatients(List<ApplicationUser> patients) => PatientPicker.ItemsSource = patients;
+    public void ShowPatientSelection(bool isVisible) => PatientPickerContainer.IsVisible = isVisible;
+    public Task ShowAlertAsync(string title, string message) => DisplayAlert(title, message, "OK");
+    public Task NavigateBackAsync() => Navigation.PopAsync();
 }

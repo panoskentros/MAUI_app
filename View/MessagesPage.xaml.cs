@@ -1,21 +1,34 @@
-﻿using MAUI_app.Controller;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.Maui.Controls;
+using MAUI_app.Controller;
+using MAUI_app.Model;
+using MAUI_app.View.interfaces;
 
 namespace MAUI_app.View;
 
-public partial class MessagesPage : ContentPage
+public partial class MessagesPage : ContentPage, IMessagesView
 {
     private readonly MessagesController _controller;
-
-    public MessagesPage(MessagesController controller)
+    public MessagesPage()
     {
         InitializeComponent();
-        _controller = controller;
-        BindingContext = _controller;
+        
+        _controller = new MessagesController(this);
+        Title = "Inbox";
     }
 
-    protected override void OnAppearing()
+    protected override async void OnAppearing()
     {
         base.OnAppearing();
-        _controller.InitializeAsync();
+        await _controller.InitializeDataAsync();
+    }
+    public void SetMessages(List<MessageItem> messages)
+    {
+        MessagesList.ItemsSource = messages;
+    }
+    public Task ShowErrorAsync(string message)
+    {
+        return DisplayAlert("Error", message, "OK");
     }
 }
