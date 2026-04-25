@@ -1,38 +1,48 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using MAUI_app.Model;
 using MAUI_app.Services.Interfaces;
-using MAUI_app.Data;
+using MAUI_app.View.interfaces;
 
 namespace MAUI_app.Controller;
 
 public class BookAppointmentController
 {
+    private readonly IBookAppointmentView _view;
     private readonly IAppointmentService _appointmentService;
     private readonly IUserService _userService;
 
-    public BookAppointmentController(IAppointmentService appointmentService, IUserService userService)
+    public BookAppointmentController(
+        IBookAppointmentView view, 
+        IAppointmentService appointmentService, 
+        IUserService userService)
     {
+        _view = view;
         _appointmentService = appointmentService;
         _userService = userService;
     }
 
-    public async Task<List<ApplicationUser>> GetDoctorsAsync()
-    {
-        return await _userService.GetAllDoctorsAsync();
-    }
-
-    public async Task<List<ApplicationUser>> GetPatientsAsync()
+    public async Task OnViewAppearing()
     {
         var user = _userService.CurrentUser;
-        if (user != null && (user.Role == UserRole.Secretary || user.Role == UserRole.Doctor))
+        if (user == null) return;
+
+        bool isStaff = user.Role == UserRole.Secretary || user.Role == UserRole.Doctor;
+        
+        _view.ShowPatientSelection(isStaff);
+
+        var doctors = await _userService.GetAllDoctorsAsync();
+        _view.SetDoctors(doctors);
+
+        if (isStaff)
         {
-            return await _userService.GetAllPatientsAsync();
+            var patients = await _userService.GetAllPatientsAsync();
+            _view.SetPatients(patients);
         }
-        return new List<ApplicationUser>();
     }
 
-    public async Task<Result> SaveAppointmentAsync(
+    public async Task SaveAppointment(
         ApplicationUser selectedDoctor, 
         ApplicationUser selectedPatient, 
         DateTime date, 
@@ -40,10 +50,19 @@ public class BookAppointmentController
         string notes)
     {
         var currentUser = _userService.CurrentUser;
-        if (currentUser == null) return Result.Fail("User not authenticated.");
+        if (currentUser == null) 
+        {
+            await _view.ShowAlertAsync("Error", "User not authenticated.");
+            return;
+        }
 
         bool isStaff = currentUser.Role == UserRole.Secretary || currentUser.Role == UserRole.Doctor;
-        if (isStaff) return Result.Fail("Please select a patient.");
+        
+        if (isStaff && selectedPatient == null) 
+        {
+            await _view.ShowAlertAsync("Error", "Please select a patient.");
+            return;
+        }
 
         DateTime combined = date.Date + time;
         DateTime cleanDate = new DateTime(combined.Year, combined.Month, combined.Day, combined.Hour, combined.Minute, 0);
@@ -64,8 +83,13 @@ public class BookAppointmentController
         var serviceResult = await _appointmentService.CreateAppointmentAsync(newAppointment);
 
         if (serviceResult.Success)
-            return Result.Ok("Appointment saved successfully.");
-
-        return Result.Fail(serviceResult.Message);
+        {
+            await _view.ShowAlertAsync("Success", "Appointment saved successfully.");
+            await _view.NavigateBackAsync();
+        }
+        else
+        {
+            await _view.ShowAlertAsync("Error", serviceResult.Message);
+        }
     }
 }

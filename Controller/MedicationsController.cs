@@ -1,15 +1,21 @@
-﻿using MAUI_app.Model;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using MAUI_app.Model;
 using MAUI_app.Data;
+using MAUI_app.View.interfaces;
 
 namespace MAUI_app.Controller;
 
 public class MedicationsController
 {
-    public MedicationsController()
+    private readonly IMedicationsView _view;
+
+    public MedicationsController(IMedicationsView view)
     {
+        _view = view;
     }
     
-    public Result<List<Medication>> GetActivePrescriptions()
+    public async Task InitializeDataAsync()
     {
         var medications = new List<Medication>
         {
@@ -27,6 +33,15 @@ public class MedicationsController
             }
         };
 
-        return Result<List<Medication>>.Ok(medications, "Prescriptions retrieved successfully.");
+        var result = Result<List<Medication>>.Ok(medications, "Prescriptions retrieved successfully.");
+
+        if (result.Success)
+        {
+            _view.SetMedications(result.Data);
+        }
+        else
+        {
+            await _view.ShowErrorAsync(result.Message);
+        }
     }
 }

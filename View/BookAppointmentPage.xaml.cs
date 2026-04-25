@@ -1,60 +1,43 @@
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.Maui.Controls;
 using MAUI_app.Controller;
-using MAUI_app.Services.Interfaces;
 using MAUI_app.Model;
+using MAUI_app.Services.Interfaces;
+using MAUI_app.View.interfaces;
 
 namespace MAUI_app.View;
 
-public partial class BookAppointmentPage : ContentPage
+public partial class BookAppointmentPage : ContentPage, IBookAppointmentView
 {
     private readonly BookAppointmentController _controller;
-    private readonly IUserService _userService;
 
     public BookAppointmentPage(IUserService userService, IAppointmentService appointmentService)
     {
         InitializeComponent();
-        _userService = userService;
-        _controller = new BookAppointmentController(appointmentService, userService);
+        _controller = new BookAppointmentController(this, appointmentService, userService);
     }
 
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        await LoadDataAsync();
-    }
-
-    private async Task LoadDataAsync()
-    {
-        var user = _userService.CurrentUser;
-        if (user == null) return;
-
-        PatientPickerContainer.IsVisible = user.Role == UserRole.Secretary || user.Role == UserRole.Doctor;
-        
-        DoctorPicker.ItemsSource = await _controller.GetDoctorsAsync();
-        
-        if (PatientPickerContainer.IsVisible)
-        {
-            PatientPicker.ItemsSource = await _controller.GetPatientsAsync();
-        }
+        await _controller.OnViewAppearing();
     }
 
     private async void OnSaveClicked(object sender, EventArgs e)
     {
-        var selectedDoctor = DoctorPicker.SelectedItem as ApplicationUser;
-        var selectedPatient = PatientPicker.SelectedItem as ApplicationUser;
-        var date = ApptDatePicker.Date;
-        var time = ApptTimePicker.Time;
-        var notes = NotesEditor.Text;
-
-        var result = await _controller.SaveAppointmentAsync(selectedDoctor, selectedPatient, date, time, notes);
-
-        if (result.Success)
-        {
-            await DisplayAlert("Success", result.Message, "OK");
-            await Navigation.PopAsync();
-        }
-        else
-        {
-            await DisplayAlert("Error", result.Message, "OK");
-        }
+        await _controller.SaveAppointment(
+            DoctorPicker.SelectedItem as ApplicationUser,
+            PatientPicker.SelectedItem as ApplicationUser,
+            ApptDatePicker.Date,
+            ApptTimePicker.Time,
+            NotesEditor.Text);
     }
+
+    public void SetDoctors(List<ApplicationUser> doctors) => DoctorPicker.ItemsSource = doctors;
+    public void SetPatients(List<ApplicationUser> patients) => PatientPicker.ItemsSource = patients;
+    public void ShowPatientSelection(bool isVisible) => PatientPickerContainer.IsVisible = isVisible;
+    public Task ShowAlertAsync(string title, string message) => DisplayAlert(title, message, "OK");
+    public Task NavigateBackAsync() => Navigation.PopAsync();
 }

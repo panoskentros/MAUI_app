@@ -1,16 +1,21 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using MAUI_app.Model;
 using MAUI_app.Data;
+using MAUI_app.View.interfaces;
 
 namespace MAUI_app.Controller;
 
 public class MessagesController
 {
-    public MessagesController()
+    private readonly IMessagesView _view;
+
+    public MessagesController(IMessagesView view)
     {
+        _view = view;
     }
 
-    public Result<List<MessageItem>> GetInboxMessages()
+    public async Task InitializeDataAsync()
     {
         var messages = new List<MessageItem>
         {
@@ -40,6 +45,15 @@ public class MessagesController
             }
         };
 
-        return Result<List<MessageItem>>.Ok(messages, "Messages retrieved successfully.");
+        var result = Result<List<MessageItem>>.Ok(messages, "Messages retrieved successfully.");
+
+        if (result.Success)
+        {
+            _view.SetMessages(result.Data);
+        }
+        else
+        {
+            await _view.ShowErrorAsync(result.Message);
+        }
     }
 }
