@@ -49,7 +49,7 @@ public class AppDbContext : DbContext
             entity.Property(a => a.Id)
                 .UseIdentityByDefaultColumn();
 
-            entity.HasIndex(a => a.AppointmentDate)
+            entity.HasIndex(a => new { a.DoctorId, a.AppointmentDate })
                 .IsUnique();
         });
     }

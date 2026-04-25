@@ -68,11 +68,16 @@ public class AppointmentService : IAppointmentService
             var errorMessages = string.Join(" ", validationResult.Errors.Select(e => e.ErrorMessage));
             return Result<Appointment>.Fail(errorMessages);
         }
+
         try
         {
             await _context.Appointments.AddAsync(appointment);
             await _context.SaveChangesAsync();
             return Result<Appointment>.Ok(appointment, "Appointment created successfully.");
+        }
+        catch (DbUpdateException)
+        {
+            return Result<Appointment>.Fail("There is already an appointment with the given date...Please refresh the view.");
         }
         catch (Exception ex)
         {
