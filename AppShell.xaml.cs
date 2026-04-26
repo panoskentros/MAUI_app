@@ -9,11 +9,18 @@ public partial class AppShell : Shell
 {
     private readonly IUserService _userService;
 
-    public AppShell(IUserService  userService)
+    public AppShell(IUserService userService)
     {
         InitializeComponent();
         _userService = userService;
         _userService.UserChanged += (s, e) => UpdateMenuBasedOnRole();
+        
+        this.Loaded += AppShell_Loaded;
+    }
+    private void AppShell_Loaded(object? sender, EventArgs e)
+    {
+        if (Application.Current is not { } app) return;
+        ThemeSwitch.IsToggled = app.RequestedTheme == AppTheme.Dark;
     }
     
     private void UpdateMenuBasedOnRole()
@@ -41,5 +48,21 @@ public partial class AppShell : Shell
         Current.FlyoutIsPresented = false;
         _userService.Logout();
         await Current.GoToAsync("//LoginPage");
+    }
+
+    private void OnThemeSwitchToggled(object sender, ToggledEventArgs e)
+    {
+        if (Application.Current is null) return;
+
+        var targetTheme = e.Value ? AppTheme.Dark : AppTheme.Light;
+
+        if (Application.Current.UserAppTheme == targetTheme) return;
+
+        Shell.Current.FlyoutIsPresented = false;
+
+        Application.Current.Dispatcher.DispatchDelayed(TimeSpan.FromMilliseconds(300), () =>
+        {
+            Application.Current.UserAppTheme = targetTheme;
+        });
     }
 }
