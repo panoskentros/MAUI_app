@@ -8,22 +8,26 @@ namespace MAUI_app;
 public partial class AppShell : Shell
 {
     private readonly IUserService _userService;
+    private IAsyncDisposable _asyncDisposableImplementation;
 
     public AppShell(IUserService userService)
     {
         InitializeComponent();
-        _userService = userService;
-        _userService.UserChanged += (s, e) => UpdateMenuBasedOnRole();
-        
         this.Loaded += AppShell_Loaded;
+        this.Unloaded += AppShell_Unloaded;
     }
     private void AppShell_Loaded(object? sender, EventArgs e)
     {
         if (Application.Current is not { } app) return;
         ThemeSwitch.IsToggled = app.RequestedTheme == AppTheme.Dark;
     }
-    
-    private void UpdateMenuBasedOnRole()
+    private void AppShell_Unloaded(object? sender, EventArgs e)
+    {
+        _userService.UserChanged -= UpdateMenuBasedOnRole;
+        this.Loaded -= AppShell_Loaded;
+        this.Unloaded -= AppShell_Unloaded;
+    }
+    private void UpdateMenuBasedOnRole(object? sender, EventArgs e)
     {
         if (_userService.CurrentUser == null) return;
 
@@ -57,12 +61,6 @@ public partial class AppShell : Shell
         var targetTheme = e.Value ? AppTheme.Dark : AppTheme.Light;
 
         if (Application.Current.UserAppTheme == targetTheme) return;
-
-        Shell.Current.FlyoutIsPresented = false;
-
-        Application.Current.Dispatcher.DispatchDelayed(TimeSpan.FromMilliseconds(300), () =>
-        {
-            Application.Current.UserAppTheme = targetTheme;
-        });
+        Application.Current.UserAppTheme = targetTheme;
     }
 }
