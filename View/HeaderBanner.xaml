@@ -5,20 +5,24 @@
     <Border StrokeThickness="0" Margin="0" Padding="20,40,20,30">
         <Border.Background>
             <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                <GradientStop Color="#42A5F5" Offset="0.1" />
-                <GradientStop Color="#0D47A1" Offset="1.0" />
+                <GradientStop Offset="0.1" 
+                              Color="{AppThemeBinding Light=#42A5F5, Dark=#1a1a1a}" />
+                <GradientStop Offset="1.0" 
+                              Color="{AppThemeBinding Light=#0D47A1, Dark=Black}" />
             </LinearGradientBrush>
         </Border.Background>
+        
         <Border.StrokeShape>
             <RoundRectangle CornerRadius="0,0,24,24" />
         </Border.StrokeShape>
+
         <HorizontalStackLayout Spacing="15" VerticalOptions="Center">
             <Image Source="medical_logo.png" HeightRequest="50" WidthRequest="50" />
+            
             <VerticalStackLayout VerticalOptions="Center">
-                
                 <Label x:Name="BannerTitleLabel" 
                        Text="{Binding BannerTitle}" 
-                       TextColor="#BBDEFB" 
+                       TextColor="{AppThemeBinding Light=#BBDEFB, Dark=#7F8C8D}" 
                        FontSize="14" 
                        FontAttributes="Bold"
                        TextTransform="Uppercase"/>
@@ -28,7 +32,6 @@
                        TextColor="White" 
                        FontSize="24" 
                        FontAttributes="Bold"/>
-                       
             </VerticalStackLayout>
         </HorizontalStackLayout>
     </Border>

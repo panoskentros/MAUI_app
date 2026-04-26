@@ -35,7 +35,6 @@ public static class MauiProgram
             {
                 windowsLifecycleBuilder.OnWindowCreated(window =>
                 {
-                    // This single line forces the app to stay BELOW the Windows title bar!
                     window.ExtendsContentIntoTitleBar = false;
                 });
             });
