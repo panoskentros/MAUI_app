@@ -86,21 +86,37 @@
                                     </HorizontalStackLayout>
                                 </VerticalStackLayout>
 
-                                <Border Grid.Column="2" 
-                                        BackgroundColor="{AppThemeBinding Light=#E8F8F5, Dark=#154331}" 
-                                        StrokeThickness="0" 
-                                        Padding="15,8" 
-                                        VerticalOptions="Center" 
-                                        HorizontalOptions="End">
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="20" />
-                                    </Border.StrokeShape>
-                                    <Label Text="{Binding Status}" 
-                                           FontSize="12" 
-                                           FontAttributes="Bold" 
-                                           TextColor="{AppThemeBinding Light=#27AE60, Dark=#2ECC71}" 
-                                           TextTransform="Uppercase" />
-                                </Border>
+                                <HorizontalStackLayout Grid.Column="2" VerticalOptions="Center" Spacing="8" HorizontalOptions="End">
+                                    <Border BackgroundColor="{AppThemeBinding Light=#E8F8F5, Dark=#154331}" 
+                                            StrokeThickness="0" 
+                                            Padding="15,8" 
+                                            HorizontalOptions="End">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="20" />
+                                        </Border.StrokeShape>
+                                        <Label Text="{Binding Status}" 
+                                               FontSize="12" 
+                                               FontAttributes="Bold" 
+                                               TextColor="{AppThemeBinding Light=#27AE60, Dark=#2ECC71}" 
+                                               TextTransform="Uppercase" 
+                                               HorizontalOptions="Center" 
+                                               VerticalOptions="Center" 
+                                               HorizontalTextAlignment="Center" 
+                                               VerticalTextAlignment="Center" />
+                                    </Border>
+
+                                    <Button Text="Cancel"
+                                            Clicked="OnCancelAppointmentClicked"
+                                            CommandParameter="{Binding .}"
+                                            BackgroundColor="{AppThemeBinding Light=#FDEDEC, Dark=#441111}"
+                                            TextColor="{AppThemeBinding Light=#E74C3C, Dark=#FF6B6B}"
+                                            FontSize="12"
+                                            FontAttributes="Bold"
+                                            HeightRequest="30"
+                                            Padding="15,0"
+                                            CornerRadius="20"
+                                            HorizontalOptions="End" />
+                                </HorizontalStackLayout>
 
                             </Grid>
                         </Border>

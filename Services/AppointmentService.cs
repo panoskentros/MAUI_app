@@ -84,4 +84,23 @@ public class AppointmentService : IAppointmentService
             return Result<Appointment>.Fail("A database error occurred: " + ex.Message);
         }
     }
+
+    public async Task<Result> CancelAppointmentAsync(int appointmentId)
+    {
+        try
+        {
+            int affectedRows = await _context.Appointments
+                .Where(a => a.Id == appointmentId)
+                .ExecuteDeleteAsync();
+
+            if (affectedRows == 0)
+                return Result.Fail("Appointment not found or already cancelled.");
+
+            return Result.Ok("Appointment cancelled successfully.");
+        }
+        catch (Exception ex)
+        {
+            return Result.Fail($"Database error: {ex.Message}");
+        }
+    }
 }
