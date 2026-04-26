@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:view="clr-namespace:MAUI_app.View"
              x:Class="MAUI_app.View.MedicationsPage"
-             BackgroundColor="#F4F6F8"
+             BackgroundColor="{AppThemeBinding Light=#F4F6F8, Dark=Black}"
              Shell.NavBarIsVisible="False">
 
     <Grid RowDefinitions="Auto, *">
@@ -11,22 +11,59 @@
 
         <Grid Grid.Row="1" RowDefinitions="Auto, *" Padding="20,10,20,30" RowSpacing="20">
             
-            <Label Grid.Row="0" Text="Active Prescriptions" FontSize="20" FontAttributes="Bold" TextColor="#2C3E50" />
+            <Label Grid.Row="0" 
+                   Text="Active Prescriptions" 
+                   FontSize="20" 
+                   FontAttributes="Bold" 
+                   TextColor="{AppThemeBinding Light=#2C3E50, Dark=White}" />
 
             <CollectionView x:Name="MedicationsList" Grid.Row="1">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Border BackgroundColor="White" Stroke="#E0E6ED" StrokeThickness="1" Padding="20" Margin="5,5,5,15">
-                            <Border.StrokeShape><RoundRectangle CornerRadius="12" /></Border.StrokeShape>
-                            <Border.Shadow><Shadow Brush="#000000" Offset="0,4" Radius="10" Opacity="0.05" /></Border.Shadow>
+                        <Border BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource OffBlack}}" 
+                                Stroke="{AppThemeBinding Light=#E0E6ED, Dark={StaticResource Gray600}}" 
+                                StrokeThickness="1" 
+                                Padding="20" 
+                                Margin="5,5,5,15">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="12" />
+                            </Border.StrokeShape>
+                            <Border.Shadow>
+                                <Shadow Brush="Black" Offset="0,4" Radius="10" Opacity="0.05" />
+                            </Border.Shadow>
                             
                             <Grid ColumnDefinitions="Auto, *, Auto" RowDefinitions="Auto, Auto" ColumnSpacing="15">
-                                <Image Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Source="{Binding Icon}" HeightRequest="40" WidthRequest="40" VerticalOptions="Center"/>
+                                <Image Grid.Row="0" 
+                                       Grid.RowSpan="2" 
+                                       Grid.Column="0" 
+                                       Source="{Binding Icon}" 
+                                       HeightRequest="40" 
+                                       WidthRequest="40" 
+                                       VerticalOptions="Center"/>
                                 
-                                <Label Grid.Row="0" Grid.Column="1" Text="{Binding Name}" FontAttributes="Bold" FontSize="18" TextColor="#2C3E50" />
-                                <Label Grid.Row="1" Grid.Column="1" Text="{Binding Instructions}" TextColor="#7F8C8D" FontSize="14" />
+                                <Label Grid.Row="0" 
+                                       Grid.Column="1" 
+                                       Text="{Binding Name}" 
+                                       FontAttributes="Bold" 
+                                       FontSize="18" 
+                                       TextColor="{AppThemeBinding Light=#2C3E50, Dark=White}" />
                                 
-                                <Button Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" Text="Refill" BackgroundColor="#E3F2FD" TextColor="#2980B9" CornerRadius="8" FontAttributes="Bold" VerticalOptions="Center" HeightRequest="35"/>
+                                <Label Grid.Row="1" 
+                                       Grid.Column="1" 
+                                       Text="{Binding Instructions}" 
+                                       TextColor="{AppThemeBinding Light=#7F8C8D, Dark={StaticResource Gray400}}" 
+                                       FontSize="14" />
+                                
+                                <Button Grid.Row="0" 
+                                        Grid.RowSpan="2" 
+                                        Grid.Column="2" 
+                                        Text="Refill" 
+                                        BackgroundColor="{AppThemeBinding Light=#E3F2FD, Dark=#1A3A5A}" 
+                                        TextColor="{AppThemeBinding Light=#2980B9, Dark=#5DADE2}" 
+                                        CornerRadius="8" 
+                                        FontAttributes="Bold" 
+                                        VerticalOptions="Center" 
+                                        HeightRequest="35"/>
                             </Grid>
                         </Border>
                     </DataTemplate>

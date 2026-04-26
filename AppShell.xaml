@@ -5,7 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:view="clr-namespace:MAUI_app.View"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-    FlyoutBackgroundColor="#0D47A1"
+    FlyoutBackgroundColor="{AppThemeBinding Light=#0D47A1, Dark=#1f1f1f}"
     FlyoutWidth="250"
     Shell.ForegroundColor="White"
     Shell.NavBarIsVisible="False"
@@ -98,8 +98,26 @@
     </Shell.ItemTemplate>
 
     <Shell.FlyoutFooter>
-        <Grid Padding="15,10,15,30">
-            <Border BackgroundColor="Transparent" Padding="15,12" StrokeThickness="0">
+        <Grid Padding="15,10,15,30" RowDefinitions="Auto, Auto" RowSpacing="10">
+            
+            <Border BackgroundColor="Transparent" Padding="15,12" StrokeThickness="0" Grid.Row="0">
+                <HorizontalStackLayout Spacing="15" VerticalOptions="Center">
+                    <Label Text="Dark Mode" 
+                           TextColor="White" 
+                           FontSize="15" 
+                           FontAttributes="Bold" 
+                           VerticalOptions="Center"
+                           WidthRequest="110"/>
+
+                    <Switch x:Name="ThemeSwitch" 
+                            Toggled="OnThemeSwitchToggled" 
+                            VerticalOptions="Center"
+                            OnColor="{AppThemeBinding Light=#0D47A1, Dark=#0D47A1}"
+                            ThumbColor="White"/>
+                </HorizontalStackLayout>
+            </Border>
+
+            <Border BackgroundColor="Transparent" Padding="15,12" StrokeThickness="0" Grid.Row="1">
                 <Border.GestureRecognizers>
                     <TapGestureRecognizer Tapped="OnSignOutTapped" />
                 </Border.GestureRecognizers>
