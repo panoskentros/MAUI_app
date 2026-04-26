@@ -14,5 +14,6 @@ public interface IUserService
     Task<ApplicationUser?> GetPatientByIdAsync(int doctorId);   
     Task<List<ApplicationUser>> GetAllPatientsAsync();
     Task<Result> RegisterAsync(ApplicationUser user);
+    Task<Result> UpdateUserAsync(ApplicationUser updatedUser);
     void Logout();
 }

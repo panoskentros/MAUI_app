@@ -98,7 +98,34 @@ public class UserService : IUserService
             return Result.Fail(ex.InnerException?.Message ?? ex.Message);
         }
     }
+    public async Task<Result> UpdateUserAsync(ApplicationUser updatedUser)
+    {
+        var validationResult = await _validator.ValidateAsync(updatedUser);
+        if (!validationResult.IsValid)
+        {
+            var errors = string.Join("\n", validationResult.Errors.Select(e => e.ErrorMessage));
+            return Result.Fail(errors);
+        }
 
+        try
+        {
+            _context.Set<ApplicationUser>().Update(updatedUser);
+            await _context.SaveChangesAsync();
+            _context.ChangeTracker.Clear();
+        
+            if (CurrentUser != null && CurrentUser.Id == updatedUser.Id)
+            {
+                CurrentUser = updatedUser;
+                OnUserChanged();
+            }
+
+            return Result.Ok(string.Empty);
+        }
+        catch (Exception ex)
+        {
+            return Result.Fail(ex.InnerException?.Message ?? ex.Message);
+        }
+    }
     public void Logout()
     {
         CurrentUser = null;

@@ -1,8 +1,10 @@
+using System.Threading.Tasks;
+
 namespace MAUI_app.View.interfaces;
 
 public interface ISettingsView
 {
-    void SetNotificationsToggleState(bool isEnabled);
-    Task ShowErrorAsync(string message);
+    void SetUserData(string username, string email);
+    Task ShowMessageAsync(string message, bool isError = false);
     Task NavigateToLoginAsync();
 }
