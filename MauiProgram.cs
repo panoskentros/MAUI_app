@@ -40,7 +40,6 @@ public static class MauiProgram
             });
         });
 #endif
-        builder.Services.AddSingleton<AppShell>();
         builder.Services.AddSingleton<IUserService, UserService>();
         builder.Services.AddSingleton<IAppointmentService, AppointmentService>();
         builder.Services.AddDbContext<AppDbContext>();
@@ -58,6 +57,8 @@ public static class MauiProgram
         builder.Services.AddTransient<MessagesPage>();
         builder.Services.AddTransient<SettingsController>();
         builder.Services.AddTransient<SettingsPage>();
+        builder.Services.AddSingleton<AppShellController>();
+        builder.Services.AddSingleton<AppShell>();
         
         builder.Services.AddValidatorsFromAssemblyContaining<App>();
 #if DEBUG
