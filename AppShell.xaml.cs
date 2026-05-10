@@ -13,6 +13,7 @@ public partial class AppShell : Shell
     public AppShell(IUserService userService)
     {
         InitializeComponent();
+        _userService = userService;
         this.Loaded += AppShell_Loaded;
         this.Unloaded += AppShell_Unloaded;
     }
