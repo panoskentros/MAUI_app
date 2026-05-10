@@ -3,6 +3,7 @@ using MAUI_app.Data;
 using MAUI_app.Model;
 using MAUI_app.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 namespace MAUI_app.Services;
 
@@ -24,57 +25,117 @@ public class UserService : IUserService
     public bool IsLoggedIn => CurrentUser != null;
     
     private void OnUserChanged() => UserChanged?.Invoke(this, EventArgs.Empty);
+
     public async Task<List<ApplicationUser>> GetAllDoctorsAsync()
     {
-        return await _context.Set<ApplicationUser>().AsNoTracking()
-            .Where(u => u.Role == UserRole.Doctor)
-            .ToListAsync();
+        try
+        {
+            return await _context.Set<ApplicationUser>().AsNoTracking()
+                .Where(u => u.Role == UserRole.Doctor)
+                .ToListAsync();
+        }
+        catch (InvalidOperationException ex) when (ex.InnerException is NpgsqlException)
+        {
+            throw new Exception("The database is currently offline. Please try again later.");
+        }
+        catch (NpgsqlException)
+        {
+            throw new Exception("The database is currently offline. Please try again later.");
+        }
     }
     
     public async Task<ApplicationUser?> GetDoctorByIdAsync(int doctorId)
     {
-        return await _context.Set<ApplicationUser>()
-            .AsNoTracking()
-            .FirstOrDefaultAsync(u => u.Role == UserRole.Doctor && u.Id == doctorId);
+        try
+        {
+            return await _context.Set<ApplicationUser>()
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u => u.Role == UserRole.Doctor && u.Id == doctorId);
+        }
+        catch (InvalidOperationException ex) when (ex.InnerException is NpgsqlException)
+        {
+            throw new Exception("The database is currently offline. Please try again later.");
+        }
+        catch (NpgsqlException)
+        {
+            throw new Exception("The database is currently offline. Please try again later.");
+        }
     }
     
     public async Task<List<ApplicationUser>> GetAllPatientsAsync()
     {
-        return await 
-            _context.Set<ApplicationUser>()
-            .AsNoTracking()
-            .Where(u => u.Role == UserRole.Patient)
-            .ToListAsync();
+        try
+        {
+            return await _context.Set<ApplicationUser>()
+                .AsNoTracking()
+                .Where(u => u.Role == UserRole.Patient)
+                .ToListAsync();
+        }
+        catch (InvalidOperationException ex) when (ex.InnerException is NpgsqlException)
+        {
+            throw new Exception("The database is currently offline. Please try again later.");
+        }
+        catch (NpgsqlException)
+        {
+            throw new Exception("The database is currently offline. Please try again later.");
+        }
     }
+
     public async Task<ApplicationUser?> GetPatientByIdAsync(int doctorId)
     {
-        return await 
-            _context.Set<ApplicationUser>()
-            .AsNoTracking()
-            .FirstOrDefaultAsync(u => u.Role == UserRole.Patient && u.Id == doctorId);
+        try
+        {
+            return await _context.Set<ApplicationUser>()
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u => u.Role == UserRole.Patient && u.Id == doctorId);
+        }
+        catch (InvalidOperationException ex) when (ex.InnerException is NpgsqlException)
+        {
+            throw new Exception("The database is currently offline. Please try again later.");
+        }
+        catch (NpgsqlException)
+        {
+            throw new Exception("The database is currently offline. Please try again later.");
+        }
     }
 
     public async Task<Result<ApplicationUser>> LoginAsync(string usernameOrEmail, string password)
     {
-        var user = await _context.Set<ApplicationUser>().AsNoTracking()
-            .FirstOrDefaultAsync(u => u.UserName == usernameOrEmail || u.Email == usernameOrEmail);
-
-        if (user == null)
+        try
         {
+            var user = await _context.Set<ApplicationUser>().AsNoTracking()
+                .FirstOrDefaultAsync(u => u.UserName == usernameOrEmail || u.Email == usernameOrEmail);
+
+            if (user == null)
+            {
+                return Result<ApplicationUser>.Fail("Invalid username/email or password");
+            }
+
+            bool isValid = PasswordHasher.VerifyPassword(password, user.HashedPassword);
+
+            if (isValid)
+            {
+                CurrentUser = user; 
+                OnUserChanged();
+                return Result<ApplicationUser>.Ok(user, string.Empty);
+            }
+
             return Result<ApplicationUser>.Fail("Invalid username/email or password");
         }
-
-        bool isValid = PasswordHasher.VerifyPassword(password, user.HashedPassword);
-
-        if (isValid)
+        catch (InvalidOperationException ex) when (ex.InnerException is NpgsqlException)
         {
-            CurrentUser = user; 
-            OnUserChanged();
-            return Result<ApplicationUser>.Ok(user, string.Empty);
+            return Result<ApplicationUser>.Fail("The database is currently offline. Please try again later.");
         }
-
-        return Result<ApplicationUser>.Fail("Invalid username/email or password");
+        catch (NpgsqlException)
+        {
+            return Result<ApplicationUser>.Fail("The database is currently offline. Please try again later.");
+        }
+        catch (Exception ex)
+        {
+            return Result<ApplicationUser>.Fail(ex.Message);
+        }
     }
+
     public async Task<Result> RegisterAsync(ApplicationUser user)
     {
         var validationResult = await _validator.ValidateAsync(user);
@@ -93,11 +154,20 @@ public class UserService : IUserService
             
             return Result.Ok(string.Empty);
         }
+        catch (InvalidOperationException ex) when (ex.InnerException is NpgsqlException)
+        {
+            return Result.Fail("The database is currently offline. Please try again later.");
+        }
+        catch (NpgsqlException)
+        {
+            return Result.Fail("The database is currently offline. Please try again later.");
+        }
         catch (Exception ex)
         {
             return Result.Fail(ex.InnerException?.Message ?? ex.Message);
         }
     }
+
     public async Task<Result> UpdateUserAsync(ApplicationUser updatedUser)
     {
         var validationResult = await _validator.ValidateAsync(updatedUser);
@@ -121,14 +191,23 @@ public class UserService : IUserService
 
             return Result.Ok(string.Empty);
         }
+        catch (InvalidOperationException ex) when (ex.InnerException is NpgsqlException)
+        {
+            return Result.Fail("The database is currently offline. Please try again later.");
+        }
+        catch (NpgsqlException)
+        {
+            return Result.Fail("The database is currently offline. Please try again later.");
+        }
         catch (Exception ex)
         {
             return Result.Fail(ex.InnerException?.Message ?? ex.Message);
         }
     }
+
     public void Logout()
     {
         CurrentUser = null;
         OnUserChanged();
-    }
+   }
 }
