@@ -7,9 +7,12 @@ public class ApplicationUser
 {
     [Key]
     public int Id { get; set; }
-    public string UserName { get; set; }
-    public string Email { get; set; }
-    public string HashedPassword { get; set; }
+    [MaxLength(150)]
+    public string UserName { get; set; } = default!;
+    [MaxLength(150)]
+    public string Email { get; set; } = default!;
+    [MaxLength(150)]
+    public string HashedPassword { get; set; } = default!;
     public UserRole Role { get; set; }
     
     [InverseProperty("ApplicationUser")]

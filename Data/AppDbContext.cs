@@ -8,9 +8,18 @@ public class AppDbContext : DbContext
     public DbSet<ApplicationUser> Users { get; set; }
     public DbSet<Appointment> Appointments { get; set; }
 
+    public AppDbContext() 
+    { 
+    }
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) 
+    { 
+    }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseNpgsql(Secrets.DatabaseConnection);
+        if (!optionsBuilder.IsConfigured)
+        {
+            optionsBuilder.UseNpgsql(Secrets.DatabaseConnection);
+        }
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

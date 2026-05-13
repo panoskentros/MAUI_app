@@ -1,8 +1,13 @@
-﻿namespace MAUI_app.Model;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace MAUI_app.Model;
 
 public class Medication
 {
-    public string Name { get; set; }
-    public string Instructions { get; set; }
-    public string Icon { get; set; } // e.g., "pill_icon.png"
+    [MaxLength(150)]
+    public string Name { get; set; } = default!;
+    [MaxLength(150)]
+    public string Instructions { get; set; }  = default!;
+    [MaxLength(150)]
+    public string Icon { get; set; } = default!;
 }
