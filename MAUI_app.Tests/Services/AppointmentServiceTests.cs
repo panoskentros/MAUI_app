@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Moq;
 using Xunit;
 
-namespace MAUI_app.UnitTests.Services;
+namespace MAUI_app.Tests.Services;
 
 public class AppointmentServiceTests
 {
