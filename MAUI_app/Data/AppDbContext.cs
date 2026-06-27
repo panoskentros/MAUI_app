@@ -1,4 +1,5 @@
 using MAUI_app.Model;
+using MAUI_app.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace MAUI_app.Data;
@@ -33,10 +34,8 @@ public class AppDbContext : DbContext
                 if (property.ClrType == typeof(DateTime) || property.ClrType == typeof(DateTime?))
                 {
                     property.SetValueConverter(new Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<DateTime, DateTime>(
-                        // 1. When saving: Strip any timezone info and save the raw number
                         v => DateTime.SpecifyKind(v, DateTimeKind.Unspecified), 
             
-                        // 2. When reading: Keep it as a raw number (Unspecified)
                         v => DateTime.SpecifyKind(v, DateTimeKind.Unspecified)));          
                 }
             }
@@ -49,6 +48,15 @@ public class AppDbContext : DbContext
 
             entity.Property(u => u.Id)
                 .UseIdentityByDefaultColumn();
+            
+            
+            entity.HasData(new ApplicationUser
+            {
+                Id = 1,
+                UserName = "admin",
+                HashedPassword = PasswordHasher.HashPassword("admin"),
+                Role = UserRole.Doctor
+            });
         });
         
         modelBuilder.Entity<Appointment>(entity =>
