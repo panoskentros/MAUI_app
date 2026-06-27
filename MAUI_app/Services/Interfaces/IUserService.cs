@@ -16,4 +16,5 @@ public interface IUserService
     Task<Result> RegisterAsync(ApplicationUser user);
     Task<Result> UpdateUserAsync(ApplicationUser updatedUser);
     void Logout();
+    Task<bool> RestoreSessionAsync();
 }

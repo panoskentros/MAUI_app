@@ -116,6 +116,7 @@ public class UserService : IUserService
             if (isValid)
             {
                 CurrentUser = user; 
+                Preferences.Default.Set("UserId", user.Id);
                 OnUserChanged();
                 return Result<ApplicationUser>.Ok(user, string.Empty);
             }
@@ -208,6 +209,34 @@ public class UserService : IUserService
     public void Logout()
     {
         CurrentUser = null;
+        Preferences.Default.Remove("UserId");
         OnUserChanged();
    }
+    public async Task<bool> RestoreSessionAsync()
+    {
+        try
+        {
+            int userId = Preferences.Default.Get("UserId", 0);
+        
+            if (userId != 0)
+            {
+                var user = await _context.Set<ApplicationUser>()
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(u => u.Id == userId);
+                
+                if (user != null)
+                {
+                    CurrentUser = user;
+                    OnUserChanged();
+                    return true;
+                }
+            }
+        }
+        catch (Exception)
+        {
+            Preferences.Default.Remove("UserId");
+        }
+    
+        return false;
+    }
 }
