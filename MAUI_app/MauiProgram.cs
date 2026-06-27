@@ -61,6 +61,8 @@ public static class MauiProgram
         builder.Services.AddSingleton<AppShell>();
         
         builder.Services.AddValidatorsFromAssemblyContaining<App>();
+        
+        builder.Services.AddSingleton<IPreferences>(Preferences.Default);
 #if DEBUG
         builder.Logging.AddDebug();
 #endif

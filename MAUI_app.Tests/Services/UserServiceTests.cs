@@ -8,6 +8,7 @@ using MAUI_app.Data;
 using MAUI_app.Model;
 using MAUI_app.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Maui.Storage;
 using Moq;
 using Xunit;
 
@@ -22,6 +23,10 @@ public class UserServiceTests
             .Options;
         var databaseContext = new AppDbContext(options);
         databaseContext.Database.EnsureCreated();
+        
+        databaseContext.Set<ApplicationUser>().RemoveRange(databaseContext.Set<ApplicationUser>());
+        databaseContext.SaveChanges();
+        
         return databaseContext;
     }
 
@@ -38,7 +43,8 @@ public class UserServiceTests
         await context.SaveChangesAsync();
 
         var mockValidator = new Mock<IValidator<ApplicationUser>>();
-        var service = new UserService(context, mockValidator.Object);
+        var mockPreferences = new Mock<IPreferences>();
+        var service = new UserService(context, mockValidator.Object, mockPreferences.Object);
 
         var result = await service.GetAllDoctorsAsync();
 
@@ -58,7 +64,8 @@ public class UserServiceTests
         await context.SaveChangesAsync();
 
         var mockValidator = new Mock<IValidator<ApplicationUser>>();
-        var service = new UserService(context, mockValidator.Object);
+        var mockPreferences = new Mock<IPreferences>();
+        var service = new UserService(context, mockValidator.Object, mockPreferences.Object);
 
         var result = await service.GetDoctorByIdAsync(1);
 
@@ -78,7 +85,8 @@ public class UserServiceTests
         await context.SaveChangesAsync();
 
         var mockValidator = new Mock<IValidator<ApplicationUser>>();
-        var service = new UserService(context, mockValidator.Object);
+        var mockPreferences = new Mock<IPreferences>();
+        var service = new UserService(context, mockValidator.Object, mockPreferences.Object);
 
         var result = await service.GetAllPatientsAsync();
 
@@ -98,7 +106,8 @@ public class UserServiceTests
         await context.SaveChangesAsync();
 
         var mockValidator = new Mock<IValidator<ApplicationUser>>();
-        var service = new UserService(context, mockValidator.Object);
+        var mockPreferences = new Mock<IPreferences>();
+        var service = new UserService(context, mockValidator.Object, mockPreferences.Object);
 
         var result = await service.GetPatientByIdAsync(2);
 
@@ -125,7 +134,8 @@ public class UserServiceTests
         await context.SaveChangesAsync();
 
         var mockValidator = new Mock<IValidator<ApplicationUser>>();
-        var service = new UserService(context, mockValidator.Object);
+        var mockPreferences = new Mock<IPreferences>();
+        var service = new UserService(context, mockValidator.Object, mockPreferences.Object);
 
         bool eventRaised = false;
         service.UserChanged += (sender, args) => eventRaised = true;
@@ -138,6 +148,7 @@ public class UserServiceTests
         Assert.True(service.IsLoggedIn);
         Assert.Equal(10, service.CurrentUser?.Id);
         Assert.True(eventRaised);
+        mockPreferences.Verify(p => p.Set("UserId", 10, null), Times.Once);
     }
 
     [Fact]
@@ -145,7 +156,8 @@ public class UserServiceTests
     {
         var context = GetDatabaseContext();
         var mockValidator = new Mock<IValidator<ApplicationUser>>();
-        var service = new UserService(context, mockValidator.Object);
+        var mockPreferences = new Mock<IPreferences>();
+        var service = new UserService(context, mockValidator.Object, mockPreferences.Object);
 
         var result = await service.LoginAsync("nonexistent", "password");
 
@@ -159,6 +171,7 @@ public class UserServiceTests
     {
         var context = GetDatabaseContext();
         var mockValidator = new Mock<IValidator<ApplicationUser>>();
+        var mockPreferences = new Mock<IPreferences>();
         
         var validationFailures = new List<ValidationFailure> 
         { 
@@ -169,7 +182,7 @@ public class UserServiceTests
             .Setup(v => v.ValidateAsync(It.IsAny<ApplicationUser>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new ValidationResult(validationFailures));
 
-        var service = new UserService(context, mockValidator.Object);
+        var service = new UserService(context, mockValidator.Object, mockPreferences.Object);
         var invalidUser = new ApplicationUser { UserName = "baduser", Email = "invalid" };
 
         var result = await service.RegisterAsync(invalidUser);
@@ -183,12 +196,13 @@ public class UserServiceTests
     {
         var context = GetDatabaseContext();
         var mockValidator = new Mock<IValidator<ApplicationUser>>();
+        var mockPreferences = new Mock<IPreferences>();
         
         mockValidator
             .Setup(v => v.ValidateAsync(It.IsAny<ApplicationUser>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new ValidationResult());
 
-        var service = new UserService(context, mockValidator.Object);
+        var service = new UserService(context, mockValidator.Object, mockPreferences.Object);
         var newUser = new ApplicationUser 
         { 
             Id = 5, 
@@ -212,6 +226,7 @@ public class UserServiceTests
     {
         var context = GetDatabaseContext();
         var mockValidator = new Mock<IValidator<ApplicationUser>>();
+        var mockPreferences = new Mock<IPreferences>();
         mockValidator
             .Setup(v => v.ValidateAsync(It.IsAny<ApplicationUser>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new ValidationResult());
@@ -224,7 +239,7 @@ public class UserServiceTests
         await context.SaveChangesAsync();
         context.ChangeTracker.Clear();
 
-        var service = new UserService(context, mockValidator.Object);
+        var service = new UserService(context, mockValidator.Object, mockPreferences.Object);
         await service.LoginAsync("oldName", rawPassword); 
 
         var updatedUser = new ApplicationUser { Id = 1, UserName = "newName", Email = "user@test.com", Role = UserRole.Patient, HashedPassword = hashedPassword };
@@ -243,6 +258,7 @@ public class UserServiceTests
     {
         var context = GetDatabaseContext();
         var mockValidator = new Mock<IValidator<ApplicationUser>>();
+        var mockPreferences = new Mock<IPreferences>();
         
         var validationFailures = new List<ValidationFailure> 
         { 
@@ -253,7 +269,7 @@ public class UserServiceTests
             .Setup(v => v.ValidateAsync(It.IsAny<ApplicationUser>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new ValidationResult(validationFailures));
 
-        var service = new UserService(context, mockValidator.Object);
+        var service = new UserService(context, mockValidator.Object, mockPreferences.Object);
         var invalidUser = new ApplicationUser { Id = 1, UserName = "", Email = "user@test.com" };
 
         var result = await service.UpdateUserAsync(invalidUser);
@@ -267,7 +283,8 @@ public class UserServiceTests
     {
         var context = GetDatabaseContext();
         var mockValidator = new Mock<IValidator<ApplicationUser>>();
-        var service = new UserService(context, mockValidator.Object);
+        var mockPreferences = new Mock<IPreferences>();
+        var service = new UserService(context, mockValidator.Object, mockPreferences.Object);
 
         bool eventRaised = false;
         service.UserChanged += (sender, args) => eventRaised = true;
@@ -277,5 +294,6 @@ public class UserServiceTests
         Assert.Null(service.CurrentUser);
         Assert.False(service.IsLoggedIn);
         Assert.True(eventRaised);
+        mockPreferences.Verify(p => p.Remove("UserId", null), Times.Once);
     }
 }

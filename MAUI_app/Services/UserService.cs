@@ -11,15 +11,16 @@ public class UserService : IUserService
 {
     private readonly AppDbContext _context;
     private readonly IValidator<ApplicationUser> _validator;
-    
+    private readonly IPreferences _preferences;
     public ApplicationUser? CurrentUser { get; private set; }
     
     public event EventHandler? UserChanged;
     
-    public UserService(AppDbContext dbContext, IValidator<ApplicationUser> validator)
+    public UserService(AppDbContext dbContext, IValidator<ApplicationUser> validator, IPreferences preferences)
     {
         _context = dbContext;
         _validator = validator;
+        _preferences = preferences;
     }
     
     public bool IsLoggedIn => CurrentUser != null;
@@ -116,7 +117,7 @@ public class UserService : IUserService
             if (isValid)
             {
                 CurrentUser = user; 
-                Preferences.Default.Set("UserId", user.Id);
+                _preferences.Set("UserId", user.Id);
                 OnUserChanged();
                 return Result<ApplicationUser>.Ok(user, string.Empty);
             }
@@ -209,14 +210,14 @@ public class UserService : IUserService
     public void Logout()
     {
         CurrentUser = null;
-        Preferences.Default.Remove("UserId");
+        _preferences.Remove("UserId");
         OnUserChanged();
    }
     public async Task<bool> RestoreSessionAsync()
     {
         try
         {
-            int userId = Preferences.Default.Get("UserId", 0);
+            int userId = _preferences.Get("UserId", 0);
         
             if (userId != 0)
             {
@@ -234,7 +235,7 @@ public class UserService : IUserService
         }
         catch (Exception)
         {
-            Preferences.Default.Remove("UserId");
+            _preferences.Remove("UserId");
         }
     
         return false;
