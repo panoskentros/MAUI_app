@@ -34,11 +34,7 @@ public partial class SettingsPage : ContentPage, ISettingsView
 
     private async void OnSaveClicked(object? sender, EventArgs e)
     {
-        string newUsername = UsernameEntry.Text;
-        string newEmail = EmailEntry.Text;
-        string newPassword = PasswordEntry.Text;
-
-        await _controller.HandleSaveProfileAsync(newUsername, newEmail, newPassword);
+        await _controller.HandleSaveProfileAsync(UsernameEntry.Text, EmailEntry.Text, PasswordEntry.Text);
         PasswordEntry.Text = string.Empty;
     }
 

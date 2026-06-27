@@ -36,6 +36,7 @@ public class SettingsController
         if (currentUser == null)
         {
             await _view.ShowMessageAsync("Authentication error. Please log in again.", true);
+            _userService.Logout();
             return;
         }
 
@@ -51,14 +52,20 @@ public class SettingsController
             UserName = newUsername.Trim(),
             Email = newEmail.Trim(),
             Role = currentUser.Role,
-            HashedPassword = string.IsNullOrWhiteSpace(newPassword) 
-                ? currentUser.HashedPassword 
+            HashedPassword = string.IsNullOrWhiteSpace(newPassword)
+                ? currentUser.HashedPassword
                 : PasswordHasher.HashPassword(newPassword)
         };
 
         var result = await _userService.UpdateUserAsync(userToUpdate);
 
-        await _view.ShowMessageAsync("Profile updated successfully!",!result.Success);
+        if (result.Success)
+            await _view.ShowMessageAsync("Profile updated successfully!");
+        else
+        {
+            await _view.ShowMessageAsync(result.Message, true);
+            _view.SetUserData(currentUser.UserName, currentUser.Email);
+        }
     }
 
     public async Task HandleNotificationsChangedAsync(bool isEnabled)
