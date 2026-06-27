@@ -54,6 +54,7 @@ public class AppDbContext : DbContext
             {
                 Id = 1,
                 UserName = "admin",
+                Email = "admin@admin.com",
                 HashedPassword = PasswordHasher.HashPassword("admin"),
                 Role = UserRole.Doctor
             });
