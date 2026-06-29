@@ -160,4 +160,46 @@ public class AppointmentService : IAppointmentService
             return Result.Fail($"Database error: {ex.Message}");
         }
     }
+    
+    public async Task<List<Appointment>> GetPastAppointmentsForPatientAsync(int userId)
+    {
+        try
+        {
+            var rightNow = DateTime.Now;
+            return await _context.Set<Appointment>()
+                .AsNoTracking()
+                .Where(a => a.ApplicationUserId == userId && a.AppointmentDate < rightNow)
+                .OrderByDescending(a => a.AppointmentDate)
+                .ToListAsync();
+        }
+        catch (InvalidOperationException ex) when (ex.InnerException is NpgsqlException)
+        {
+            throw new Exception("The database is currently offline. Please try again later.");
+        }
+        catch (NpgsqlException)
+        {
+            throw new Exception("The database is currently offline. Please try again later.");
+        }
+    }
+
+    public async Task<List<Appointment>> GetPastAppointmentsForDoctorAsync(int doctorId)
+    {
+        try
+        {
+            var rightNow = DateTime.Now;
+            return await _context.Set<Appointment>()
+                .AsNoTracking()
+                .Where(a => a.DoctorId == doctorId && a.AppointmentDate < rightNow)
+                .OrderByDescending(a => a.AppointmentDate)
+                .ToListAsync();
+        }
+        catch (InvalidOperationException ex) when (ex.InnerException is NpgsqlException)
+        {
+            throw new Exception("The database is currently offline. Please try again later.");
+        }
+        catch (NpgsqlException)
+        {
+            throw new Exception("The database is currently offline. Please try again later.");
+        }
+    }
 }

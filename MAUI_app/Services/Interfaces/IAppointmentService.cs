@@ -11,4 +11,6 @@ public interface IAppointmentService
     Task<List<Appointment>> GetUpcomingAppointmentsForClinicAsync();
     Task<Result<Appointment>> CreateAppointmentAsync(Appointment appointment);
     Task<Result> CancelAppointmentAsync(int appointmentId);
+    Task<List<Appointment>> GetPastAppointmentsForPatientAsync(int userId);
+    Task<List<Appointment>> GetPastAppointmentsForDoctorAsync(int doctorId);
 }

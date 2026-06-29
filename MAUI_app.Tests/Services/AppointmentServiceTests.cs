@@ -118,4 +118,50 @@ public class AppointmentServiceTests
 
         Assert.True(result.Success);
     }
+    
+    [Fact]
+    public async Task GetPastAppointmentsForPatientAsync_ReturnsOnlyPastAppointmentsForSpecificUser()
+    {
+        var context = GetDatabaseContext();
+        int userId = 40;
+
+        context.Appointments.AddRange(new List<Appointment>
+        {
+            new Appointment { Id = 1, ApplicationUserId = userId, AppointmentDate = DateTime.Now.AddDays(-2), PatientName = "Test", Status = "Completed" },
+            new Appointment { Id = 2, ApplicationUserId = userId, AppointmentDate = DateTime.Now.AddDays(2), PatientName = "Test", Status = "Scheduled" },
+            new Appointment { Id = 3, ApplicationUserId = 99, AppointmentDate = DateTime.Now.AddDays(-1), PatientName = "Test", Status = "Completed" }
+        });
+        await context.SaveChangesAsync();
+
+        var mockValidator = new Mock<IValidator<Appointment>>();
+        var service = new AppointmentService(context, mockValidator.Object);
+
+        var results = await service.GetPastAppointmentsForPatientAsync(userId);
+
+        Assert.Single(results);
+        Assert.Equal(1, results[0].Id);
+    }
+
+    [Fact]
+    public async Task GetPastAppointmentsForDoctorAsync_ReturnsOnlyPastAppointmentsForSpecificDoctor()
+    {
+        var context = GetDatabaseContext();
+        int doctorId = 22;
+
+        context.Appointments.AddRange(new List<Appointment>
+        {
+            new Appointment { Id = 1, DoctorId = doctorId, AppointmentDate = DateTime.Now.AddDays(-3), PatientName = "Test", Status = "Completed" },
+            new Appointment { Id = 2, DoctorId = doctorId, AppointmentDate = DateTime.Now.AddDays(1), PatientName = "Test", Status = "Scheduled" },
+            new Appointment { Id = 3, DoctorId = 99, AppointmentDate = DateTime.Now.AddDays(-2), PatientName = "Test", Status = "Completed" }
+        });
+        await context.SaveChangesAsync();
+
+        var mockValidator = new Mock<IValidator<Appointment>>();
+        var service = new AppointmentService(context, mockValidator.Object);
+
+        var results = await service.GetPastAppointmentsForDoctorAsync(doctorId);
+
+        Assert.Single(results);
+        Assert.Equal(1, results[0].Id);
+    }
 }
