@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Microsoft.Maui.Controls;
@@ -12,17 +12,27 @@ namespace MAUI_app.View;
 public partial class MyAppointmentsPage : ContentPage, IAppointmentsView
 {
     private readonly AppointmentsController _controller;
+    private readonly IUserService _userService;
+
     public MyAppointmentsPage(IAppointmentService appointmentService, IUserService userService)
     {
         InitializeComponent();
+        _userService = userService;
         _controller = new AppointmentsController(this, appointmentService, userService);
     }
 
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+
+        if (_userService.CurrentUser != null)
+        {
+            AddAppointmentBtn.IsVisible = _userService.CurrentUser.Role != UserRole.Doctor;
+        }
+
         await _controller.InitializeDataAsync();
     }
+
     public void SetAppointments(ObservableCollection<Appointment> appointments)
     {
         AllAppointmentsList.ItemsSource = appointments;
@@ -36,7 +46,6 @@ public partial class MyAppointmentsPage : ContentPage, IAppointmentsView
             return DisplayAlert("Info", message, "OK");
     }
 
- 
     private async void OnCancelAppointmentClicked(object sender, EventArgs e)
     {
         if (sender is Button button && button.CommandParameter is Appointment appointmentToCancel)
@@ -48,5 +57,15 @@ public partial class MyAppointmentsPage : ContentPage, IAppointmentsView
               await _controller.CancelAppointmentAsync(appointmentToCancel);
             }
         }
+    }
+
+    private async void OnRefreshClicked(object sender, EventArgs e)
+    {
+        await _controller.InitializeDataAsync();
+    }
+
+    private async void OnAddAppointmentClicked(object sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync(nameof(BookAppointmentPage));
     }
 }

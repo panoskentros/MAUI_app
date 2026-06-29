@@ -11,11 +11,42 @@
 
         <Grid Grid.Row="1" RowDefinitions="Auto, *" Padding="20" RowSpacing="15">
             
-            <Label Grid.Row="0" 
-                   Text="All Scheduled Appointments" 
-                   FontSize="22" 
-                   FontAttributes="Bold" 
-                   TextColor="{AppThemeBinding Light=#2C3E50, Dark=White}" />
+            <Grid Grid.Row="0" ColumnDefinitions="*, Auto, Auto" ColumnSpacing="10">
+                <Label Grid.Column="0" 
+                       Text="All Scheduled Appointments" 
+                       FontSize="22" 
+                       FontAttributes="Bold" 
+                       TextColor="{AppThemeBinding Light=#2C3E50, Dark=White}" 
+                       VerticalOptions="Center" />
+                
+                <Button Grid.Column="1" 
+                        x:Name="AddAppointmentBtn"
+                        Text="+" 
+                        Clicked="OnAddAppointmentClicked"
+                        BackgroundColor="{AppThemeBinding Light=#27AE60, Dark=#2ECC71}"
+                        TextColor="White"
+                        FontAttributes="Bold"
+                        FontSize="22"
+                        CornerRadius="10"
+                        HeightRequest="35"
+                        WidthRequest="35"
+                        Padding="0"
+                        VerticalOptions="Center"
+                        IsVisible="False" />
+                
+                <Button Grid.Column="2" 
+                        Text="Refresh" 
+                        Clicked="OnRefreshClicked"
+                        BackgroundColor="{AppThemeBinding Light=#0D47A1, Dark=#1976D2}"
+                        TextColor="White"
+                        FontAttributes="Bold"
+                        CornerRadius="10"
+                        HeightRequest="35"
+                        Padding="15,0"
+                        VerticalOptions="Center" />
+            </Grid>
+            
+            
 
             <CollectionView x:Name="AllAppointmentsList" Grid.Row="1">
                 

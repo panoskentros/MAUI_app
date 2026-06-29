@@ -3,6 +3,7 @@ using MAUI_app.View.interfaces;
 using Microsoft.Maui.Controls;
 using System;
 using System.Threading.Tasks;
+using MAUI_app.View;
 
 namespace MAUI_app;
 
@@ -16,6 +17,8 @@ public partial class AppShell : Shell, IAppShellView
         
         _controller = controller;
         _controller.SetView(this);
+        
+        Routing.RegisterRoute(nameof(BookAppointmentPage), typeof(BookAppointmentPage));
 
         this.Loaded += AppShell_Loaded;
         this.Unloaded += AppShell_Unloaded;

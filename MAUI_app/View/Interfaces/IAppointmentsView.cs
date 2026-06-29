@@ -7,4 +7,5 @@ public interface IAppointmentsView
 {
     void SetAppointments(ObservableCollection<Appointment> appointments);
     Task ShowMessageAsync(string message,bool isError=false);
+
 }
