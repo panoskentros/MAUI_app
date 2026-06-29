@@ -7,4 +7,5 @@ public interface IAppShellView
     void CloseFlyout();
     Task NavigateToLoginAsync();
     void ShowError(string message);
+    void UpdateUserDisplay(string userName);
 }

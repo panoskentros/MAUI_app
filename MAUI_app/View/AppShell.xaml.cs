@@ -79,4 +79,9 @@ public partial class AppShell : Shell, IAppShellView
         if (Application.Current.UserAppTheme == targetTheme) return;
         Application.Current.UserAppTheme = targetTheme;
     }
+    
+    public void UpdateUserDisplay(string userName)
+    {
+        UserNameLabel.Text = userName;
+    }
 }

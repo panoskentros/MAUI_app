@@ -34,7 +34,7 @@ public class AppShellController
     public void UpdateMenuBasedOnRole(object? sender, EventArgs e)
     {
         if (_userService.CurrentUser == null || _view == null) return;
-
+        RefreshUserInfo();
         var role = _userService.CurrentUser.Role;
 
         _view.SetScheduleVisibility(role == UserRole.Secretary || role == UserRole.Doctor);
@@ -57,5 +57,11 @@ public class AppShellController
         {
             _view?.ShowError(ex.Message);
         }
+    }
+    public void RefreshUserInfo()
+    {
+        var user = _userService.CurrentUser;
+        if (user != null && _view != null)
+            _view.UpdateUserDisplay(user.UserName);
     }
 }
