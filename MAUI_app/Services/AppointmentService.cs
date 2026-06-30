@@ -25,6 +25,7 @@ public class AppointmentService : IAppointmentService
             var today = DateTime.Today;
             return await _context.Set<Appointment>()
                 .AsNoTracking()
+                .Include(a => a.ApplicationUser)
                 .Where(a => a.ApplicationUserId == userId && a.AppointmentDate >= today)
                 .OrderBy(a => a.AppointmentDate)
                 .ToListAsync();
@@ -66,6 +67,7 @@ public class AppointmentService : IAppointmentService
 
             return await _context.Set<Appointment>()
                 .AsNoTracking()
+                .Include(a => a.ApplicationUser)
                 .Where(a => a.DoctorId == doctorId && a.AppointmentDate >= rightNow)
                 .OrderBy(a => a.AppointmentDate)
                 .ToListAsync();
@@ -87,6 +89,7 @@ public class AppointmentService : IAppointmentService
             var today = DateTime.Today;
             return await _context.Set<Appointment>()
                 .AsNoTracking()
+                .Include(a => a.ApplicationUser)
                 .Where(a => a.AppointmentDate >= today)
                 .OrderBy(a => a.AppointmentDate)
                 .ToListAsync();
@@ -200,6 +203,7 @@ public class AppointmentService : IAppointmentService
             var rightNow = DateTime.Now;
             return await _context.Set<Appointment>()
                 .AsNoTracking()
+                .Include(a => a.ApplicationUser)
                 .Where(a => a.ApplicationUserId == userId && a.AppointmentDate < rightNow)
                 .OrderByDescending(a => a.AppointmentDate)
                 .ToListAsync();
@@ -221,6 +225,7 @@ public class AppointmentService : IAppointmentService
             var rightNow = DateTime.Now;
             return await _context.Set<Appointment>()
                 .AsNoTracking()
+                .Include(a => a.ApplicationUser)
                 .Where(a => a.DoctorId == doctorId && a.AppointmentDate < rightNow)
                 .OrderByDescending(a => a.AppointmentDate)
                 .ToListAsync();

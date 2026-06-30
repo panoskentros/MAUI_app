@@ -12,11 +12,7 @@ public class AppointmentValidator : AbstractValidator<Appointment>
     public AppointmentValidator(IServiceScopeFactory scopeFactory)
     {
         _scopeFactory = scopeFactory;
-
-        RuleFor(x => x.PatientName)
-            .NotEmpty().WithMessage("Patient name is required.")
-            .MaximumLength(150).WithMessage("Patient name cannot exceed 150 characters.");
-
+        
         RuleFor(x => x.DoctorId)
             .GreaterThan(0).WithMessage("A valid doctor must be selected.");
 

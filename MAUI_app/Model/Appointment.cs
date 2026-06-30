@@ -6,8 +6,6 @@ public class Appointment
 {
     public int Id { get; set; }
     public int DoctorId { get; set; }
-    [MaxLength(150)]
-    public string PatientName { get; set; } = default!;
     [NotMapped] public string DisplayName { get; set; } = default!;
     public DateTime AppointmentDate { get; set; }
     [MaxLength(150)]

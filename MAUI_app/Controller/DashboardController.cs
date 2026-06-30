@@ -89,9 +89,9 @@ public class DashboardController
 
         if (appointments.Any())
         {
-            var nextPatient = appointments.First();
-            string timeNameStr = nextPatient.AppointmentDate.ToString("h:mm tt") + " - " + nextPatient.PatientName;
-            string detailsStr = "Reason: " + (string.IsNullOrWhiteSpace(nextPatient.MedicalNotes) ? "Standard Checkup" : nextPatient.MedicalNotes);
+            var nextAppointment = appointments.First();
+            string timeNameStr = nextAppointment.AppointmentDate.ToString("h:mm tt") + " - " + nextAppointment.ApplicationUser.UserName;
+            string detailsStr = "Reason: " + (string.IsNullOrWhiteSpace(nextAppointment.MedicalNotes) ? "Standard Checkup" : nextAppointment.MedicalNotes);
 
             _view.SetDoctorNextPatient(timeNameStr, detailsStr);
 

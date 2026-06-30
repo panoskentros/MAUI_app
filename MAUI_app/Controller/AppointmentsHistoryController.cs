@@ -55,7 +55,7 @@ public class AppointmentsHistoryController
         
                 foreach (var appt in doctorAppts)
                 {
-                    appt.DisplayName = $"Dr. {doctor.UserName} - Patient: {appt.PatientName}";
+                    appt.DisplayName = $"Dr. {doctor.UserName} - Patient: {appt.ApplicationUser.UserName}";
                 }
         
                 allPastAppts.AddRange(doctorAppts);
@@ -73,7 +73,7 @@ public class AppointmentsHistoryController
             
             foreach (var appt in rawAppointments)
             {
-                appt.DisplayName = appt.PatientName;
+                appt.DisplayName = appt.ApplicationUser.UserName;
             }
         }
 

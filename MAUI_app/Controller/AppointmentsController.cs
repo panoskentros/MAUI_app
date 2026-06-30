@@ -53,7 +53,7 @@ public class AppointmentsController
             appointmentsList = await _appointmentService.GetUpcomingAppointmentsForClinicAsync();
             foreach (var appt in appointmentsList) 
             {
-                appt.DisplayName = appt.PatientName;
+                appt.DisplayName = appt.ApplicationUser.UserName;
             }
         }
         else 
@@ -61,7 +61,7 @@ public class AppointmentsController
             appointmentsList = await _appointmentService.GetTodaysPatientsForDoctorAsync(user.Id);
             foreach (var appt in appointmentsList) 
             {
-                appt.DisplayName = appt.PatientName;
+                appt.DisplayName = appt.ApplicationUser.UserName;
             }
         }
 
