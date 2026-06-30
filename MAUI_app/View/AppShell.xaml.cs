@@ -39,17 +39,7 @@ public partial class AppShell : Shell, IAppShellView
         this.Loaded -= AppShell_Loaded;
         this.Unloaded -= AppShell_Unloaded;
     }
-
-    public void SetScheduleVisibility(bool isVisible)
-    {
-        ScheduleItem.FlyoutItemIsVisible = isVisible;
-    }
-
-    public void SetAvailabilityVisibility(bool isVisible)
-    {
-        AvailabilityItem.FlyoutItemIsVisible = isVisible;
-    }
-
+    
     public void CloseFlyout()
     {
         Current.FlyoutIsPresented = false;

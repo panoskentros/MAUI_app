@@ -68,33 +68,10 @@ public class SettingsController
         }
     }
 
-    public async Task HandleNotificationsChangedAsync(bool isEnabled)
-    {
-        var settings = new UserSettings 
-        { 
-            NotificationsEnabled = isEnabled 
-        };
-
-        var result = SaveUserPreferences(settings);
-        
-        if (!result.Success)
-        {
-            await _view.ShowMessageAsync(result.Message, true);
-        }
-    }
-
     public async Task HandleSignOutAsync()
     {
         _userService.Logout(); 
         await _view.NavigateToLoginAsync();
     }
-
-    private Result SaveUserPreferences(UserSettings settings)
-    {
-        if (settings == null)
-        {
-            return Result.Fail("Invalid settings data");
-        }
-        return Result.Ok("Settings saved successfully");
-    }
+    
 }

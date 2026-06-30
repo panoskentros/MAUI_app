@@ -35,10 +35,6 @@ public class AppShellController
     {
         if (_userService.CurrentUser == null || _view == null) return;
         RefreshUserInfo();
-        var role = _userService.CurrentUser.Role;
-
-        _view.SetScheduleVisibility(role == UserRole.Secretary || role == UserRole.Doctor);
-        _view.SetAvailabilityVisibility(role == UserRole.Doctor);
     }
 
     public async Task HandleSignOutAsync()

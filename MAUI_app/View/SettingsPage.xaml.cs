@@ -37,12 +37,7 @@ public partial class SettingsPage : ContentPage, ISettingsView
         await _controller.HandleSaveProfileAsync(UsernameEntry.Text, EmailEntry.Text, PasswordEntry.Text);
         PasswordEntry.Text = string.Empty;
     }
-
-    private async void OnSignOutClicked(object? sender, EventArgs e)
-    {
-        await _controller.HandleSignOutAsync();
-    }
-
+    
     public Task ShowMessageAsync(string message, bool isError = false)
     {
         if (isError)

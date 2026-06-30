@@ -92,17 +92,6 @@
                                 
                     </VerticalStackLayout>
                 </Border>
-
-                <Button Text="Sign Out" 
-                        Clicked="OnSignOutClicked"
-                        BackgroundColor="{AppThemeBinding Light=#FDEDEC, Dark=#441111}" 
-                        TextColor="{AppThemeBinding Light=#E74C3C, Dark=#FF6B6B}" 
-                        FontSize="16"
-                        FontAttributes="Bold" 
-                        CornerRadius="12" 
-                        HeightRequest="55" 
-                        Margin="0,15,0,0" />
-
             </VerticalStackLayout>
         </ScrollView>
     </Grid>

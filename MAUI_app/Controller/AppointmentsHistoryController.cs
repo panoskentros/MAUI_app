@@ -44,6 +44,28 @@ public class AppointmentsHistoryController
                 appt.DisplayName = doctor != null ? $"Dr. {doctor.UserName}" : "Unknown Doctor";
             }
         }
+        else if (user.Role == UserRole.Secretary)
+        {
+            var allPastAppts = new List<Appointment>();
+            var doctors = await _userService.GetAllDoctorsAsync();
+    
+            foreach (var doctor in doctors)
+            {
+                var doctorAppts = await _appointmentService.GetPastAppointmentsForDoctorAsync(doctor.Id);
+        
+                foreach (var appt in doctorAppts)
+                {
+                    appt.DisplayName = $"Dr. {doctor.UserName} - Patient: {appt.PatientName}";
+                }
+        
+                allPastAppts.AddRange(doctorAppts);
+            }
+
+            rawAppointments = allPastAppts
+                .OrderBy(a => doctors.FirstOrDefault(d => d.Id == a.DoctorId)?.UserName)
+                .ThenByDescending(a => a.AppointmentDate)
+                .ToList();
+        }
         else
         {
             var doctorAppts = await _appointmentService.GetPastAppointmentsForDoctorAsync(user.Id);

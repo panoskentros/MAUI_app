@@ -166,24 +166,12 @@
         <ShellContent Route="dashboard" ContentTemplate="{DataTemplate view:DashboardPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="My Appointments" Icon="book_medical_solid.png">
+    <FlyoutItem Title="Appointments" Icon="book_medical_solid.png">
         <ShellContent Route="appointments" ContentTemplate="{DataTemplate view:MyAppointmentsPage}" />
     </FlyoutItem>
     
     <FlyoutItem x:Name="AppointmentsHistoryItem" Title="History" Icon="calendar_icon.png" Shell.NavBarIsVisible="False">
         <ShellContent Route="AppointmentsHistoryPage" ContentTemplate="{DataTemplate view:AppointmentsHistoryPage}" />
-    </FlyoutItem>
-
-    <FlyoutItem x:Name="MedicalRecordsItem" Title="Medical Records" Icon="pill_icon.png" Shell.NavBarIsVisible="False">
-        <ShellContent Route="medications" ContentTemplate="{DataTemplate view:MedicationsPage}" /> 
-    </FlyoutItem>
-
-    <FlyoutItem x:Name="ScheduleItem" Title="Daily Schedule" Icon="message_icon.png" Shell.NavBarIsVisible="False">
-        <ShellContent Route="messages" ContentTemplate="{DataTemplate view:MessagesPage}" />
-    </FlyoutItem>
-
-    <FlyoutItem x:Name="AvailabilityItem" Title="Set Availability" Icon="settings_icon.png" Shell.NavBarIsVisible="False">
-        <ShellContent Route="settings" ContentTemplate="{DataTemplate view:SettingsPage}" />
     </FlyoutItem>
     
     <FlyoutItem x:Name="ProfileItem" Title="My Profile" Icon="user_icon.png" Shell.NavBarIsVisible="False">
