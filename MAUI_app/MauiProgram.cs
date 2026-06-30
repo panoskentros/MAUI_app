@@ -39,6 +39,44 @@ public static class MauiProgram
                 });
             });
         });
+        // 1. Για τα Pickers (Patient, Doctor)
+        Microsoft.Maui.Handlers.PickerHandler.Mapper.AppendToMapping("CustomPickerWindows", (handler, view) =>
+        {
+            handler.PlatformView.BorderThickness = new Microsoft.UI.Xaml.Thickness(0);
+            handler.PlatformView.Background = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Transparent);
+            handler.PlatformView.MinHeight = 0;
+            handler.PlatformView.MinWidth = 0;
+            handler.PlatformView.Padding = new Microsoft.UI.Xaml.Thickness(0);
+        });
+
+        // 2. Για το DatePicker
+        Microsoft.Maui.Handlers.DatePickerHandler.Mapper.AppendToMapping("CustomDatePickerWindows", (handler, view) =>
+        {
+            handler.PlatformView.BorderThickness = new Microsoft.UI.Xaml.Thickness(0);
+            handler.PlatformView.Background = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Transparent);
+            handler.PlatformView.MinHeight = 0;
+            handler.PlatformView.MinWidth = 0;
+            handler.PlatformView.Padding = new Microsoft.UI.Xaml.Thickness(0);
+        });
+
+        // 3. Για το TimePicker
+        Microsoft.Maui.Handlers.TimePickerHandler.Mapper.AppendToMapping("CustomTimePickerWindows", (handler, view) =>
+        {
+            handler.PlatformView.BorderThickness = new Microsoft.UI.Xaml.Thickness(0);
+            handler.PlatformView.Background = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Transparent);
+            handler.PlatformView.MinHeight = 0;
+            handler.PlatformView.MinWidth = 0;
+            handler.PlatformView.Padding = new Microsoft.UI.Xaml.Thickness(0);
+        });
+
+        // 4. Για το Editor (Reason for Visit)
+        Microsoft.Maui.Handlers.EditorHandler.Mapper.AppendToMapping("CustomEditorWindows", (handler, view) =>
+        {
+            handler.PlatformView.BorderThickness = new Microsoft.UI.Xaml.Thickness(0);
+            handler.PlatformView.Background = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Transparent);
+            // Αφαιρεί το native μπλε περίγραμμα των Windows όταν κάνεις click (Focus)
+            handler.PlatformView.Resources["TextControlBorderThemeThicknessFocused"] = new Microsoft.UI.Xaml.Thickness(0);
+        });
 #endif
         builder.Services.AddSingleton<IUserService, UserService>();
         builder.Services.AddSingleton<IAppointmentService, AppointmentService>();

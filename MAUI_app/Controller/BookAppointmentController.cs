@@ -73,26 +73,29 @@ public class BookAppointmentController
         
         if (isStaff && selectedPatient == null) 
         {
-            await _view.ShowAlertAsync("Error", "Please select a patient.");
+            await _view.ShowAlertAsync("Error", "Please select a patient from the list before confirming.");
             return;
         }
+        
         if (selectedDoctor == null)
         {
-            await _view.ShowAlertAsync("Error", "Please select a doctor.");
+            await _view.ShowAlertAsync("Error", "Please select a doctor from the list before confirming.");
             return;
         }
+
+        string safeNotes = notes ?? string.Empty;
 
         DateTime combined = date.Date + time;
         DateTime cleanDate = new DateTime(combined.Year, combined.Month, combined.Day, combined.Hour, combined.Minute, 0);
 
         Result<Appointment> serviceResult;
 
-        _appointmentToEdit.AppointmentDate = cleanDate;
-        _appointmentToEdit.MedicalNotes = notes;
-        _appointmentToEdit.DoctorId = selectedDoctor.Id;
-
         if (_appointmentToEdit != null && _appointmentToEdit.Id != 0)
         {
+            _appointmentToEdit.AppointmentDate = cleanDate;
+            _appointmentToEdit.MedicalNotes = safeNotes;
+            _appointmentToEdit.DoctorId = selectedDoctor.Id;
+            
             if (isStaff)
             {
                 _appointmentToEdit.ApplicationUserId = selectedPatient.Id;
@@ -102,10 +105,18 @@ public class BookAppointmentController
         }
         else
         {
-            _appointmentToEdit.ApplicationUserId = isStaff ? selectedPatient.Id : currentUser.Id;
-            _appointmentToEdit.Status = "Scheduled";
+            int patientId = isStaff ? selectedPatient.Id : currentUser.Id;
 
-            serviceResult = await _appointmentService.CreateAppointmentAsync(_appointmentToEdit);
+            var newAppointment = new Appointment
+            {
+                ApplicationUserId = patientId,
+                DoctorId = selectedDoctor.Id,
+                AppointmentDate = cleanDate,
+                MedicalNotes = safeNotes,
+                Status = "Scheduled"
+            };
+
+            serviceResult = await _appointmentService.CreateAppointmentAsync(newAppointment);
         }
 
         if (serviceResult.Success)

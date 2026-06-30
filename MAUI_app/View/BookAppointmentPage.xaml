@@ -18,14 +18,15 @@
                            FontSize="14" 
                            FontAttributes="Bold" 
                            TextColor="{AppThemeBinding Light=#1C1C1E, Dark=White}" />
-                    <Border BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource OffBlack}}" 
-                            Stroke="{AppThemeBinding Light=#E0E6ED, Dark={StaticResource Gray600}}" 
+                    <Border BackgroundColor="{AppThemeBinding Light=White, Dark=#1C1C1E}" 
+                            Stroke="{AppThemeBinding Light=#E0E6ED, Dark=#333333}" 
                             StrokeThickness="1"
                             HeightRequest="50">
                         <Border.StrokeShape><RoundRectangle CornerRadius="8" /></Border.StrokeShape>
                         <Picker x:Name="PatientPicker"
                                 ItemDisplayBinding="{Binding UserName}"
                                 TextColor="{AppThemeBinding Light=Black, Dark=White}"
+                                TitleColor="Gray"
                                 HorizontalOptions="Fill"
                                 VerticalOptions="Center"
                                 Margin="10,0" />
@@ -37,14 +38,15 @@
                            FontSize="14" 
                            FontAttributes="Bold" 
                            TextColor="{AppThemeBinding Light=#1C1C1E, Dark=White}" />
-                    <Border BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource OffBlack}}" 
-                            Stroke="{AppThemeBinding Light=#E0E6ED, Dark={StaticResource Gray600}}" 
+                    <Border BackgroundColor="{AppThemeBinding Light=White, Dark=#1C1C1E}" 
+                            Stroke="{AppThemeBinding Light=#E0E6ED, Dark=#333333}" 
                             StrokeThickness="1"
                             HeightRequest="50">
                         <Border.StrokeShape><RoundRectangle CornerRadius="8" /></Border.StrokeShape>
                         <Picker x:Name="DoctorPicker"
                                 ItemDisplayBinding="{Binding UserName}"
                                 TextColor="{AppThemeBinding Light=Black, Dark=White}"
+                                TitleColor="Gray"
                                 HorizontalOptions="Fill"
                                 VerticalOptions="Center"
                                 Margin="10,0" />
@@ -58,13 +60,13 @@
                                FontSize="14" 
                                FontAttributes="Bold" 
                                TextColor="{AppThemeBinding Light=#1C1C1E, Dark=White}" />
-                        <Border BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource OffBlack}}" 
-                                Stroke="{AppThemeBinding Light=#E0E6ED, Dark={StaticResource Gray600}}" 
+                        <Border BackgroundColor="{AppThemeBinding Light=White, Dark=#1C1C1E}" 
+                                Stroke="{AppThemeBinding Light=#E0E6ED, Dark=#333333}" 
                                 StrokeThickness="1"
                                 HeightRequest="50">
                             <Border.StrokeShape><RoundRectangle CornerRadius="8" /></Border.StrokeShape>
                             <DatePicker x:Name="ApptDatePicker" 
-                                        HorizontalOptions="Start"
+                                        HorizontalOptions="Fill"
                                         VerticalOptions="Center"
                                         Margin="10,0" 
                                         TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
@@ -76,15 +78,15 @@
                                FontSize="14" 
                                FontAttributes="Bold" 
                                TextColor="{AppThemeBinding Light=#1C1C1E, Dark=White}" />
-                        <Border BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource OffBlack}}" 
-                                Stroke="{AppThemeBinding Light=#E0E6ED, Dark={StaticResource Gray600}}" 
+                        <Border BackgroundColor="{AppThemeBinding Light=White, Dark=#1C1C1E}" 
+                                Stroke="{AppThemeBinding Light=#E0E6ED, Dark=#333333}" 
                                 StrokeThickness="1"
                                 HeightRequest="50">
                             <Border.StrokeShape><RoundRectangle CornerRadius="8" /></Border.StrokeShape>
                             <TimePicker x:Name="ApptTimePicker" 
-                                        HorizontalOptions="Start"
+                                        HorizontalOptions="Fill"
                                         VerticalOptions="Center"
-                                        Margin="10,0"
+                                        Margin="10,0" 
                                         TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
                         </Border>
                     </VerticalStackLayout>
@@ -95,12 +97,14 @@
                            FontSize="14" 
                            FontAttributes="Bold" 
                            TextColor="{AppThemeBinding Light=#1C1C1E, Dark=White}" />
-                    <Border BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource OffBlack}}" 
-                            Stroke="{AppThemeBinding Light=#E0E6ED, Dark={StaticResource Gray600}}" 
+                    <Border BackgroundColor="{AppThemeBinding Light=White, Dark=#1C1C1E}" 
+                            Stroke="{AppThemeBinding Light=#E0E6ED, Dark=#333333}" 
                             StrokeThickness="1"
                             HeightRequest="110">
                         <Border.StrokeShape><RoundRectangle CornerRadius="8" /></Border.StrokeShape>
                         <Editor x:Name="NotesEditor" 
+                                Placeholder="E.g., Checkup..." 
+                                PlaceholderColor="Gray"
                                 HorizontalOptions="Fill"
                                 VerticalOptions="Fill"
                                 HeightRequest="100" 
