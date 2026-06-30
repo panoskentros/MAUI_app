@@ -33,7 +33,7 @@ public class AppointmentsHistoryControllerTests
         var pastDate = DateTime.Now.AddDays(-5);
         var pastAppointments = new List<Appointment>
         {
-            new Appointment { Id = 1, ApplicationUserId = 40, DoctorId = 22, AppointmentDate = pastDate, PatientName = "PatientTest" }
+            new Appointment { Id = 1, ApplicationUserId = 40, DoctorId = 22, AppointmentDate = pastDate}
         };
         _mockAppointmentService.Setup(s => s.GetPastAppointmentsForPatientAsync(40)).ReturnsAsync(pastAppointments);
 
@@ -61,7 +61,7 @@ public class AppointmentsHistoryControllerTests
         var pastDate = DateTime.Now.AddDays(-2);
         var pastAppointments = new List<Appointment>
         {
-            new Appointment { Id = 2, ApplicationUserId = 40, DoctorId = 22, AppointmentDate = pastDate, PatientName = "Panos Kentros" }
+            new Appointment { Id = 2, ApplicationUserId = 40, DoctorId = 22, AppointmentDate = pastDate }
         };
         _mockAppointmentService.Setup(s => s.GetPastAppointmentsForDoctorAsync(22)).ReturnsAsync(pastAppointments);
 

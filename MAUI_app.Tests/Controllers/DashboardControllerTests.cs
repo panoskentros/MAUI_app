@@ -48,8 +48,8 @@ public class DashboardControllerTests
 
         var patientsList = new List<Appointment> 
         { 
-            new Appointment { PatientName = "John Doe", AppointmentDate = DateTime.Today.AddHours(10), MedicalNotes = "Checkup" },
-            new Appointment { PatientName = "Jane Doe", AppointmentDate = DateTime.Today.AddHours(11) }
+            new Appointment { AppointmentDate = DateTime.Today.AddHours(10), MedicalNotes = "Checkup" },
+            new Appointment { AppointmentDate = DateTime.Today.AddHours(11) }
         };
 
         mockAppointmentService
