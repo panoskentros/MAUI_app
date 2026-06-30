@@ -99,7 +99,8 @@
                     </Border>
                 </VerticalStackLayout>
 
-                <Button Text="Confirm Appointment"
+                <Button x:Name="SubmitButton"
+                        Text="Confirm Appointment"
                         Clicked="OnSaveClicked"
                         BackgroundColor="#0D47A1"
                         TextColor="White"

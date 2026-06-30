@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using MAUI_app.Data;
 using MAUI_app.Model;
 using MAUI_app.Services.Interfaces;
 using MAUI_app.View.interfaces;
@@ -12,6 +13,8 @@ public class BookAppointmentController
     private readonly IBookAppointmentView _view;
     private readonly IAppointmentService _appointmentService;
     private readonly IUserService _userService;
+    
+    private Appointment _appointmentToEdit;
 
     public BookAppointmentController(
         IBookAppointmentView view, 
@@ -23,31 +26,42 @@ public class BookAppointmentController
         _userService = userService;
     }
 
+    public void SetAppointmentToEdit(Appointment appt)
+    {
+        _appointmentToEdit = appt;
+    }
+
     public async Task OnViewAppearing()
     {
         var user = _userService.CurrentUser;
         if (user == null) return;
 
         bool isStaff = user.Role == UserRole.Secretary || user.Role == UserRole.Doctor;
-        
         _view.ShowPatientSelection(isStaff);
 
         var doctors = await _userService.GetAllDoctorsAsync();
         _view.SetDoctors(doctors);
 
+        List<ApplicationUser> patients = null;
         if (isStaff)
         {
-            var patients = await _userService.GetAllPatientsAsync();
+            patients = await _userService.GetAllPatientsAsync();
             _view.SetPatients(patients);
+        }
+
+        // Αν είμαστε σε Edit Mode, προσυμπλήρωσε τα δεδομένα
+        if (_appointmentToEdit != null)
+        {
+            _view.PrefillData(_appointmentToEdit, doctors, patients);
+            _view.SetSubmitButtonText("Update Appointment");
+        }
+        else
+        {
+            _view.SetSubmitButtonText("Confirm Appointment");
         }
     }
 
-    public async Task SaveAppointment(
-        ApplicationUser selectedDoctor, 
-        ApplicationUser selectedPatient, 
-        DateTime date, 
-        TimeSpan time, 
-        string notes)
+    public async Task SaveAppointment(ApplicationUser selectedDoctor, ApplicationUser selectedPatient, DateTime date, TimeSpan time, string notes)
     {
         var currentUser = _userService.CurrentUser;
         if (currentUser == null) 
@@ -63,28 +77,54 @@ public class BookAppointmentController
             await _view.ShowAlertAsync("Error", "Please select a patient.");
             return;
         }
+        if (selectedDoctor == null)
+        {
+            await _view.ShowAlertAsync("Error", "Please select a doctor.");
+            return;
+        }
 
         DateTime combined = date.Date + time;
         DateTime cleanDate = new DateTime(combined.Year, combined.Month, combined.Day, combined.Hour, combined.Minute, 0);
 
-        int patientId = isStaff ? selectedPatient.Id : currentUser.Id;
-        string patientName = isStaff ? selectedPatient.UserName : currentUser.UserName;
+        Result<Appointment> serviceResult;
 
-        var newAppointment = new Appointment
+        if (_appointmentToEdit != null)
         {
-            ApplicationUserId = patientId,
-            DoctorId = selectedDoctor.Id,
-            PatientName = patientName,
-            AppointmentDate = cleanDate,
-            MedicalNotes = notes,
-            Status = "Scheduled"
-        };
+            // Update υπάρχοντος ραντεβού
+            _appointmentToEdit.AppointmentDate = cleanDate;
+            _appointmentToEdit.MedicalNotes = notes;
+            _appointmentToEdit.DoctorId = selectedDoctor.Id;
+            
+            if (isStaff)
+            {
+                _appointmentToEdit.ApplicationUserId = selectedPatient.Id;
+                _appointmentToEdit.PatientName = selectedPatient.UserName;
+            }
+            
+            serviceResult = await _appointmentService.UpdateAppointmentAsync(_appointmentToEdit);
+        }
+        else
+        {
+            // Δημιουργία νέου
+            int patientId = isStaff ? selectedPatient.Id : currentUser.Id;
+            string patientName = isStaff ? selectedPatient.UserName : currentUser.UserName;
 
-        var serviceResult = await _appointmentService.CreateAppointmentAsync(newAppointment);
+            var newAppointment = new Appointment
+            {
+                ApplicationUserId = patientId,
+                DoctorId = selectedDoctor.Id,
+                PatientName = patientName,
+                AppointmentDate = cleanDate,
+                MedicalNotes = notes,
+                Status = "Scheduled"
+            };
+
+            serviceResult = await _appointmentService.CreateAppointmentAsync(newAppointment);
+        }
 
         if (serviceResult.Success)
         {
-            await _view.ShowAlertAsync("Success", "Appointment saved successfully.");
+            await _view.ShowAlertAsync("Success", serviceResult.Message);
             await _view.NavigateBackAsync();
         }
         else

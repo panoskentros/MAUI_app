@@ -13,7 +13,15 @@ public partial class MyAppointmentsPage : ContentPage, IAppointmentsView
 {
     private readonly AppointmentsController _controller;
     private readonly IUserService _userService;
-
+    public static readonly BindableProperty CanRescheduleProperty =
+        BindableProperty.Create(nameof(CanReschedule), typeof(bool), typeof(MyAppointmentsPage), false);
+    
+    public bool CanReschedule
+    {
+        get => (bool)GetValue(CanRescheduleProperty);
+        set => SetValue(CanRescheduleProperty, value);
+    }
+    
     public MyAppointmentsPage(IAppointmentService appointmentService, IUserService userService)
     {
         InitializeComponent();
@@ -28,6 +36,8 @@ public partial class MyAppointmentsPage : ContentPage, IAppointmentsView
         if (_userService.CurrentUser != null)
         {
             AddAppointmentBtn.IsVisible = _userService.CurrentUser.Role != UserRole.Doctor;
+            CanReschedule = _userService.CurrentUser.Role == UserRole.Patient || 
+                            _userService.CurrentUser.Role == UserRole.Secretary;
         }
 
         await _controller.InitializeDataAsync();
@@ -44,6 +54,18 @@ public partial class MyAppointmentsPage : ContentPage, IAppointmentsView
             return DisplayAlert("Error", message, "OK");
         else
             return DisplayAlert("Info", message, "OK");
+    }
+    
+    private async void OnRescheduleAppointmentClicked(object sender, EventArgs e)
+    {
+        if (sender is Button button && button.CommandParameter is Appointment appointmentToReschedule)
+        {
+            var navigationParameter = new Dictionary<string, object>
+            {
+                { "AppointmentToEdit", appointmentToReschedule }
+            };
+            await Shell.Current.GoToAsync(nameof(BookAppointmentPage), navigationParameter);
+        }
     }
 
     private async void OnCancelAppointmentClicked(object sender, EventArgs e)

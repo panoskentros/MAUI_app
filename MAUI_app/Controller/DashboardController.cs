@@ -12,6 +12,7 @@ public class DashboardController
     private readonly IDashboardView _view;
     private readonly IAppointmentService _appointmentService;
     private readonly IUserService _userService;
+    private Appointment _nextPatientAppointment;
 
     public DashboardController(
         IDashboardView view, 
@@ -56,18 +57,22 @@ public class DashboardController
         if (appointments != null && appointments.Any())
         {
             var nextAppt = appointments.First();
+            _nextPatientAppointment = nextAppt;
             string dateStr = nextAppt.AppointmentDate.ToString("dddd, MMM dd - h:mm tt");
             string detailsStr = "Reason: " + (string.IsNullOrWhiteSpace(nextAppt.MedicalNotes) ? "General Checkup" : nextAppt.MedicalNotes);
             
             _view.SetPatientNextAppointment(dateStr, detailsStr);
+            _view.SetPatientRescheduleButton(true);
             
             bool hasMore = appointments.Count > 1;
             string buttonText = hasMore ? $"See {appointments.Count - 1} More" : "";
             _view.SetPatientMoreAppointmentsButton(hasMore, buttonText);
         }
         else
-        {
+        {   
+            _nextPatientAppointment = null;
             _view.SetPatientNextAppointment("No upcoming appointments", "Book a new appointment below");
+            _view.SetPatientRescheduleButton(false);
             _view.SetPatientMoreAppointmentsButton(false);
         }
     }
@@ -105,4 +110,11 @@ public class DashboardController
     public async Task HandleViewAllAppointmentsClicked() => await _view.NavigateToAppointmentsAsync();
     public async Task HandleMedicalRecordsClicked() => await _view.NavigateToMedicationsAsync();
     public async Task HandleSettingsClicked() => await _view.NavigateToSettingsAsync();
+    public async Task HandleRescheduleClicked()
+    {
+        if (_nextPatientAppointment != null)
+        {
+            await _view.NavigateToRescheduleAppointmentAsync(_nextPatientAppointment);
+        }
+    }
 }

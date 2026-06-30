@@ -4,6 +4,7 @@ using Microsoft.Maui.Controls;
 using MAUI_app.Controller;
 using MAUI_app.Services.Interfaces;
 using MAUI_app.View.interfaces;
+using MAUI_app.Model;
 
 namespace MAUI_app.View;
 
@@ -86,6 +87,22 @@ public partial class DashboardPage : ContentPage, IDashboardView
     {
         DoctorMorePatientsButton.IsVisible = isVisible;
         if (isVisible) DoctorMorePatientsButton.Text = buttonText;
+    }
+    
+    public void SetPatientRescheduleButton(bool isVisible) => PatientRescheduleButton.IsVisible = isVisible;
+    
+    public async Task NavigateToRescheduleAppointmentAsync(Appointment appt)
+    {
+        var navigationParameter = new System.Collections.Generic.Dictionary<string, object>
+        {
+            { "AppointmentToEdit", appt }
+        };
+        await Shell.Current.GoToAsync(nameof(BookAppointmentPage), navigationParameter);
+    }
+    
+    private async void OnRescheduleClicked(object sender, EventArgs e)
+    {
+        await _controller.HandleRescheduleClicked();
     }
 
     public async Task NavigateToBookAppointmentAsync()

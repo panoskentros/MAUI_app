@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:view="clr-namespace:MAUI_app.View"
              x:Class="MAUI_app.View.MyAppointmentsPage"
-             BackgroundColor="{AppThemeBinding Light=#F4F6F8, Dark=Black}"
+             x:Name="ThisPage" BackgroundColor="{AppThemeBinding Light=#F4F6F8, Dark=Black}"
              Shell.NavBarIsVisible="False">
 
     <Grid RowDefinitions="Auto, *">
@@ -135,6 +135,19 @@
                                                HorizontalTextAlignment="Center" 
                                                VerticalTextAlignment="Center" />
                                     </Border>
+                                    
+                                    <Button Text="Reschedule"
+                                            Clicked="OnRescheduleAppointmentClicked"
+                                            CommandParameter="{Binding .}"
+                                            IsVisible="{Binding CanReschedule, Source={x:Reference ThisPage}}"
+                                            BackgroundColor="{AppThemeBinding Light=#E8F8F5, Dark=#154331}"
+                                            TextColor="{AppThemeBinding Light=#27AE60, Dark=#2ECC71}"
+                                            FontSize="12"
+                                            FontAttributes="Bold"
+                                            HeightRequest="30"
+                                            Padding="15,0"
+                                            CornerRadius="20"
+                                            HorizontalOptions="End" />
 
                                     <Button Text="Cancel"
                                             Clicked="OnCancelAppointmentClicked"

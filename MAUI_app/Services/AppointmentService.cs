@@ -133,6 +133,38 @@ public class AppointmentService : IAppointmentService
             return Result<Appointment>.Fail("A database error occurred: " + ex.Message);
         }
     }
+    
+    public async Task<Result<Appointment>> UpdateAppointmentAsync(Appointment appointment)
+    {
+        try
+        {
+            var validationResult = await _validator.ValidateAsync(appointment);
+            if (!validationResult.IsValid)
+            {
+                var errorMessages = string.Join("\n", validationResult.Errors.Select(e => e.ErrorMessage));
+                return Result<Appointment>.Fail(errorMessages);
+            }
+            
+            var existingTracking = _context.Appointments.Local.FirstOrDefault(a => a.Id == appointment.Id);
+            if (existingTracking != null)
+            {
+                _context.Entry(existingTracking).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
+            }
+
+            _context.Appointments.Update(appointment);
+            await _context.SaveChangesAsync();
+        
+            return Result<Appointment>.Ok(appointment, "Appointment updated successfully.");
+        }
+        catch (DbUpdateException)
+        {
+            return Result<Appointment>.Fail("There is already an appointment with the given date.");
+        }
+        catch (Exception ex)
+        {
+            return Result<Appointment>.Fail("A database error occurred: " + ex.Message);
+        }
+    }
 
     public async Task<Result> CancelAppointmentAsync(int appointmentId)
     {

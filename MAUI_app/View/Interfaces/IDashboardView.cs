@@ -1,3 +1,5 @@
+using MAUI_app.Model;
+
 namespace MAUI_app.View.interfaces;
 
 public interface IDashboardView
@@ -13,6 +15,9 @@ public interface IDashboardView
     
     void SetDoctorNextPatient(string timeAndNameText, string detailsText);
     void SetDoctorMorePatientsButton(bool isVisible, string buttonText = "");
+    
+    void SetPatientRescheduleButton(bool isVisible);
+    Task NavigateToRescheduleAppointmentAsync(Appointment appt);
     
     Task NavigateToBookAppointmentAsync();
     Task NavigateToAppointmentsAsync();
