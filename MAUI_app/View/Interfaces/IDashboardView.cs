@@ -17,10 +17,7 @@ public interface IDashboardView
     void SetDoctorMorePatientsButton(bool isVisible, string buttonText = "");
     
     void SetPatientRescheduleButton(bool isVisible);
-    Task NavigateToRescheduleAppointmentAsync(Appointment appt);
-    
-    Task NavigateToBookAppointmentAsync();
+    Task NavigateToBookAppointmentAsync(Appointment appt = null!);
     Task NavigateToAppointmentsAsync();
     Task NavigateToMedicationsAsync();
-    Task NavigateToSettingsAsync();
 }

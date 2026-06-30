@@ -21,6 +21,7 @@ public class AppointmentValidator : AbstractValidator<Appointment>
             .GreaterThan(0).WithMessage("A valid doctor must be selected.");
 
         RuleFor(x => x.AppointmentDate)
+            .Cascade(CascadeMode.Stop)
             .NotEmpty().WithMessage("Appointment date is required.")
             .Must(date => date >= DateTime.Now).WithMessage("The appointment date cannot be in the past.")
             .MustAsync(async (model, date, token) =>

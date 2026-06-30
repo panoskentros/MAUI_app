@@ -50,7 +50,7 @@ public class BookAppointmentController
         }
 
         // Αν είμαστε σε Edit Mode, προσυμπλήρωσε τα δεδομένα
-        if (_appointmentToEdit != null)
+        if (_appointmentToEdit.Id != 0)
         {
             _view.PrefillData(_appointmentToEdit, doctors, patients);
             _view.SetSubmitButtonText("Update Appointment");
@@ -88,38 +88,27 @@ public class BookAppointmentController
 
         Result<Appointment> serviceResult;
 
-        if (_appointmentToEdit != null)
+        _appointmentToEdit.AppointmentDate = cleanDate;
+        _appointmentToEdit.MedicalNotes = notes;
+        _appointmentToEdit.DoctorId = selectedDoctor.Id;
+
+        if (_appointmentToEdit.Id != 0)
         {
-            // Update υπάρχοντος ραντεβού
-            _appointmentToEdit.AppointmentDate = cleanDate;
-            _appointmentToEdit.MedicalNotes = notes;
-            _appointmentToEdit.DoctorId = selectedDoctor.Id;
-            
             if (isStaff)
             {
                 _appointmentToEdit.ApplicationUserId = selectedPatient.Id;
                 _appointmentToEdit.PatientName = selectedPatient.UserName;
             }
-            
+    
             serviceResult = await _appointmentService.UpdateAppointmentAsync(_appointmentToEdit);
         }
         else
         {
-            // Δημιουργία νέου
-            int patientId = isStaff ? selectedPatient.Id : currentUser.Id;
-            string patientName = isStaff ? selectedPatient.UserName : currentUser.UserName;
+            _appointmentToEdit.ApplicationUserId = isStaff ? selectedPatient.Id : currentUser.Id;
+            _appointmentToEdit.PatientName = isStaff ? selectedPatient.UserName : currentUser.UserName;
+            _appointmentToEdit.Status = "Scheduled";
 
-            var newAppointment = new Appointment
-            {
-                ApplicationUserId = patientId,
-                DoctorId = selectedDoctor.Id,
-                PatientName = patientName,
-                AppointmentDate = cleanDate,
-                MedicalNotes = notes,
-                Status = "Scheduled"
-            };
-
-            serviceResult = await _appointmentService.CreateAppointmentAsync(newAppointment);
+            serviceResult = await _appointmentService.CreateAppointmentAsync(_appointmentToEdit);
         }
 
         if (serviceResult.Success)

@@ -54,7 +54,7 @@ public class DashboardController
     {
         var appointments = await _appointmentService.GetUpcomingAppointmentsForPatientAsync(userId);
 
-        if (appointments != null && appointments.Any())
+        if (appointments.Any())
         {
             var nextAppt = appointments.First();
             _nextPatientAppointment = nextAppt;
@@ -87,7 +87,7 @@ public class DashboardController
     {
         var appointments = await _appointmentService.GetTodaysPatientsForDoctorAsync(userId);
 
-        if (appointments != null && appointments.Any())
+        if (appointments.Any())
         {
             var nextPatient = appointments.First();
             string timeNameStr = nextPatient.AppointmentDate.ToString("h:mm tt") + " - " + nextPatient.PatientName;
@@ -109,12 +109,11 @@ public class DashboardController
     public async Task HandleBookAppointmentClicked() => await _view.NavigateToBookAppointmentAsync();
     public async Task HandleViewAllAppointmentsClicked() => await _view.NavigateToAppointmentsAsync();
     public async Task HandleMedicalRecordsClicked() => await _view.NavigateToMedicationsAsync();
-    public async Task HandleSettingsClicked() => await _view.NavigateToSettingsAsync();
     public async Task HandleRescheduleClicked()
     {
         if (_nextPatientAppointment != null)
         {
-            await _view.NavigateToRescheduleAppointmentAsync(_nextPatientAppointment);
+            await _view.NavigateToBookAppointmentAsync(_nextPatientAppointment);
         }
     }
 }

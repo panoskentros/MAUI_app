@@ -44,13 +44,7 @@ public partial class DashboardPage : ContentPage, IDashboardView
         await AnimateBorder(sender);
         await _controller.HandleViewAllAppointmentsClicked();
     }
-
-    private async void OnSetAvailabilityTapped(object sender, TappedEventArgs e)
-    {
-        await AnimateBorder(sender);
-        await _controller.HandleSettingsClicked();
-    }
-
+    
     private async Task AnimateBorder(object sender)
     {
         if (sender is Border border)
@@ -91,24 +85,19 @@ public partial class DashboardPage : ContentPage, IDashboardView
     
     public void SetPatientRescheduleButton(bool isVisible) => PatientRescheduleButton.IsVisible = isVisible;
     
-    public async Task NavigateToRescheduleAppointmentAsync(Appointment appt)
-    {
-        var navigationParameter = new System.Collections.Generic.Dictionary<string, object>
-        {
-            { "AppointmentToEdit", appt }
-        };
-        await Shell.Current.GoToAsync(nameof(BookAppointmentPage), navigationParameter);
-    }
-    
     private async void OnRescheduleClicked(object sender, EventArgs e)
     {
         await _controller.HandleRescheduleClicked();
     }
 
-    public async Task NavigateToBookAppointmentAsync()
+    public async Task NavigateToBookAppointmentAsync(Appointment appt = null)
     {
-        var bookPage = Handler.MauiContext.Services.GetService<BookAppointmentPage>();
-        await Navigation.PushAsync(bookPage);
+        var navigationParameter = new Dictionary<string, object>
+        {
+            { "AppointmentToEdit", appt ?? new Appointment() }
+        };
+    
+        await Shell.Current.GoToAsync(nameof(BookAppointmentPage), navigationParameter);
     }
 
     public Task NavigateToAppointmentsAsync() => Shell.Current.GoToAsync("//appointments");
