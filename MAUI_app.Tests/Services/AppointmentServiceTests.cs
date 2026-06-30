@@ -22,6 +22,10 @@ public class AppointmentServiceTests
             .Options;
         var databaseContext = new AppDbContext(options);
         databaseContext.Database.EnsureCreated();
+        
+        databaseContext.Set<ApplicationUser>().RemoveRange(databaseContext.Set<ApplicationUser>()); // remove default admin user from seeding
+        databaseContext.SaveChanges();
+        
         return databaseContext;
     }
 
@@ -30,6 +34,11 @@ public class AppointmentServiceTests
     {
         var context = GetDatabaseContext();
         int userId = 1;
+
+        context.AddRange(
+            new ApplicationUser { Id = userId, UserName = "Patient1", Email = "p1@test.com", HashedPassword = "hash" },
+            new ApplicationUser { Id = 99, UserName = "Patient99", Email = "p99@test.com", HashedPassword = "hash" }
+        );
 
         context.Appointments.AddRange(new List<Appointment>
         {
@@ -53,11 +62,13 @@ public class AppointmentServiceTests
     {
         var context = GetDatabaseContext();
         
+        context.AddRange(new ApplicationUser { Id = 1, UserName = "Patient1", Email = "p1@test.com", HashedPassword = "hash" });
+
         context.Appointments.AddRange(new List<Appointment>
         {
-            new Appointment { Id = 1, AppointmentDate = DateTime.Today, Status = "Scheduled" },
-            new Appointment { Id = 2, AppointmentDate = DateTime.Today, Status = "Scheduled" },
-            new Appointment { Id = 3, AppointmentDate = DateTime.Today.AddDays(1), Status = "Scheduled" }
+            new Appointment { Id = 1, ApplicationUserId = 1, AppointmentDate = DateTime.Today, Status = "Scheduled" },
+            new Appointment { Id = 2, ApplicationUserId = 1, AppointmentDate = DateTime.Today, Status = "Scheduled" },
+            new Appointment { Id = 3, ApplicationUserId = 1, AppointmentDate = DateTime.Today.AddDays(1), Status = "Scheduled" }
         });
         await context.SaveChangesAsync();
 
@@ -76,11 +87,13 @@ public class AppointmentServiceTests
         int doctorId = 5;
         var rightNow = DateTime.Now;
 
+        context.AddRange(new ApplicationUser { Id = 1, UserName = "Patient1", Email = "p1@test.com", HashedPassword = "hash" });
+
         context.Appointments.AddRange(new List<Appointment>
         {
-            new Appointment { Id = 1, DoctorId = doctorId, AppointmentDate = rightNow.AddHours(-1), Status = "Scheduled" },
-            new Appointment { Id = 2, DoctorId = doctorId, AppointmentDate = rightNow.AddHours(1), Status = "Scheduled" },
-            new Appointment { Id = 3, DoctorId = 99, AppointmentDate = rightNow.AddHours(1), Status = "Scheduled" }
+            new Appointment { Id = 1, ApplicationUserId = 1, DoctorId = doctorId, AppointmentDate = rightNow.AddHours(-1), Status = "Scheduled" },
+            new Appointment { Id = 2, ApplicationUserId = 1, DoctorId = doctorId, AppointmentDate = rightNow.AddHours(1), Status = "Scheduled" },
+            new Appointment { Id = 3, ApplicationUserId = 1, DoctorId = 99, AppointmentDate = rightNow.AddHours(1), Status = "Scheduled" }
         });
         await context.SaveChangesAsync();
 
@@ -101,13 +114,14 @@ public class AppointmentServiceTests
         
         mockValidator
             .Setup(v => v.ValidateAsync(It.IsAny<Appointment>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new FluentValidation.Results.ValidationResult());
+            .ReturnsAsync(new ValidationResult());
 
         var service = new AppointmentService(context, mockValidator.Object);
         
         var appointment = new Appointment 
         { 
             Id = 10, 
+            ApplicationUserId = 1,
             AppointmentDate = DateTime.Today.AddDays(1), 
             Status = "Scheduled",
             DoctorId = 1
@@ -123,6 +137,11 @@ public class AppointmentServiceTests
     {
         var context = GetDatabaseContext();
         int userId = 40;
+
+        context.AddRange(
+            new ApplicationUser { Id = userId, UserName = "Patient40", Email = "p40@test.com", HashedPassword = "hash" },
+            new ApplicationUser { Id = 99, UserName = "Patient99", Email = "p99@test.com", HashedPassword = "hash" }
+        );
 
         context.Appointments.AddRange(new List<Appointment>
         {
@@ -147,11 +166,13 @@ public class AppointmentServiceTests
         var context = GetDatabaseContext();
         int doctorId = 22;
 
+        context.AddRange(new ApplicationUser { Id = 1, UserName = "Patient1", Email = "p1@test.com", HashedPassword = "hash" });
+
         context.Appointments.AddRange(new List<Appointment>
         {
-            new Appointment { Id = 1, DoctorId = doctorId, AppointmentDate = DateTime.Now.AddDays(-3), Status = "Completed" },
-            new Appointment { Id = 2, DoctorId = doctorId, AppointmentDate = DateTime.Now.AddDays(1), Status = "Scheduled" },
-            new Appointment { Id = 3, DoctorId = 99, AppointmentDate = DateTime.Now.AddDays(-2),Status = "Completed" }
+            new Appointment { Id = 1, ApplicationUserId = 1, DoctorId = doctorId, AppointmentDate = DateTime.Now.AddDays(-3), Status = "Completed" },
+            new Appointment { Id = 2, ApplicationUserId = 1, DoctorId = doctorId, AppointmentDate = DateTime.Now.AddDays(1), Status = "Scheduled" },
+            new Appointment { Id = 3, ApplicationUserId = 1, DoctorId = 99, AppointmentDate = DateTime.Now.AddDays(-2),Status = "Completed" }
         });
         await context.SaveChangesAsync();
 

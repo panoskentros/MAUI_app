@@ -27,7 +27,7 @@ public class AppointmentsHistoryControllerTests
     [Fact]
     public async Task LoadHistoryAsync_WhenUserIsPatient_GroupsAppointmentsCorrectly()
     {
-        var currentPatient = new ApplicationUser { Id = 40, Role = UserRole.Patient, UserName = "PatientTest" };
+        var currentPatient = new ApplicationUser { Id = 40, Role = UserRole.Patient, UserName = "patient test" };
         _mockUserService.Setup(s => s.CurrentUser).Returns(currentPatient);
 
         var pastDate = DateTime.Now.AddDays(-5);
@@ -39,7 +39,7 @@ public class AppointmentsHistoryControllerTests
 
         var doctorsList = new List<ApplicationUser>
         {
-            new ApplicationUser { Id = 22, Role = UserRole.Doctor, UserName = "Smith" }
+            new ApplicationUser { Id = 22, Role = UserRole.Doctor, UserName = "dre" }
         };
         _mockUserService.Setup(s => s.GetAllDoctorsAsync()).ReturnsAsync(doctorsList);
 
@@ -48,20 +48,27 @@ public class AppointmentsHistoryControllerTests
         await controller.LoadHistoryAsync();
 
         _mockView.Verify(v => v.SetHistoryAppointments(It.Is<IEnumerable<IGrouping<string, Appointment>>>(
-            g => g.Count() == 1 && g.First().Key == pastDate.Date.ToString("MMMM dd, yyyy") && g.First().First().DisplayName == "Dr. Smith"
+            g => g.Count() == 1 && g.First().Key == pastDate.Date.ToString("MMMM dd, yyyy") && g.First().First().DisplayName == "Dr. dre"
         )), Times.Once);
     }
 
     [Fact]
     public async Task LoadHistoryAsync_WhenUserIsDoctor_GroupsAppointmentsCorrectly()
     {
-        var currentDoctor = new ApplicationUser { Id = 22, Role = UserRole.Doctor, UserName = "DoctorTest" };
+        var currentDoctor = new ApplicationUser { Id = 22, Role = UserRole.Doctor, UserName = "doctor test" };
         _mockUserService.Setup(s => s.CurrentUser).Returns(currentDoctor);
 
         var pastDate = DateTime.Now.AddDays(-2);
         var pastAppointments = new List<Appointment>
         {
-            new Appointment { Id = 2, ApplicationUserId = 40, DoctorId = 22, AppointmentDate = pastDate }
+            new Appointment 
+            { 
+                Id = 2, 
+                ApplicationUserId = 40, 
+                DoctorId = 22, 
+                AppointmentDate = pastDate,
+                ApplicationUser = new ApplicationUser { Id = 40, UserName = "panos kent" } 
+            }
         };
         _mockAppointmentService.Setup(s => s.GetPastAppointmentsForDoctorAsync(22)).ReturnsAsync(pastAppointments);
 
@@ -70,7 +77,7 @@ public class AppointmentsHistoryControllerTests
         await controller.LoadHistoryAsync();
 
         _mockView.Verify(v => v.SetHistoryAppointments(It.Is<IEnumerable<IGrouping<string, Appointment>>>(
-            g => g.Count() == 1 && g.First().Key == pastDate.Date.ToString("MMMM dd, yyyy") && g.First().First().DisplayName == "Panos Kentros"
+            g => g.Count() == 1 && g.First().Key == pastDate.Date.ToString("MMMM dd, yyyy") && g.First().First().DisplayName == "panos kent"
         )), Times.Once);
     }
 }
