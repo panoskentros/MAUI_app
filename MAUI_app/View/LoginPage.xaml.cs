@@ -76,6 +76,8 @@ public partial class LoginPage : ContentPage, ILoginView
     {
         UsernameOrEmailEntry.Text = string.Empty;
         PasswordEntry.Text = string.Empty;
+        UsernameOrEmailEntry.TextColor = Microsoft.Maui.Graphics.Colors.Black;
+        PasswordEntry.TextColor = Microsoft.Maui.Graphics.Colors.Black;
     }
 
     public void UpdatePasswordVisibilityState(bool isHidden)

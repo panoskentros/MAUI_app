@@ -38,34 +38,72 @@
     </Shell.Resources>
 
     <Shell.FlyoutHeader>
-        <VerticalStackLayout Padding="20,40,20,20" Spacing="10" HorizontalOptions="Fill">
-        
-            <Border StrokeShape="Ellipse" 
-                    HeightRequest="80" 
-                    WidthRequest="80" 
-                    HorizontalOptions="Center"
-                    BackgroundColor="White"
-                    StrokeThickness="0">
-                <Image Source="user_icon.png" 
-                       Aspect="AspectFill"
-                       HeightRequest="80" 
-                       WidthRequest="80"
-                       HorizontalOptions="Center"
-                       VerticalOptions="Center"/>
-            </Border>
+    <Grid>
+        <Border StrokeThickness="0" Margin="0" Padding="20,50,20,30">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Offset="0.0" Color="{AppThemeBinding Light=#42A5F5, Dark=#1a1a1a}" />
+                    <GradientStop Offset="1.0" Color="{AppThemeBinding Light=#0D47A1, Dark=Black}" />
+                </LinearGradientBrush>
+            </Border.Background>
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="30,30,0,0" />
+            </Border.StrokeShape>
 
-            <Label x:Name="UserNameLabel" 
-                   Text="" 
-                   TextColor="White" 
-                   FontSize="18" 
-                   FontAttributes="Bold" 
-                   HorizontalOptions="Center"
-                   HorizontalTextAlignment="Center"
-                   LineBreakMode="WordWrap"
-                   MaxLines="2"
-                   WidthRequest="200" />
-        </VerticalStackLayout>
-    </Shell.FlyoutHeader>
+            <VerticalStackLayout Spacing="15" HorizontalOptions="Center">
+                
+                <Border StrokeShape="Ellipse" 
+                        HeightRequest="90" WidthRequest="90" 
+                        HorizontalOptions="Center"
+                        BackgroundColor="Transparent"
+                        Stroke="{AppThemeBinding Light=#90CAF9, Dark=#333333}"
+                        StrokeThickness="2"
+                        Padding="4">
+    
+                    <Grid HeightRequest="80" WidthRequest="80">
+                        <Ellipse Fill="White" HeightRequest="80" WidthRequest="80" />
+        
+                        <Image Source="user_icon.png" 
+                               Aspect="AspectFill"
+                               HeightRequest="70" WidthRequest="70"
+                               HorizontalOptions="Center" VerticalOptions="Center">
+                            <Image.Clip>
+                                <EllipseGeometry Center="35,35" RadiusX="35" RadiusY="35" />
+                            </Image.Clip>
+                        </Image>
+                    </Grid>
+                </Border>
+
+                <VerticalStackLayout Spacing="5" HorizontalOptions="Center">
+                    <Label x:Name="UserNameLabel" 
+                           Text="Loading..." 
+                           TextColor="White" 
+                           FontSize="20" 
+                           FontAttributes="Bold" 
+                           HorizontalOptions="Center"
+                           HorizontalTextAlignment="Center"
+                           LineBreakMode="WordWrap"
+                           MaxLines="2" />
+                    
+                    <Border BackgroundColor="{AppThemeBinding Light=#1976D2, Dark=#222222}"
+                            StrokeThickness="0"
+                            Padding="12,4"
+                            HorizontalOptions="Center">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="12" />
+                        </Border.StrokeShape>
+                        <Label x:Name="UserRoleLabel"
+                               Text="ROLE"
+                               TextColor="{AppThemeBinding Light=#E3F2FD, Dark=#BBDEFB}"
+                               FontSize="12"
+                               FontAttributes="Bold"
+                               TextTransform="Uppercase" />
+                    </Border>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </Border>
+    </Grid>
+</Shell.FlyoutHeader>
 
     <Shell.ItemTemplate>
         <DataTemplate>

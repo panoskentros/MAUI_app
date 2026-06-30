@@ -20,13 +20,14 @@
                            TextColor="{AppThemeBinding Light=#1C1C1E, Dark=White}" />
                     <Border BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource OffBlack}}" 
                             Stroke="{AppThemeBinding Light=#E0E6ED, Dark={StaticResource Gray600}}" 
-                            StrokeThickness="1">
+                            StrokeThickness="1"
+                            HeightRequest="50">
                         <Border.StrokeShape><RoundRectangle CornerRadius="8" /></Border.StrokeShape>
                         <Picker x:Name="PatientPicker"
                                 ItemDisplayBinding="{Binding UserName}"
-                                Title="Choose a patient..."
                                 TextColor="{AppThemeBinding Light=Black, Dark=White}"
-                                TitleColor="{AppThemeBinding Light=Gray, Dark={StaticResource Gray400}}"
+                                HorizontalOptions="Fill"
+                                VerticalOptions="Center"
                                 Margin="10,0" />
                     </Border>
                 </VerticalStackLayout>
@@ -38,18 +39,20 @@
                            TextColor="{AppThemeBinding Light=#1C1C1E, Dark=White}" />
                     <Border BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource OffBlack}}" 
                             Stroke="{AppThemeBinding Light=#E0E6ED, Dark={StaticResource Gray600}}" 
-                            StrokeThickness="1">
-                        <Border.StrokeShape><RoundRectangle  CornerRadius="8" /></Border.StrokeShape>
+                            StrokeThickness="1"
+                            HeightRequest="50">
+                        <Border.StrokeShape><RoundRectangle CornerRadius="8" /></Border.StrokeShape>
                         <Picker x:Name="DoctorPicker"
                                 ItemDisplayBinding="{Binding UserName}"
-                                Title="Choose a doctor..."
                                 TextColor="{AppThemeBinding Light=Black, Dark=White}"
-                                TitleColor="{AppThemeBinding Light=Gray, Dark={StaticResource Gray400}}"
+                                HorizontalOptions="Fill"
+                                VerticalOptions="Center"
                                 Margin="10,0" />
                     </Border>
                 </VerticalStackLayout>
 
                 <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
+                    
                     <VerticalStackLayout Grid.Column="0" Spacing="5">
                         <Label Text="Date" 
                                FontSize="14" 
@@ -57,9 +60,12 @@
                                TextColor="{AppThemeBinding Light=#1C1C1E, Dark=White}" />
                         <Border BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource OffBlack}}" 
                                 Stroke="{AppThemeBinding Light=#E0E6ED, Dark={StaticResource Gray600}}" 
-                                StrokeThickness="1">
+                                StrokeThickness="1"
+                                HeightRequest="50">
                             <Border.StrokeShape><RoundRectangle CornerRadius="8" /></Border.StrokeShape>
                             <DatePicker x:Name="ApptDatePicker" 
+                                        HorizontalOptions="Start"
+                                        VerticalOptions="Center"
                                         Margin="10,0" 
                                         TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
                         </Border>
@@ -72,10 +78,13 @@
                                TextColor="{AppThemeBinding Light=#1C1C1E, Dark=White}" />
                         <Border BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource OffBlack}}" 
                                 Stroke="{AppThemeBinding Light=#E0E6ED, Dark={StaticResource Gray600}}" 
-                                StrokeThickness="1">
+                                StrokeThickness="1"
+                                HeightRequest="50">
                             <Border.StrokeShape><RoundRectangle CornerRadius="8" /></Border.StrokeShape>
                             <TimePicker x:Name="ApptTimePicker" 
-                                        Margin="10,0" 
+                                        HorizontalOptions="Start"
+                                        VerticalOptions="Center"
+                                        Margin="10,0"
                                         TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
                         </Border>
                     </VerticalStackLayout>
@@ -88,13 +97,14 @@
                            TextColor="{AppThemeBinding Light=#1C1C1E, Dark=White}" />
                     <Border BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource OffBlack}}" 
                             Stroke="{AppThemeBinding Light=#E0E6ED, Dark={StaticResource Gray600}}" 
-                            StrokeThickness="1">
+                            StrokeThickness="1"
+                            HeightRequest="110">
                         <Border.StrokeShape><RoundRectangle CornerRadius="8" /></Border.StrokeShape>
                         <Editor x:Name="NotesEditor" 
-                                Placeholder="E.g., Checkup..." 
-                                PlaceholderColor="{AppThemeBinding Light=Gray, Dark={StaticResource Gray400}}"
+                                HorizontalOptions="Fill"
+                                VerticalOptions="Fill"
                                 HeightRequest="100" 
-                                Margin="10,5" 
+                                Margin="10,0" 
                                 TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
                     </Border>
                 </VerticalStackLayout>

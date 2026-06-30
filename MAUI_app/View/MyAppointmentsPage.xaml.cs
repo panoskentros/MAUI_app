@@ -81,9 +81,20 @@ public partial class MyAppointmentsPage : ContentPage, IAppointmentsView
         }
     }
 
+    private bool _isRefreshing = false;
     private async void OnRefreshClicked(object sender, EventArgs e)
     {
-        await _controller.InitializeDataAsync();
+        if (_isRefreshing) return;
+
+        try
+        {
+            _isRefreshing = true;
+            await _controller.InitializeDataAsync();
+        }
+        finally
+        {
+            _isRefreshing = false;
+        }
     }
 
     private async void OnAddAppointmentClicked(object sender, EventArgs e)

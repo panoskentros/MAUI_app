@@ -154,7 +154,7 @@ public class AppointmentService : IAppointmentService
                 _context.Entry(existingTracking).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
             }
 
-            _context.Appointments.Update(appointment);
+            _context.Entry(appointment).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
             await _context.SaveChangesAsync();
         
             return Result<Appointment>.Ok(appointment, "Appointment updated successfully.");

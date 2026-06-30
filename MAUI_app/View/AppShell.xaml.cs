@@ -70,8 +70,9 @@ public partial class AppShell : Shell, IAppShellView
         Application.Current.UserAppTheme = targetTheme;
     }
     
-    public void UpdateUserDisplay(string userName)
+    public void UpdateUserDisplay(string userName, string userRole)
     {
         UserNameLabel.Text = userName;
+        UserRoleLabel.Text = userRole;
     }
 }

@@ -5,5 +5,5 @@ public interface IAppShellView
     void CloseFlyout();
     Task NavigateToLoginAsync();
     void ShowError(string message);
-    void UpdateUserDisplay(string userName);
+    void UpdateUserDisplay(string userName, string userRole);
 }

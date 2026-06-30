@@ -76,9 +76,10 @@
                                 <Entry x:Name="UsernameOrEmailEntry" 
                                        Grid.Column="1" 
                                        Margin="0,0,4,0"
-                                       Placeholder="Username or Email" 
+                                       Placeholder="Username or Email"
+                                       PlaceholderColor="#8E8E93" 
                                        BackgroundColor="Transparent" 
-                                       TextColor="Black" 
+                                       TextColor="#000000" 
                                        ReturnType="Next" 
                                        VerticalOptions="Center" />
                             </Grid>
@@ -101,9 +102,10 @@
                                 <Entry x:Name="PasswordEntry" 
                                        Grid.Column="1" 
                                        Placeholder="Password" 
+                                       PlaceholderColor="#8E8E93"
                                        IsPassword="True"
                                        BackgroundColor="Transparent" 
-                                       TextColor="Black" 
+                                       TextColor="#000000" 
                                        ReturnType="Done" 
                                        VerticalOptions="Center"
                                        Completed="OnLoginClicked"/>

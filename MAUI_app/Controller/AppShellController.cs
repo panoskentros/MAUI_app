@@ -58,6 +58,6 @@ public class AppShellController
     {
         var user = _userService.CurrentUser;
         if (user != null && _view != null)
-            _view.UpdateUserDisplay(user.UserName);
+            _view.UpdateUserDisplay(user.UserName, user.Role.ToString());
     }
 }

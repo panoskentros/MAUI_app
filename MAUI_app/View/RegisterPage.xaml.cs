@@ -100,6 +100,10 @@ public partial class RegisterPage : ContentPage, IRegisterView
         EmailEntry.Text = string.Empty;
         PasswordEntry.Text = string.Empty;
         ConfirmPassword.Text = string.Empty;
+        UsernameEntry.TextColor = Microsoft.Maui.Graphics.Colors.Black;
+        EmailEntry.TextColor = Microsoft.Maui.Graphics.Colors.Black;
+        PasswordEntry.TextColor = Microsoft.Maui.Graphics.Colors.Black;
+        ConfirmPassword.TextColor = Microsoft.Maui.Graphics.Colors.Black;
     }
 
     public void UpdatePasswordVisibilityState(bool isHidden)
