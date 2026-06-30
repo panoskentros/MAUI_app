@@ -87,38 +87,21 @@
                 </VerticalStackLayout>
                 
                 <VerticalStackLayout x:Name="SecretaryView" Spacing="20" IsVisible="False">
-                    <Border BackgroundColor="{AppThemeBinding Light=#F2F2F7, Dark={StaticResource Gray900}}" StrokeThickness="0" HeightRequest="50">
-                        <Border.StrokeShape><RoundRectangle CornerRadius="8" /></Border.StrokeShape>
-                        <Grid ColumnDefinitions="Auto, *">
-                            <Image Grid.Column="0" Source="user_icon.png" WidthRequest="20" HeightRequest="20" Margin="15,0,10,0" Opacity="0.5" />
-                            <Entry Grid.Column="1" Placeholder="Search patients by name or phone..." BackgroundColor="Transparent" VerticalOptions="Center" />
-                        </Grid>
+    
+                    <Border BackgroundColor="{AppThemeBinding Light=#E3F2FD, Dark={StaticResource Gray950}}" StrokeThickness="0" Padding="15">
+                        <Border.StrokeShape><RoundRectangle CornerRadius="12" /></Border.StrokeShape>
+                        <VerticalStackLayout>
+                            <Label x:Name="SecretaryApptsTodayLabel" FontSize="24" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#0D47A1, Dark=#BBDEFB}" />
+                            <Label Text="Appointments Today" FontSize="12" TextColor="{AppThemeBinding Light=#0D47A1, Dark=#BBDEFB}" />
+                        </VerticalStackLayout>
                     </Border>
 
-                    <Grid ColumnDefinitions="*, *" ColumnSpacing="15">
-                        <Border Grid.Column="0" BackgroundColor="{AppThemeBinding Light=#E3F2FD, Dark={StaticResource Gray950}}" StrokeThickness="0" Padding="15">
-                            <Border.StrokeShape><RoundRectangle CornerRadius="12" /></Border.StrokeShape>
-                            <VerticalStackLayout>
-                                <Label x:Name="SecretaryApptsTodayLabel" FontSize="24" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#0D47A1, Dark=#BBDEFB}" />
-                                <Label Text="Appointments Today" FontSize="12" TextColor="{AppThemeBinding Light=#0D47A1, Dark=#BBDEFB}" />
-                            </VerticalStackLayout>
-                        </Border>
-                        
-                        <Border Grid.Column="1" BackgroundColor="{AppThemeBinding Light=#FFF3E0, Dark={StaticResource Gray950}}" StrokeThickness="0" Padding="15">
-                            <Border.StrokeShape><RoundRectangle CornerRadius="12" /></Border.StrokeShape>
-                            <VerticalStackLayout>
-                                <Label Text="0" FontSize="24" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#E65100, Dark=#FFB74D}" />
-                                <Label Text="Awaiting Check-in" FontSize="12" TextColor="{AppThemeBinding Light=#E65100, Dark=#FFB74D}" />
-                            </VerticalStackLayout>
-                        </Border>
-                    </Grid>
-
                     <Label Text="Quick Actions" FontSize="18" FontAttributes="Bold" Margin="0,10,0,0"/>
-                    
+    
                     <Button Text="Book Walk-in / Call-in" 
                             Clicked="OnBookAppointmentTapped"
                             BackgroundColor="#0D47A1" TextColor="White" HeightRequest="50" CornerRadius="12" FontAttributes="Bold" ImageSource="calendar_icon.png" />
-                    
+    
                     <Button Text="Manage Clinic Schedule" 
                             Clicked="OnViewAllAppointmentsClicked"
                             BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource Gray950}}" TextColor="{AppThemeBinding Light=#0D47A1, Dark=#BBDEFB}" HeightRequest="50" CornerRadius="12" FontAttributes="Bold" BorderColor="{AppThemeBinding Light=#0D47A1, Dark=#BBDEFB}" BorderWidth="2" ImageSource="message_icon.png" />

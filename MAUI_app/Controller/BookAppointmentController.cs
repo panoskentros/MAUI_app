@@ -48,9 +48,8 @@ public class BookAppointmentController
             patients = await _userService.GetAllPatientsAsync();
             _view.SetPatients(patients);
         }
-
-        // Αν είμαστε σε Edit Mode, προσυμπλήρωσε τα δεδομένα
-        if (_appointmentToEdit.Id != 0)
+        
+        if (_appointmentToEdit != null && _appointmentToEdit.Id != 0)
         {
             _view.PrefillData(_appointmentToEdit, doctors, patients);
             _view.SetSubmitButtonText("Update Appointment");
@@ -92,7 +91,7 @@ public class BookAppointmentController
         _appointmentToEdit.MedicalNotes = notes;
         _appointmentToEdit.DoctorId = selectedDoctor.Id;
 
-        if (_appointmentToEdit.Id != 0)
+        if (_appointmentToEdit != null && _appointmentToEdit.Id != 0)
         {
             if (isStaff)
             {

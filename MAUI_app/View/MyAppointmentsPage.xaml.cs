@@ -58,7 +58,7 @@ public partial class MyAppointmentsPage : ContentPage, IAppointmentsView
     
     private async void OnRescheduleAppointmentClicked(object sender, EventArgs e)
     {
-        if (sender is Button button && button.CommandParameter is Appointment appointmentToReschedule)
+        if (sender is ImageButton button && button.CommandParameter is Appointment appointmentToReschedule)
         {
             var navigationParameter = new Dictionary<string, object>
             {
@@ -70,7 +70,7 @@ public partial class MyAppointmentsPage : ContentPage, IAppointmentsView
 
     private async void OnCancelAppointmentClicked(object sender, EventArgs e)
     {
-        if (sender is Button button && button.CommandParameter is Appointment appointmentToCancel)
+        if (sender is ImageButton button && button.CommandParameter is Appointment appointmentToCancel)
         {
             bool confirm = await DisplayAlert("Cancel Appointment", "Are you sure you want to cancel this appointment?", "Yes", "No");
         

@@ -1,8 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="MAUI_app.View.HeaderBanner">
-    <Border StrokeThickness="0" Margin="0" Padding="20,40,20,30">
+             x:Class="MAUI_app.View.HeaderBanner"
+             x:Name="ThisBanner">
+             
+    <Border StrokeThickness="0" Margin="0" Padding="20,35,20,35">
         <Border.Background>
             <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                 <GradientStop Offset="0.1" 
@@ -17,22 +19,31 @@
         </Border.StrokeShape>
 
         <HorizontalStackLayout Spacing="15" VerticalOptions="Center">
-            <Image Source="medical_logo.png" HeightRequest="50" WidthRequest="50" />
             
-            <VerticalStackLayout VerticalOptions="Center">
-                <Label x:Name="BannerTitleLabel" 
-                       Text="{Binding BannerTitle}" 
-                       TextColor="{AppThemeBinding Light=#BBDEFB, Dark=#7F8C8D}" 
-                       FontSize="14" 
-                       FontAttributes="Bold"
-                       TextTransform="Uppercase"/>
-                
-                <Label x:Name="WelcomeLabel" 
-                       Text="{Binding BannerWelcomeMessage}" 
-                       TextColor="White" 
-                       FontSize="24" 
-                       FontAttributes="Bold"/>
-            </VerticalStackLayout>
+            <Button Text="❮" 
+                    Clicked="OnBackButtonClicked"
+                    IsVisible="{Binding ShowBackButton, Source={x:Reference ThisBanner}}"
+                    BackgroundColor="Transparent"
+                    TextColor="White"
+                    FontSize="26"
+                    FontAttributes="Bold"
+                    HeightRequest="50"
+                    WidthRequest="40"
+                    VerticalOptions="Center"
+                    Padding="0"/>
+
+            <Image Source="medical_logo.png" 
+                   HeightRequest="50" 
+                   WidthRequest="50" 
+                   VerticalOptions="Center" />
+            
+            <Label x:Name="WelcomeLabel" 
+                   Text="Welcome!" 
+                   TextColor="White" 
+                   FontSize="24" 
+                   FontAttributes="Bold"
+                   VerticalOptions="Center" />
+                   
         </HorizontalStackLayout>
     </Border>
 </ContentView>
