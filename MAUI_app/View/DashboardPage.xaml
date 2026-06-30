@@ -158,17 +158,6 @@
                                 <Label Text="My Schedule" FontSize="12" FontAttributes="Bold" />
                             </VerticalStackLayout>
                         </Border>
-
-                        <Border Grid.Column="1" BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource Gray950}}" StrokeThickness="0" HeightRequest="80">
-                            <Border.StrokeShape><RoundRectangle CornerRadius="12" /></Border.StrokeShape>
-                            <Border.Shadow><Shadow Brush="Black" Offset="0,2" Radius="5" Opacity="0.05" /></Border.Shadow>
-                            <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnSetAvailabilityTapped"/></Border.GestureRecognizers>
-                            
-                            <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="5">
-                                <Image Source="settings_icon.png" WidthRequest="24" HeightRequest="24" />
-                                <Label Text="Set Availability" FontSize="12" FontAttributes="Bold" />
-                            </VerticalStackLayout>
-                        </Border>
                     </Grid>
                 </VerticalStackLayout>
 
