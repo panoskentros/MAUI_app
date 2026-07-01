@@ -60,7 +60,7 @@ public class BookAppointmentController
         }
     }
 
-    public async Task SaveAppointment(ApplicationUser selectedDoctor, ApplicationUser selectedPatient, DateTime date, TimeSpan time, string notes)
+ public async Task SaveAppointment(ApplicationUser selectedDoctor, ApplicationUser selectedPatient, DateTime date, TimeSpan time, string notes)
     {
         var currentUser = _userService.CurrentUser;
         if (currentUser == null) 
@@ -73,29 +73,26 @@ public class BookAppointmentController
         
         if (isStaff && selectedPatient == null) 
         {
-            await _view.ShowAlertAsync("Error", "Please select a patient from the list before confirming.");
+            await _view.ShowAlertAsync("Error", "Please select a patient.");
             return;
         }
-        
         if (selectedDoctor == null)
         {
-            await _view.ShowAlertAsync("Error", "Please select a doctor from the list before confirming.");
+            await _view.ShowAlertAsync("Error", "Please select a doctor.");
             return;
         }
-
-        string safeNotes = notes ?? string.Empty;
 
         DateTime combined = date.Date + time;
         DateTime cleanDate = new DateTime(combined.Year, combined.Month, combined.Day, combined.Hour, combined.Minute, 0);
 
         Result<Appointment> serviceResult;
 
-        if (_appointmentToEdit != null && _appointmentToEdit.Id != 0)
+        _appointmentToEdit.AppointmentDate = cleanDate;
+        _appointmentToEdit.MedicalNotes = notes;
+        _appointmentToEdit.DoctorId = selectedDoctor.Id;
+
+        if (_appointmentToEdit.Id != 0)
         {
-            _appointmentToEdit.AppointmentDate = cleanDate;
-            _appointmentToEdit.MedicalNotes = safeNotes;
-            _appointmentToEdit.DoctorId = selectedDoctor.Id;
-            
             if (isStaff)
             {
                 _appointmentToEdit.ApplicationUserId = selectedPatient.Id;
@@ -105,18 +102,10 @@ public class BookAppointmentController
         }
         else
         {
-            int patientId = isStaff ? selectedPatient.Id : currentUser.Id;
+            _appointmentToEdit.ApplicationUserId = isStaff ? selectedPatient.Id : currentUser.Id;
+            _appointmentToEdit.Status = "Scheduled";
 
-            var newAppointment = new Appointment
-            {
-                ApplicationUserId = patientId,
-                DoctorId = selectedDoctor.Id,
-                AppointmentDate = cleanDate,
-                MedicalNotes = safeNotes,
-                Status = "Scheduled"
-            };
-
-            serviceResult = await _appointmentService.CreateAppointmentAsync(newAppointment);
+            serviceResult = await _appointmentService.CreateAppointmentAsync(_appointmentToEdit);
         }
 
         if (serviceResult.Success)
