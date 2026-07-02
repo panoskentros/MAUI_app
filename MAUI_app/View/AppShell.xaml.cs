@@ -19,7 +19,8 @@ public partial class AppShell : Shell, IAppShellView
         _controller.SetView(this);
         
         Routing.RegisterRoute(nameof(BookAppointmentPage), typeof(BookAppointmentPage));
-
+        Routing.RegisterRoute(nameof(AddMedicationPage), typeof(AddMedicationPage));
+        
         this.Loaded += AppShell_Loaded;
         this.Unloaded += AppShell_Unloaded;
     }

@@ -39,6 +39,9 @@ public class BookAppointmentController
         bool isStaff = user.Role == UserRole.Secretary || user.Role == UserRole.Doctor;
         _view.ShowPatientSelection(isStaff);
 
+        bool isDoctor = user.Role == UserRole.Doctor;
+        _view.SetMedicationEditState(isDoctor);
+
         var doctors = await _userService.GetAllDoctorsAsync();
         _view.SetDoctors(doctors);
 
@@ -60,7 +63,7 @@ public class BookAppointmentController
         }
     }
 
- public async Task SaveAppointment(ApplicationUser selectedDoctor, ApplicationUser selectedPatient, DateTime date, TimeSpan time, string notes)
+    public async Task SaveAppointment(ApplicationUser selectedDoctor, ApplicationUser selectedPatient, DateTime date, TimeSpan time, string notes, string medicationName, string medicationInstructions)
     {
         var currentUser = _userService.CurrentUser;
         if (currentUser == null) 
@@ -85,11 +88,16 @@ public class BookAppointmentController
         DateTime combined = date.Date + time;
         DateTime cleanDate = new DateTime(combined.Year, combined.Month, combined.Day, combined.Hour, combined.Minute, 0);
 
-        Result<Appointment> serviceResult;
+        if (_appointmentToEdit == null)
+        {
+            _appointmentToEdit = new Appointment();
+        }
 
         _appointmentToEdit.AppointmentDate = cleanDate;
         _appointmentToEdit.MedicalNotes = notes;
         _appointmentToEdit.DoctorId = selectedDoctor.Id;
+        
+        Result<Appointment> serviceResult;
 
         if (_appointmentToEdit.Id != 0)
         {

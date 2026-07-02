@@ -12,7 +12,7 @@
     Shell.TabBarIsVisible="False">
 
     <Shell.Resources>
-        <Style Class="FlyoutItemLayoutStyle" TargetType="Layout" ApplyToDerivedTypes="True">
+        <Style TargetType="Layout" ApplyToDerivedTypes="True">
             <Setter Property="VisualStateManager.VisualStateGroups">
                 <VisualStateGroupList>
                     <VisualStateGroup x:Name="CommonStates">
@@ -204,6 +204,10 @@
     
     <FlyoutItem x:Name="AppointmentsHistoryItem" Title="History" Icon="calendar_icon.png" Shell.NavBarIsVisible="False">
         <ShellContent Route="AppointmentsHistoryPage" ContentTemplate="{DataTemplate view:AppointmentsHistoryPage}" />
+    </FlyoutItem>
+    
+    <FlyoutItem x:Name="MedicationsItem" Title="Medications" Icon="pill_icon.png" Shell.NavBarIsVisible="False">
+        <ShellContent Route="MedicationsPage" ContentTemplate="{DataTemplate view:MedicationsPage}" />
     </FlyoutItem>
     
     <FlyoutItem x:Name="ProfileItem" Title="My Profile" Icon="user_icon.png" Shell.NavBarIsVisible="False">

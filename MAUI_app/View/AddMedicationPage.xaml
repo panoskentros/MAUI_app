@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:model="clr-namespace:MAUI_app.Model"
+             xmlns:view="clr-namespace:MAUI_app.View"
+             x:Class="MAUI_app.View.AddMedicationPage"
+             BackgroundColor="{AppThemeBinding Light=#F5F5F7, Dark=#000000}"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto, *">
+        
+        <view:HeaderBanner Grid.Row="0" />
+
+        <ScrollView Grid.Row="1" Margin="0,10,0,0">
+            <VerticalStackLayout Spacing="25" Padding="20,10,20,40">
+
+                <!-- Patient Selection -->
+                <Border BackgroundColor="{AppThemeBinding Light=White, Dark=#1C1C1E}"
+                        Stroke="Transparent"
+                        Padding="20">
+                    <Border.StrokeShape><RoundRectangle CornerRadius="16" /></Border.StrokeShape>
+                    <Border.Shadow>
+                        <Shadow Brush="{AppThemeBinding Light=#E0E0E0, Dark=Transparent}" Offset="0,4" Radius="10" Opacity="0.5" />
+                    </Border.Shadow>
+                    
+                    <VerticalStackLayout Spacing="15">
+                        <Label Text="Patient Information" 
+                               FontSize="18" 
+                               FontAttributes="Bold" 
+                               TextColor="{AppThemeBinding Light=#1C1C1E, Dark=White}" 
+                               Margin="0,0,0,5"/>
+
+                        <VerticalStackLayout x:Name="PatientPickerContainer" Spacing="8">
+                            <Label Text="Select Patient" FontSize="13" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#555555, Dark=#AAAAAA}" />
+                            <Border BackgroundColor="{AppThemeBinding Light=#F8F9FA, Dark=#2C2C2E}" Stroke="{AppThemeBinding Light=#E0E6ED, Dark=#3A3A3C}" StrokeThickness="1" HeightRequest="50">
+                                <Border.StrokeShape><RoundRectangle CornerRadius="10" /></Border.StrokeShape>
+                                <Picker x:Name="PatientPicker" 
+                                        ItemDisplayBinding="{Binding AppUserName}" 
+                                        TextColor="{AppThemeBinding Light=Black, Dark=White}" 
+                                        Title="Choose a patient..."
+                                        TitleColor="Gray" 
+                                        HorizontalOptions="Fill" 
+                                        VerticalOptions="Center" 
+                                        Margin="10,0" />
+                            </Border>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border BackgroundColor="{AppThemeBinding Light=#E8F4FD, Dark=#0A1929}" 
+                        Stroke="{AppThemeBinding Light=#90CAF9, Dark=#1E3A5F}" 
+                        StrokeThickness="1.5"
+                        Padding="20">
+                    <Border.StrokeShape><RoundRectangle CornerRadius="16" /></Border.StrokeShape>
+                    <Border.Shadow>
+                        <Shadow Brush="{AppThemeBinding Light=#BBDEFB, Dark=Transparent}" Offset="0,4" Radius="10" Opacity="0.4" />
+                    </Border.Shadow>
+                    
+                    <VerticalStackLayout Spacing="15">
+                        
+                        <HorizontalStackLayout Spacing="8" VerticalOptions="Center" Margin="0,0,0,5">
+                            <Label Text="💊" FontSize="18" VerticalOptions="Center"/>
+                            <Label Text="Prescription Details" FontSize="16" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#0D47A1, Dark=#64B5F6}" />
+                        </HorizontalStackLayout>
+
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="Medication Name" FontSize="13" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#0D47A1, Dark=#64B5F6}" />
+                            <Border BackgroundColor="{AppThemeBinding Light=White, Dark=#122336}" Stroke="{AppThemeBinding Light=#BBDEFB, Dark=#1E3A5F}" StrokeThickness="1" HeightRequest="50">
+                                <Border.StrokeShape><RoundRectangle CornerRadius="10" /></Border.StrokeShape>
+                                <Entry x:Name="MedicationNameEntry" Placeholder="e.g., Amoxicillin 500mg" PlaceholderColor="{AppThemeBinding Light=#90CAF9, Dark=#455A64}" HorizontalOptions="Fill" VerticalOptions="Center" Margin="10,0" TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="Instructions" FontSize="13" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#0D47A1, Dark=#64B5F6}" />
+                            <Border BackgroundColor="{AppThemeBinding Light=White, Dark=#122336}" Stroke="{AppThemeBinding Light=#BBDEFB, Dark=#1E3A5F}" StrokeThickness="1" HeightRequest="90">
+                                <Border.StrokeShape><RoundRectangle CornerRadius="10" /></Border.StrokeShape>
+                                <Editor x:Name="MedicationInstructionsEditor" Placeholder="e.g., Take one pill twice daily after meals." PlaceholderColor="{AppThemeBinding Light=#90CAF9, Dark=#455A64}" HorizontalOptions="Fill" VerticalOptions="Fill" HeightRequest="80" Margin="10,5" TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
+                            </Border>
+                        </VerticalStackLayout>
+                        
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Duration Section -->
+                <Border BackgroundColor="{AppThemeBinding Light=White, Dark=#1C1C1E}"
+                        Stroke="Transparent"
+                        Padding="20">
+                    <Border.StrokeShape><RoundRectangle CornerRadius="16" /></Border.StrokeShape>
+                    <Border.Shadow>
+                        <Shadow Brush="{AppThemeBinding Light=#E0E0E0, Dark=Transparent}" Offset="0,4" Radius="10" Opacity="0.5" />
+                    </Border.Shadow>
+
+                    <VerticalStackLayout Spacing="15">
+                        <Label Text="Duration" FontSize="18" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#1C1C1E, Dark=White}" Margin="0,0,0,5"/>
+
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
+                            <VerticalStackLayout Grid.Column="0" Spacing="8">
+                                <Label Text="Start Date" FontSize="13" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#555555, Dark=#AAAAAA}" />
+                                <Border BackgroundColor="{AppThemeBinding Light=#F8F9FA, Dark=#2C2C2E}" Stroke="{AppThemeBinding Light=#E0E6ED, Dark=#3A3A3C}" StrokeThickness="1" HeightRequest="50">
+                                    <Border.StrokeShape><RoundRectangle CornerRadius="10" /></Border.StrokeShape>
+                                    <DatePicker x:Name="StartDatePicker" HorizontalOptions="Fill" VerticalOptions="Center" Margin="10,0" TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
+                                </Border>
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Grid.Column="1" Spacing="8">
+                                <Label Text="End Date" FontSize="13" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#555555, Dark=#AAAAAA}" />
+                                <Border BackgroundColor="{AppThemeBinding Light=#F8F9FA, Dark=#2C2C2E}" Stroke="{AppThemeBinding Light=#E0E6ED, Dark=#3A3A3C}" StrokeThickness="1" HeightRequest="50">
+                                    <Border.StrokeShape><RoundRectangle CornerRadius="10" /></Border.StrokeShape>
+                                    <DatePicker x:Name="EndDatePicker" HorizontalOptions="Fill" VerticalOptions="Center" Margin="10,0" TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
+                                </Border>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Submit Button -->
+                <Button x:Name="SubmitButton"
+                        Text="Save Prescription"
+                        Clicked="OnSaveClicked"
+                        BackgroundColor="#0D47A1"
+                        TextColor="White"
+                        HeightRequest="55"
+                        CornerRadius="28"
+                        FontAttributes="Bold"
+                        FontSize="16"
+                        Margin="0,10,0,20">
+                    <Button.Shadow>
+                        <Shadow Brush="#0D47A1" Offset="0,5" Radius="12" Opacity="0.4" />
+                    </Button.Shadow>
+                </Button>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

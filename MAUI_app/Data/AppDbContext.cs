@@ -8,7 +8,7 @@ public class AppDbContext : DbContext
 {
     public DbSet<ApplicationUser> Users { get; set; }
     public DbSet<Appointment> Appointments { get; set; }
-
+    public DbSet<Medication> Medications { get; set; }
     public AppDbContext() 
     { 
     }
@@ -21,8 +21,13 @@ public class AppDbContext : DbContext
         {
             optionsBuilder.UseNpgsql(Secrets.DatabaseConnection);
         }
+        
+        optionsBuilder.ConfigureWarnings(warnings => 
+            warnings.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
     }
-
+    private static readonly Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<DateTime, DateTime> DateTimeConverter = 
+        new(v => DateTime.SpecifyKind(v, DateTimeKind.Unspecified), 
+            v => DateTime.SpecifyKind(v, DateTimeKind.Unspecified));
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -33,10 +38,7 @@ public class AppDbContext : DbContext
             {
                 if (property.ClrType == typeof(DateTime) || property.ClrType == typeof(DateTime?))
                 {
-                    property.SetValueConverter(new Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<DateTime, DateTime>(
-                        v => DateTime.SpecifyKind(v, DateTimeKind.Unspecified), 
-            
-                        v => DateTime.SpecifyKind(v, DateTimeKind.Unspecified)));          
+                    property.SetValueConverter(DateTimeConverter);          
                 }
             }
         }
@@ -55,7 +57,7 @@ public class AppDbContext : DbContext
                 Id = 1,
                 UserName = "admin",
                 Email = "admin@admin.com",
-                HashedPassword = PasswordHasher.HashPassword("admin"),
+                HashedPassword = "$2a$11$yp4bvraezYGvSzDFdH48luRXhKDhT60bGU9HG5bh01BsVRdnsMnpe", // admin text hash to allow for migrations
                 Role = UserRole.Doctor
             });
         });

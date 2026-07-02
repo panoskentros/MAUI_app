@@ -1,13 +1,21 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MAUI_app.Model;
 
 public class Medication
 {
-    [MaxLength(150)]
-    public string Name { get; set; } = default!;
-    [MaxLength(150)]
-    public string Instructions { get; set; }  = default!;
-    [MaxLength(150)]
-    public string Icon { get; set; } = default!;
+    [Key] public int Id { get; set; }
+    public string MedicationName { get; set; } = default!;
+    public string Instructions { get; set; } = default!;
+    public DateTime StartDate { get; set; }
+    public DateTime EndDate { get; set; }
+    public int DoctorId { get; set; }
+    [ForeignKey(nameof(DoctorId))]
+    public ApplicationUser Doctor { get; set; } = default!;
+    
+    public int ApplicationUserId { get; set; } 
+    [ForeignKey(nameof(ApplicationUserId))]
+    public ApplicationUser ApplicationUser { get; set; } = default!;
 }

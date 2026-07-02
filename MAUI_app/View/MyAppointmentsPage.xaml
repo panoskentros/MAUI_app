@@ -2,7 +2,9 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:view="clr-namespace:MAUI_app.View"
-             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit" x:Class="MAUI_app.View.MyAppointmentsPage"
+             xmlns:model="clr-namespace:MAUI_app.Model"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit" 
+             x:Class="MAUI_app.View.MyAppointmentsPage"
              x:Name="ThisPage" 
              BackgroundColor="{AppThemeBinding Light=#F4F6F8, Dark=Black}"
              Shell.NavBarIsVisible="False">
@@ -50,8 +52,6 @@
                     </ImageButton.Behaviors>
                 </ImageButton>
             </Grid>
-            
-            
 
             <CollectionView x:Name="AllAppointmentsList" Grid.Row="1">
                 
@@ -68,7 +68,8 @@
                 </CollectionView.EmptyView>
 
                 <CollectionView.ItemTemplate>
-                    <DataTemplate>
+                    <!-- Added x:DataType here to resolve symbol warnings -->
+                    <DataTemplate x:DataType="model:Appointment">
                         <Border Margin="5" 
                                 BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource OffBlack}}" 
                                 StrokeThickness="0" 
