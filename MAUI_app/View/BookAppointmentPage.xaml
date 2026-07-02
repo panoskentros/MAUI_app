@@ -81,45 +81,6 @@
                     </VerticalStackLayout>
                 </Border>
 
-                <Border x:Name="MedicationContainer" 
-                        BackgroundColor="{AppThemeBinding Light=#E8F4FD, Dark=#0A1929}" 
-                        Stroke="{AppThemeBinding Light=#90CAF9, Dark=#1E3A5F}" 
-                        StrokeThickness="1.5"
-                        Padding="20">
-                    <Border.StrokeShape><RoundRectangle CornerRadius="16" /></Border.StrokeShape>
-                    <Border.Shadow>
-                        <Shadow Brush="{AppThemeBinding Light=#BBDEFB, Dark=Transparent}" Offset="0,4" Radius="10" Opacity="0.4" />
-                    </Border.Shadow>
-                    
-                    <VerticalStackLayout Spacing="15">
-                        
-                        <HorizontalStackLayout Spacing="8" VerticalOptions="Center" Margin="0,0,0,5">
-                            <Label Text="⚕️" FontSize="18" VerticalOptions="Center"/>
-                            <VerticalStackLayout>
-                                <Label Text="Doctor's Prescription Area" FontSize="16" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#0D47A1, Dark=#64B5F6}" />
-                                <Label Text="Medications will be prescribed by the attending doctor after the end of the appointment." FontSize="12" FontAttributes="Italic" TextColor="{AppThemeBinding Light=#1565C0, Dark=#90CAF9}" />
-                            </VerticalStackLayout>
-                        </HorizontalStackLayout>
-
-                        <VerticalStackLayout Spacing="8">
-                            <Label Text="Medication Name" FontSize="13" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#0D47A1, Dark=#64B5F6}" />
-                            <Border BackgroundColor="{AppThemeBinding Light=White, Dark=#122336}" Stroke="{AppThemeBinding Light=#BBDEFB, Dark=#1E3A5F}" StrokeThickness="1" HeightRequest="50">
-                                <Border.StrokeShape><RoundRectangle CornerRadius="10" /></Border.StrokeShape>
-                                <Entry x:Name="MedicationNameEntry" Placeholder="Awaiting doctor's input..." PlaceholderColor="{AppThemeBinding Light=#90CAF9, Dark=#455A64}" HorizontalOptions="Fill" VerticalOptions="Center" Margin="10,0" TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
-                            </Border>
-                        </VerticalStackLayout>
-
-                        <VerticalStackLayout Spacing="8">
-                            <Label Text="Instructions" FontSize="13" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#0D47A1, Dark=#64B5F6}" />
-                            <Border BackgroundColor="{AppThemeBinding Light=White, Dark=#122336}" Stroke="{AppThemeBinding Light=#BBDEFB, Dark=#1E3A5F}" StrokeThickness="1" HeightRequest="90">
-                                <Border.StrokeShape><RoundRectangle CornerRadius="10" /></Border.StrokeShape>
-                                <Editor x:Name="MedicationInstructionsEditor" Placeholder="Awaiting doctor's input..." PlaceholderColor="{AppThemeBinding Light=#90CAF9, Dark=#455A64}" HorizontalOptions="Fill" VerticalOptions="Fill" HeightRequest="80" Margin="10,5" TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
-                            </Border>
-                        </VerticalStackLayout>
-                        
-                    </VerticalStackLayout>
-                </Border>
-
                 <Button x:Name="SubmitButton"
                         Text="Confirm Appointment"
                         Clicked="OnSaveClicked"

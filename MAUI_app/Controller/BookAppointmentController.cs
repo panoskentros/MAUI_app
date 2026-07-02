@@ -40,7 +40,6 @@ public class BookAppointmentController
         _view.ShowPatientSelection(isStaff);
 
         bool isDoctor = user.Role == UserRole.Doctor;
-        _view.SetMedicationEditState(isDoctor);
 
         var doctors = await _userService.GetAllDoctorsAsync();
         _view.SetDoctors(doctors);
@@ -63,7 +62,7 @@ public class BookAppointmentController
         }
     }
 
-    public async Task SaveAppointment(ApplicationUser selectedDoctor, ApplicationUser selectedPatient, DateTime date, TimeSpan time, string notes, string medicationName, string medicationInstructions)
+    public async Task SaveAppointment(ApplicationUser selectedDoctor, ApplicationUser selectedPatient, DateTime date, TimeSpan time, string notes)
     {
         var currentUser = _userService.CurrentUser;
         if (currentUser == null) 

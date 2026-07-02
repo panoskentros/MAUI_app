@@ -45,9 +45,7 @@ public partial class BookAppointmentPage : ContentPage, IBookAppointmentView
             PatientPicker.SelectedItem as ApplicationUser,
             ApptDatePicker.Date,
             ApptTimePicker.Time,
-            NotesEditor.Text,
-            MedicationNameEntry.Text,
-            MedicationInstructionsEditor.Text);
+            NotesEditor.Text);
     }
     
     public void PrefillData(Appointment appt, List<ApplicationUser> doctors, List<ApplicationUser> patients)
@@ -71,12 +69,6 @@ public partial class BookAppointmentPage : ContentPage, IBookAppointmentView
     public void SetDoctors(List<ApplicationUser> doctors) => DoctorPicker.ItemsSource = doctors;
     public void SetPatients(List<ApplicationUser> patients) => PatientPicker.ItemsSource = patients;
     public void ShowPatientSelection(bool isVisible) => PatientPickerContainer.IsVisible = isVisible;
-    
-    public void SetMedicationEditState(bool canEdit)
-    {
-        MedicationNameEntry.IsReadOnly = !canEdit;
-        MedicationInstructionsEditor.IsReadOnly = !canEdit;
-    }
 
     public Task ShowAlertAsync(string title, string message) => DisplayAlert(title, message, "OK");
     public Task NavigateBackAsync() => Navigation.PopAsync();

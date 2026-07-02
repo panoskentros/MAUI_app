@@ -11,5 +11,4 @@ public interface IBookAppointmentView
     void SetSubmitButtonText(string text);
     Task ShowAlertAsync(string title, string message);
     Task NavigateBackAsync();
-    void SetMedicationEditState(bool canEdit);
 }
