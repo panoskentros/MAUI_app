@@ -206,8 +206,8 @@
         <ShellContent Route="AppointmentsHistoryPage" ContentTemplate="{DataTemplate view:AppointmentsHistoryPage}" />
     </FlyoutItem>
     
-    <FlyoutItem x:Name="MedicationsItem" Title="Medications" Icon="pill_icon.png" Shell.NavBarIsVisible="False">
-        <ShellContent Route="MedicationsPage" ContentTemplate="{DataTemplate view:MedicationsPage}" />
+    <FlyoutItem x:Name="MedicationsItem" Title="Medications" Icon="pill_icon.png" Route="medications" Shell.NavBarIsVisible="False">
+        <ShellContent ContentTemplate="{DataTemplate view:MedicationsPage}" />
     </FlyoutItem>
     
     <FlyoutItem x:Name="ProfileItem" Title="My Profile" Icon="user_icon.png" Shell.NavBarIsVisible="False">

@@ -25,7 +25,7 @@ public class ApplicationUser
     [InverseProperty("Doctor")]
     public virtual ICollection<Appointment> DoctorAppointments { get; set; } = new List<Appointment>();
     
-    [InverseProperty("ApplicationUser")]
+    [InverseProperty("Patient")]
     public virtual ICollection<Medication> Medications { get; set; } = new List<Medication>();
     
     [InverseProperty("Doctor")]

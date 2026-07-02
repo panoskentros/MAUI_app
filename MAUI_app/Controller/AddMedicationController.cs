@@ -38,11 +38,18 @@ public class AddMedicationController
 
             if (_medicationToEdit != null)
             {
-                _view.PrefillData(_medicationToEdit, _patients);
+                // Προεπιλέγουμε τον ασθενή αν υπάρχει (π.χ. από το Dashboard)
+                if (_medicationToEdit.ApplicationUserId != 0)
+                {
+                    _view.PrefillData(_medicationToEdit, _patients);
+                }
+                
+                // Επαναφέραμε το κείμενο να λέει πάντα "Update" αν υπάρχει έστω και προσχέδιο
                 _view.SetSubmitButtonText("Update Prescription");
             }
             else
             {
+                // Αν πατήσει σκέτο "Add" από άλλο μενού χωρίς προσχέδιο
                 _view.SetSubmitButtonText("Save Prescription");
             }
         }

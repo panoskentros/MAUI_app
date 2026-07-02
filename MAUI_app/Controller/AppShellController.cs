@@ -35,6 +35,8 @@ public class AppShellController
     {
         if (_userService.CurrentUser == null || _view == null) return;
         RefreshUserInfo();
+        bool canSeeMedications = _userService.CurrentUser.Role != UserRole.Secretary;
+        _view.SetMedicationsVisibility(canSeeMedications);
     }
 
     public async Task HandleSignOutAsync()

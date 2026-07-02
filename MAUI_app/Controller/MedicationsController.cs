@@ -18,8 +18,7 @@ public class MedicationsController
         if (currentUser.Role == UserRole.Doctor || currentUser.Role == UserRole.Secretary)
         {
             return await _context.Medications
-                .Include(m => m.ApplicationUser)
-                .Include(m => m.Doctor)
+                .Include(m => m.Patient)
                 .ToListAsync();
         }
         else if (currentUser.Role == UserRole.Patient)

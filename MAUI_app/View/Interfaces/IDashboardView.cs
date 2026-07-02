@@ -20,4 +20,5 @@ public interface IDashboardView
     Task NavigateToBookAppointmentAsync(Appointment appt = null!);
     Task NavigateToAppointmentsAsync();
     Task NavigateToMedicationsAsync();
+    Task NavigateToAddMedicationAsync(Medication med = null);
 }

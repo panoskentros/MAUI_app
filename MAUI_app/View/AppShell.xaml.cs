@@ -76,4 +76,9 @@ public partial class AppShell : Shell, IAppShellView
         UserNameLabel.Text = userName;
         UserRoleLabel.Text = userRole;
     }
+    
+    public void SetMedicationsVisibility(bool isVisible)
+    {
+        MedicationsItem.IsVisible = isVisible;
+    }
 }

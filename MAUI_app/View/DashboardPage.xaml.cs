@@ -45,6 +45,12 @@ public partial class DashboardPage : ContentPage, IDashboardView
         await _controller.HandleViewAllAppointmentsClicked();
     }
     
+    private async void OnPrescriptionsTapped(object sender, EventArgs e)
+    {
+        await AnimateBorder(sender);
+        await NavigateToMedicationsAsync();
+    }
+    
     private async Task AnimateBorder(object sender)
     {
         if (sender is Border border)
@@ -89,6 +95,11 @@ public partial class DashboardPage : ContentPage, IDashboardView
     {
         await _controller.HandleRescheduleClicked();
     }
+    
+    private async void OnWriteDiagnosisClicked(object sender, EventArgs e)
+    {
+        await _controller.HandleWriteDiagnosisClicked();
+    }
 
     public async Task NavigateToBookAppointmentAsync(Appointment appt = null)
     {
@@ -102,5 +113,14 @@ public partial class DashboardPage : ContentPage, IDashboardView
 
     public Task NavigateToAppointmentsAsync() => Shell.Current.GoToAsync("//appointments");
     public Task NavigateToMedicationsAsync() => Shell.Current.GoToAsync("//medications");
+    public async Task NavigateToAddMedicationAsync(Medication med = null)
+    {
+        var navigationParameter = new Dictionary<string, object>
+        {
+            { "MedicationToEdit", med ?? new Medication() }
+        };
+    
+        await Shell.Current.GoToAsync(nameof(AddMedicationPage), navigationParameter);
+    }
     public Task NavigateToSettingsAsync() => Shell.Current.GoToAsync("//settings");
 }

@@ -17,5 +17,7 @@ public class Medication
     
     public int ApplicationUserId { get; set; } 
     [ForeignKey(nameof(ApplicationUserId))]
-    public ApplicationUser ApplicationUser { get; set; } = default!;
+    public ApplicationUser Patient { get; set; } = default!;
+    [NotMapped]
+    public string DisplayName { get; set; }
 }

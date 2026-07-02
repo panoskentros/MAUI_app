@@ -35,9 +35,8 @@
                             <Border BackgroundColor="{AppThemeBinding Light=#F8F9FA, Dark=#2C2C2E}" Stroke="{AppThemeBinding Light=#E0E6ED, Dark=#3A3A3C}" StrokeThickness="1" HeightRequest="50">
                                 <Border.StrokeShape><RoundRectangle CornerRadius="10" /></Border.StrokeShape>
                                 <Picker x:Name="PatientPicker" 
-                                        ItemDisplayBinding="{Binding AppUserName}" 
+                                        ItemDisplayBinding="{Binding UserName}"
                                         TextColor="{AppThemeBinding Light=Black, Dark=White}" 
-                                        Title="Choose a patient..."
                                         TitleColor="Gray" 
                                         HorizontalOptions="Fill" 
                                         VerticalOptions="Center" 

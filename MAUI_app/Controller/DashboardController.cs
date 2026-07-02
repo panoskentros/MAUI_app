@@ -13,6 +13,7 @@ public class DashboardController
     private readonly IAppointmentService _appointmentService;
     private readonly IUserService _userService;
     private Appointment _nextPatientAppointment;
+    private Appointment _nextDoctorAppointment;
 
     public DashboardController(
         IDashboardView view, 
@@ -90,17 +91,20 @@ public class DashboardController
         if (appointments.Any())
         {
             var nextAppointment = appointments.First();
-            string timeNameStr = nextAppointment.AppointmentDate.ToString("h:mm tt") + " - " + nextAppointment.ApplicationUser.UserName;
+            _nextDoctorAppointment = nextAppointment;
+            
+            string timeNameStr = nextAppointment.AppointmentDate.ToString("dddd, MMM dd - h:mm tt") + " - " + nextAppointment.ApplicationUser.UserName;
             string detailsStr = "Reason: " + (string.IsNullOrWhiteSpace(nextAppointment.MedicalNotes) ? "Standard Checkup" : nextAppointment.MedicalNotes);
 
             _view.SetDoctorNextPatient(timeNameStr, detailsStr);
 
             bool hasMore = appointments.Count > 1;
-            string buttonText = hasMore ? $"See {appointments.Count - 1} More Today" : "";
+            string buttonText = hasMore ? $"See {appointments.Count - 1} More" : "";
             _view.SetDoctorMorePatientsButton(hasMore, buttonText);
         }
         else
         {
+            _nextDoctorAppointment = null;
             _view.SetDoctorNextPatient("No more patients today", "Enjoy your break!");
             _view.SetDoctorMorePatientsButton(false);
         }
@@ -115,5 +119,9 @@ public class DashboardController
         {
             await _view.NavigateToBookAppointmentAsync(_nextPatientAppointment);
         }
+    }
+    public async Task HandleWriteDiagnosisClicked()
+    {
+        await _view.NavigateToAddMedicationAsync();
     }
 }

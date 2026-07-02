@@ -6,4 +6,5 @@ public interface IAppShellView
     Task NavigateToLoginAsync();
     void ShowError(string message);
     void UpdateUserDisplay(string userName, string userRole);
+    void SetMedicationsVisibility(bool isVisible);
 }

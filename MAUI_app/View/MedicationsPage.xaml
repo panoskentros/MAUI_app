@@ -55,6 +55,9 @@
                                 BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource OffBlack}}" 
                                 StrokeThickness="0" 
                                 Padding="15">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnMedicationTapped" />
+                            </Border.GestureRecognizers>
                             <Border.StrokeShape>
                                 <RoundRectangle CornerRadius="16" />
                             </Border.StrokeShape>
@@ -70,7 +73,8 @@
                                             <toolkit:IconTintColorBehavior TintColor="{AppThemeBinding Light=#2C3E50, Dark=White}" />
                                         </Image.Behaviors>
                                     </Image>
-                                    <Label Text="{Binding ApplicationUser.UserName}" 
+                                    
+                                    <Label Text="{Binding DisplayName}" 
                                            FontSize="20" 
                                            FontAttributes="Bold"
                                            TextColor="{AppThemeBinding Light=#2C3E50, Dark=White}" 
