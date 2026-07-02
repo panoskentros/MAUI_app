@@ -16,10 +16,18 @@ public class MedicationsControllerTests
         
         var context = new AppDbContext(options);
         
+        context.Users.AddRange(
+            new ApplicationUser { Id = 1, UserName = "PatientOne", Email = "p1@test.com", HashedPassword = "dummy", Role = UserRole.Patient },
+            new ApplicationUser { Id = 2, UserName = "DoctorOne", Email = "d1@test.com", HashedPassword = "dummy", Role = UserRole.Doctor },
+            new ApplicationUser { Id = 3, UserName = "PatientTwo", Email = "p2@test.com", HashedPassword = "dummy", Role = UserRole.Patient },
+            new ApplicationUser { Id = 4, UserName = "SecretaryOne", Email = "s1@test.com", HashedPassword = "dummy", Role = UserRole.Secretary }
+        );
+
         context.Medications.AddRange(
             new Medication { 
                 Id = 1, 
                 MedicationName = "Aspirin", 
+                Instructions = "Take one tablet daily",
                 ApplicationUserId = 1, 
                 DoctorId = 2, 
                 StartDate = DateTime.Now, 
@@ -28,6 +36,7 @@ public class MedicationsControllerTests
             new Medication { 
                 Id = 2, 
                 MedicationName = "Ibuprofen", 
+                Instructions = "Take with food",
                 ApplicationUserId = 3, 
                 DoctorId = 2, 
                 StartDate = DateTime.Now, 
@@ -85,6 +94,7 @@ public class MedicationsControllerTests
         var med = new Medication { 
             Id = 0, 
             MedicationName = "Tylenol", 
+            Instructions = "Take as needed for pain",
             StartDate = DateTime.Now, 
             EndDate = DateTime.Now.AddDays(5) 
         };
@@ -103,6 +113,7 @@ public class MedicationsControllerTests
         var med = new Medication { 
             Id = 0, 
             MedicationName = "Amoxicillin", 
+            Instructions = "Take one pill every 8 hours",
             ApplicationUserId = 1, 
             DoctorId = 2, 
             StartDate = DateTime.Now, 

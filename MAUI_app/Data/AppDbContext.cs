@@ -1,3 +1,4 @@
+using System;
 using MAUI_app.Model;
 using MAUI_app.Services;
 using Microsoft.EntityFrameworkCore;
@@ -9,12 +10,15 @@ public class AppDbContext : DbContext
     public DbSet<ApplicationUser> Users { get; set; }
     public DbSet<Appointment> Appointments { get; set; }
     public DbSet<Medication> Medications { get; set; }
+    
     public AppDbContext() 
     { 
     }
+    
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) 
     { 
     }
+    
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         if (!optionsBuilder.IsConfigured)
@@ -25,9 +29,11 @@ public class AppDbContext : DbContext
         optionsBuilder.ConfigureWarnings(warnings => 
             warnings.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
     }
+    
     private static readonly Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<DateTime, DateTime> DateTimeConverter = 
         new(v => DateTime.SpecifyKind(v, DateTimeKind.Unspecified), 
             v => DateTime.SpecifyKind(v, DateTimeKind.Unspecified));
+            
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -51,13 +57,12 @@ public class AppDbContext : DbContext
             entity.Property(u => u.Id)
                 .UseIdentityByDefaultColumn();
             
-            
             entity.HasData(new ApplicationUser
             {
                 Id = 1,
                 UserName = "admin",
                 Email = "admin@admin.com",
-                HashedPassword = "$2a$11$yp4bvraezYGvSzDFdH48luRXhKDhT60bGU9HG5bh01BsVRdnsMnpe", // admin text hash to allow for migrations
+                HashedPassword = "$2a$11$yp4bvraezYGvSzDFdH48luRXhKDhT60bGU9HG5bh01BsVRdnsMnpe",
                 Role = UserRole.Doctor
             });
         });
@@ -71,6 +76,18 @@ public class AppDbContext : DbContext
 
             entity.HasIndex(a => new { a.DoctorId, a.AppointmentDate })
                 .IsUnique();
+                
+            entity.HasIndex(a => a.ApplicationUserId);
+        });
+        
+        modelBuilder.Entity<Medication>(entity =>
+        {
+            entity.HasKey(m => m.Id);
+
+            entity.HasIndex(m => m.ApplicationUserId);
+            entity.HasIndex(m => m.DoctorId);
+            entity.HasIndex(m => m.StartDate);
+            entity.HasIndex(m => m.EndDate);
         });
     }
 }
