@@ -22,11 +22,11 @@ public class AppointmentService : IAppointmentService
     {
         try
         {
-            var today = DateTime.Today;
+            var datetimenow = DateTime.Now;
             return await _context.Set<Appointment>()
                 .AsNoTracking()
                 .Include(a => a.ApplicationUser)
-                .Where(a => a.ApplicationUserId == userId && a.AppointmentDate >= today)
+                .Where(a => a.ApplicationUserId == userId && a.AppointmentDate >= datetimenow)
                 .OrderBy(a => a.AppointmentDate)
                 .ToListAsync();
         }
@@ -44,10 +44,10 @@ public class AppointmentService : IAppointmentService
     {
         try
         {
-            var today = DateTime.Today;
+            var datetimenow = DateTime.Now;
             return await _context.Set<Appointment>()
                 .AsNoTracking()
-                .CountAsync(a => a.AppointmentDate.Date == today);
+                .CountAsync(a => a.AppointmentDate.Date == datetimenow);
         }
         catch (InvalidOperationException ex) when (ex.InnerException is NpgsqlException)
         {
@@ -86,11 +86,11 @@ public class AppointmentService : IAppointmentService
     {
         try
         {
-            var today = DateTime.Today;
+            var datetimeNow = DateTime.Now;
             return await _context.Set<Appointment>()
                 .AsNoTracking()
                 .Include(a => a.ApplicationUser)
-                .Where(a => a.AppointmentDate >= today)
+                .Where(a => a.AppointmentDate >= datetimeNow)
                 .OrderBy(a => a.AppointmentDate)
                 .ToListAsync();
         }

@@ -131,7 +131,7 @@
                                         <Border.StrokeShape>
                                             <RoundRectangle CornerRadius="20" />
                                         </Border.StrokeShape>
-                                        <Label Text="{Binding Status}" 
+                                        <Label Text="SCHEDULED" 
                                                FontSize="12" 
                                                FontAttributes="Bold" 
                                                TextColor="{AppThemeBinding Light=#27AE60, Dark=#2ECC71}" 

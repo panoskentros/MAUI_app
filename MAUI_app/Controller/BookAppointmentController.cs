@@ -111,8 +111,6 @@ public class BookAppointmentController
         else
         {
             _appointmentToEdit.ApplicationUserId = isStaff ? selectedPatient.Id : currentUser.Id;
-            _appointmentToEdit.Status = "Scheduled";
-
             serviceResult = await _appointmentService.CreateAppointmentAsync(_appointmentToEdit);
         }
 

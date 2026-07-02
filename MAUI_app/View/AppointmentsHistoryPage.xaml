@@ -108,7 +108,7 @@
                                     <Border.StrokeShape>
                                         <RoundRectangle CornerRadius="20" />
                                     </Border.StrokeShape>
-                                    <Label Text="{Binding Status}" 
+                                    <Label Text="COMPLETED" 
                                            FontSize="12" 
                                            FontAttributes="Bold" 
                                            TextColor="{AppThemeBinding Light=#2980B9, Dark=#85C1E9}" 

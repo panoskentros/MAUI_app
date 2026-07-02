@@ -31,9 +31,7 @@ public class AppointmentValidator : AbstractValidator<Appointment>
                 return !exists;
             })
             .WithMessage("This appointment date is already scheduled in another record.");
-
-        RuleFor(x => x.Status)
-            .NotEmpty().WithMessage("Appointment status is required.");
+        
 
         RuleFor(x => x.ApplicationUserId)
             .GreaterThan(0).WithMessage("A valid application user is required.");
