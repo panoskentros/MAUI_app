@@ -42,9 +42,9 @@ public class AppointmentServiceTests
 
         context.Appointments.AddRange(new List<Appointment>
         {
-            new Appointment { Id = 1, ApplicationUserId = userId, AppointmentDate = DateTime.Today.AddDays(-2), Status = "Scheduled" },
-            new Appointment { Id = 2, ApplicationUserId = userId, AppointmentDate = DateTime.Today.AddDays(2), Status = "Scheduled" },
-            new Appointment { Id = 3, ApplicationUserId = 99, AppointmentDate = DateTime.Today.AddDays(2), Status = "Scheduled" }
+            new Appointment { Id = 1, ApplicationUserId = userId, AppointmentDate = DateTime.Today.AddDays(-2) },
+            new Appointment { Id = 2, ApplicationUserId = userId, AppointmentDate = DateTime.Today.AddDays(2) },
+            new Appointment { Id = 3, ApplicationUserId = 99, AppointmentDate = DateTime.Today.AddDays(2) }
         });
         await context.SaveChangesAsync();
 
@@ -66,9 +66,9 @@ public class AppointmentServiceTests
 
         context.Appointments.AddRange(new List<Appointment>
         {
-            new Appointment { Id = 1, ApplicationUserId = 1, AppointmentDate = DateTime.Today, Status = "Scheduled" },
-            new Appointment { Id = 2, ApplicationUserId = 1, AppointmentDate = DateTime.Today, Status = "Scheduled" },
-            new Appointment { Id = 3, ApplicationUserId = 1, AppointmentDate = DateTime.Today.AddDays(1), Status = "Scheduled" }
+            new Appointment { Id = 1, ApplicationUserId = 1, AppointmentDate = DateTime.Today },
+            new Appointment { Id = 2, ApplicationUserId = 1, AppointmentDate = DateTime.Today },
+            new Appointment { Id = 3, ApplicationUserId = 1, AppointmentDate = DateTime.Today.AddDays(1) }
         });
         await context.SaveChangesAsync();
 
@@ -91,9 +91,9 @@ public class AppointmentServiceTests
 
         context.Appointments.AddRange(new List<Appointment>
         {
-            new Appointment { Id = 1, ApplicationUserId = 1, DoctorId = doctorId, AppointmentDate = rightNow.AddHours(-1), Status = "Scheduled" },
-            new Appointment { Id = 2, ApplicationUserId = 1, DoctorId = doctorId, AppointmentDate = rightNow.AddHours(1), Status = "Scheduled" },
-            new Appointment { Id = 3, ApplicationUserId = 1, DoctorId = 99, AppointmentDate = rightNow.AddHours(1), Status = "Scheduled" }
+            new Appointment { Id = 1, ApplicationUserId = 1, DoctorId = doctorId, AppointmentDate = rightNow.AddHours(-1) },
+            new Appointment { Id = 2, ApplicationUserId = 1, DoctorId = doctorId, AppointmentDate = rightNow.AddHours(1) },
+            new Appointment { Id = 3, ApplicationUserId = 1, DoctorId = 99, AppointmentDate = rightNow.AddHours(1) }
         });
         await context.SaveChangesAsync();
 
@@ -123,7 +123,6 @@ public class AppointmentServiceTests
             Id = 10, 
             ApplicationUserId = 1,
             AppointmentDate = DateTime.Today.AddDays(1), 
-            Status = "Scheduled",
             DoctorId = 1
         };
 
@@ -145,9 +144,9 @@ public class AppointmentServiceTests
 
         context.Appointments.AddRange(new List<Appointment>
         {
-            new Appointment { Id = 1, ApplicationUserId = userId, AppointmentDate = DateTime.Now.AddDays(-2), Status = "Completed" },
-            new Appointment { Id = 2, ApplicationUserId = userId, AppointmentDate = DateTime.Now.AddDays(2), Status = "Scheduled" },
-            new Appointment { Id = 3, ApplicationUserId = 99, AppointmentDate = DateTime.Now.AddDays(-1), Status = "Completed" }
+            new Appointment { Id = 1, ApplicationUserId = userId, AppointmentDate = DateTime.Now.AddDays(-2) },
+            new Appointment { Id = 2, ApplicationUserId = userId, AppointmentDate = DateTime.Now.AddDays(2) },
+            new Appointment { Id = 3, ApplicationUserId = 99, AppointmentDate = DateTime.Now.AddDays(-1) }
         });
         await context.SaveChangesAsync();
 
@@ -170,9 +169,9 @@ public class AppointmentServiceTests
 
         context.Appointments.AddRange(new List<Appointment>
         {
-            new Appointment { Id = 1, ApplicationUserId = 1, DoctorId = doctorId, AppointmentDate = DateTime.Now.AddDays(-3), Status = "Completed" },
-            new Appointment { Id = 2, ApplicationUserId = 1, DoctorId = doctorId, AppointmentDate = DateTime.Now.AddDays(1), Status = "Scheduled" },
-            new Appointment { Id = 3, ApplicationUserId = 1, DoctorId = 99, AppointmentDate = DateTime.Now.AddDays(-2),Status = "Completed" }
+            new Appointment { Id = 1, ApplicationUserId = 1, DoctorId = doctorId, AppointmentDate = DateTime.Now.AddDays(-3) },
+            new Appointment { Id = 2, ApplicationUserId = 1, DoctorId = doctorId, AppointmentDate = DateTime.Now.AddDays(1) },
+            new Appointment { Id = 3, ApplicationUserId = 1, DoctorId = 99, AppointmentDate = DateTime.Now.AddDays(-2) }
         });
         await context.SaveChangesAsync();
 
