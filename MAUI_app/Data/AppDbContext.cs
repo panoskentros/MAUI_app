@@ -31,8 +31,8 @@ public class AppDbContext : DbContext
     }
     
     private static readonly Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<DateTime, DateTime> DateTimeConverter = 
-        new(v => DateTime.SpecifyKind(v, DateTimeKind.Unspecified), 
-            v => DateTime.SpecifyKind(v, DateTimeKind.Unspecified));
+        new(v => v.ToUniversalTime(), 
+            v => DateTime.SpecifyKind(v, DateTimeKind.Utc));
             
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
