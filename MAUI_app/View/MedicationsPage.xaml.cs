@@ -22,7 +22,6 @@ public partial class MedicationsPage : ContentPage
     {
         base.OnAppearing();
         
-        // Show/Hide Add button based on Role
         if (_userService.CurrentUser != null)
         {
             AddMedicationButton.IsVisible = _userService.CurrentUser.Role == UserRole.Doctor;
@@ -55,26 +54,21 @@ public partial class MedicationsPage : ContentPage
 
     private async void OnAddMedicationClicked(object sender, EventArgs e)
     {
-        // Navigate to the Add/Edit page
         await Shell.Current.GoToAsync(nameof(AddMedicationPage));
     }
     
-    private async void OnMedicationTapped(object sender, TappedEventArgs e)
+    private async void OnEditMedicationClicked(object sender, EventArgs e)
     {
-        // 1. Έλεγχος Ασφαλείας: ΜΟΝΟ οι γιατροί μπορούν να κάνουν επεξεργασία!
         if (_userService.CurrentUser == null || _userService.CurrentUser.Role != UserRole.Doctor)
         {
-            return; // Αν είναι ασθενής, σταματάει εδώ και δεν κάνει τίποτα.
+            return; 
         }
-
-        // 2. Παίρνουμε τα δεδομένα της συγκεκριμένης κάρτας που πατήθηκε
-        if (sender is Border border && border.BindingContext is Medication selectedMed)
+        
+        if (sender is ImageButton button && button.CommandParameter is Medication selectedMed)
         {
-            // Κάνουμε ένα ωραίο εφέ στο κουμπί/κάρτα
-            await border.ScaleTo(0.95, 100);
-            await border.ScaleTo(1.0, 100);
-
-            // 3. Στέλνουμε το συγκεκριμένο φάρμακο στη σελίδα προσθήκης/επεξεργασίας
+            await button.ScaleTo(0.90, 100);
+            await button.ScaleTo(1.0, 100);
+            
             var navigationParameter = new Dictionary<string, object>
             {
                 { "MedicationToEdit", selectedMed }
