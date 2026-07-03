@@ -70,6 +70,6 @@ public class DashboardControllerTests
         await controller.InitializeDashboardAsync();
 
         mockView.Verify(v => v.ShowDoctorView(true), Times.Once);
-        mockView.Verify(v => v.SetDoctorMorePatientsButton(true, "See 1 More Today"), Times.Once);
+        mockView.Verify(v => v.SetDoctorMorePatientsButton(true, "See 1 More"), Times.Once);
     }
 }

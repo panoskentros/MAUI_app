@@ -12,7 +12,7 @@ public class MedicationsController
     {
         _context = context;
     }
-
+    
     public async Task<List<Medication>> GetMedicationsAsync(ApplicationUser currentUser)
     {
         if (currentUser.Role == UserRole.Doctor || currentUser.Role == UserRole.Secretary)

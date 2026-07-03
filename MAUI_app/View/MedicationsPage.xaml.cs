@@ -11,6 +11,8 @@ public partial class MedicationsPage : ContentPage
     private readonly MedicationsController _controller;
     private readonly IUserService _userService;
 
+    public bool IsDoctor { get; set; }
+
     public MedicationsPage(MedicationsController controller, IUserService userService)
     {
         InitializeComponent();
@@ -24,7 +26,8 @@ public partial class MedicationsPage : ContentPage
         
         if (_userService.CurrentUser != null)
         {
-            AddMedicationButton.IsVisible = _userService.CurrentUser.Role == UserRole.Doctor;
+            IsDoctor = _userService.CurrentUser.Role == UserRole.Doctor;
+            AddMedicationButton.IsVisible = IsDoctor;
         }
 
         await LoadData();

@@ -22,11 +22,11 @@ public class AppointmentService : IAppointmentService
     {
         try
         {
-            var datetimenow = DateTime.Now;
+            var datetimeNow = DateTime.Now;
             return await _context.Set<Appointment>()
                 .AsNoTracking()
                 .Include(a => a.ApplicationUser)
-                .Where(a => a.ApplicationUserId == userId && a.AppointmentDate >= datetimenow)
+                .Where(a => a.ApplicationUserId == userId && a.AppointmentDate >= datetimeNow)
                 .OrderBy(a => a.AppointmentDate)
                 .ToListAsync();
         }
@@ -42,44 +42,23 @@ public class AppointmentService : IAppointmentService
 
     public async Task<int> GetTodaysAppointmentCountAsync()
     {
-        try
-        {
-            var datetimenow = DateTime.Now;
-            return await _context.Set<Appointment>()
-                .AsNoTracking()
-                .CountAsync(a => a.AppointmentDate.Date == datetimenow);
-        }
-        catch (InvalidOperationException ex) when (ex.InnerException is NpgsqlException)
-        {
-            throw new Exception("The database is currently offline. Please try again later.");
-        }
-        catch (NpgsqlException)
-        {
-            throw new Exception("The database is currently offline. Please try again later.");
-        }
+        var today = DateTime.Today;
+        var tomorrow = today.AddDays(1);
+
+        return await _context.Set<Appointment>()
+            .AsNoTracking()
+            .CountAsync(a => a.AppointmentDate >= today && a.AppointmentDate < tomorrow);
     }
 
     public async Task<List<Appointment>> GetTodaysPatientsForDoctorAsync(int doctorId)
     {
-        try
-        {
-            var rightNow = DateTime.Now; 
+        var today = DateTime.Today;
+        var tomorrow = today.AddDays(1);
 
-            return await _context.Set<Appointment>()
-                .AsNoTracking()
-                .Include(a => a.ApplicationUser)
-                .Where(a => a.DoctorId == doctorId && a.AppointmentDate >= rightNow)
-                .OrderBy(a => a.AppointmentDate)
-                .ToListAsync();
-        }
-        catch (InvalidOperationException ex) when (ex.InnerException is NpgsqlException)
-        {
-            throw new Exception("The database is currently offline. Please try again later.");
-        }
-        catch (NpgsqlException)
-        {
-            throw new Exception("The database is currently offline. Please try again later.");
-        }
+        return await _context.Set<Appointment>()
+            .AsNoTracking()
+            .Where(a => a.DoctorId == doctorId && a.AppointmentDate >= today && a.AppointmentDate < tomorrow)
+            .ToListAsync();
     }
 
     public async Task<List<Appointment>> GetUpcomingAppointmentsForClinicAsync()

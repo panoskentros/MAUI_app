@@ -23,7 +23,7 @@ public class AppointmentServiceTests
         var databaseContext = new AppDbContext(options);
         databaseContext.Database.EnsureCreated();
         
-        databaseContext.Set<ApplicationUser>().RemoveRange(databaseContext.Set<ApplicationUser>()); // remove default admin user from seeding
+        databaseContext.Set<ApplicationUser>().RemoveRange(databaseContext.Set<ApplicationUser>());
         databaseContext.SaveChanges();
         
         return databaseContext;
@@ -42,9 +42,9 @@ public class AppointmentServiceTests
 
         context.Appointments.AddRange(new List<Appointment>
         {
-            new Appointment { Id = 1, ApplicationUserId = userId, AppointmentDate = DateTime.Today.AddDays(-2) },
-            new Appointment { Id = 2, ApplicationUserId = userId, AppointmentDate = DateTime.Today.AddDays(2) },
-            new Appointment { Id = 3, ApplicationUserId = 99, AppointmentDate = DateTime.Today.AddDays(2) }
+            new Appointment { Id = 1, ApplicationUserId = userId, AppointmentDate = DateTime.Now.AddDays(1) },
+            new Appointment { Id = 2, ApplicationUserId = userId, AppointmentDate = DateTime.Now.AddDays(-1) },
+            new Appointment { Id = 3, ApplicationUserId = 99, AppointmentDate = DateTime.Now.AddDays(1) }
         });
         await context.SaveChangesAsync();
 
@@ -54,7 +54,7 @@ public class AppointmentServiceTests
         var results = await service.GetUpcomingAppointmentsForPatientAsync(userId);
 
         Assert.Single(results);
-        Assert.Equal(2, results[0].Id);
+        Assert.Equal(1, results[0].Id);
     }
 
     [Fact]
@@ -66,8 +66,8 @@ public class AppointmentServiceTests
 
         context.Appointments.AddRange(new List<Appointment>
         {
-            new Appointment { Id = 1, ApplicationUserId = 1, AppointmentDate = DateTime.Today },
-            new Appointment { Id = 2, ApplicationUserId = 1, AppointmentDate = DateTime.Today },
+            new Appointment { Id = 1, ApplicationUserId = 1, AppointmentDate = DateTime.Today.AddHours(-1) },
+            new Appointment { Id = 2, ApplicationUserId = 1, AppointmentDate = DateTime.Today.AddHours(1) },
             new Appointment { Id = 3, ApplicationUserId = 1, AppointmentDate = DateTime.Today.AddDays(1) }
         });
         await context.SaveChangesAsync();
@@ -77,7 +77,7 @@ public class AppointmentServiceTests
 
         var count = await service.GetTodaysAppointmentCountAsync();
 
-        Assert.Equal(2, count);
+        Assert.Equal(1, count);
     }
 
     [Fact]
@@ -85,15 +85,15 @@ public class AppointmentServiceTests
     {
         var context = GetDatabaseContext();
         int doctorId = 5;
-        var rightNow = DateTime.Now;
+        var today = DateTime.Today;
 
         context.AddRange(new ApplicationUser { Id = 1, UserName = "Patient1", Email = "p1@test.com", HashedPassword = "hash" });
 
         context.Appointments.AddRange(new List<Appointment>
         {
-            new Appointment { Id = 1, ApplicationUserId = 1, DoctorId = doctorId, AppointmentDate = rightNow.AddHours(-1) },
-            new Appointment { Id = 2, ApplicationUserId = 1, DoctorId = doctorId, AppointmentDate = rightNow.AddHours(1) },
-            new Appointment { Id = 3, ApplicationUserId = 1, DoctorId = 99, AppointmentDate = rightNow.AddHours(1) }
+            new Appointment { Id = 1, ApplicationUserId = 1, DoctorId = doctorId, AppointmentDate = today.AddDays(-1) },
+            new Appointment { Id = 2, ApplicationUserId = 1, DoctorId = doctorId, AppointmentDate = today.AddHours(12) },
+            new Appointment { Id = 3, ApplicationUserId = 1, DoctorId = 99, AppointmentDate = today.AddHours(12) }
         });
         await context.SaveChangesAsync();
 
