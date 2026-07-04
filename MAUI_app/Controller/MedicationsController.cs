@@ -51,4 +51,25 @@ public class MedicationsController
         await _context.SaveChangesAsync();
         return true;
     }
+    
+    public async Task<bool> DeleteMedicationAsync(int medicationId)
+    {
+        try
+        {
+            var medToDelete = await _context.Medications.FindAsync(medicationId);
+            
+            if (medToDelete != null)
+            {
+                _context.Medications.Remove(medToDelete);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            
+            return false;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+    }
 }

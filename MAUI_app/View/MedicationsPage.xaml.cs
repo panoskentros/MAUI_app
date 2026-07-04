@@ -80,4 +80,36 @@ public partial class MedicationsPage : ContentPage
             await Shell.Current.GoToAsync(nameof(AddMedicationPage), navigationParameter);
         }
     }
+    
+    private async void OnDeleteMedicationClicked(object sender, EventArgs e)
+    {
+        if (_userService.CurrentUser == null || _userService.CurrentUser.Role != UserRole.Doctor)
+        {
+            return; 
+        }
+        
+        if (sender is ImageButton button && button.CommandParameter is Medication selectedMed)
+        {
+            await button.ScaleTo(0.90, 100);
+            await button.ScaleTo(1.0, 100);
+            
+            bool confirm = await DisplayAlert("Delete Prescription", 
+                $"Are you sure you want to delete the prescription for {selectedMed.MedicationName}?", 
+                "Yes", "No");
+            
+            if (confirm)
+            {
+                bool success = await _controller.DeleteMedicationAsync(selectedMed.Id);
+                
+                if (success)
+                {
+                    await LoadData();
+                }
+                else
+                {
+                    await DisplayAlert("Error", "Failed to delete the prescription.", "OK");
+                }
+            }
+        }
+    }
 }

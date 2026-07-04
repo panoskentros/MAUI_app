@@ -79,22 +79,31 @@
                                                VerticalOptions="Center" />
                                     </HorizontalStackLayout>
 
-                                    <ImageButton Grid.Column="1"
-                                                 Source="pen_solid.png" 
-                                                 ToolTipProperties.Text="Edit Prescription"
-                                                 Clicked="OnEditMedicationClicked"
-                                                 CommandParameter="{Binding .}"
-                                                 IsVisible="{Binding Source={RelativeSource AncestorType={x:Type view:MedicationsPage}}, Path=IsDoctor}"
-                                                 BackgroundColor="{AppThemeBinding Light=#E8F8F5, Dark=#154331}"
-                                                 HeightRequest="35" 
-                                                 WidthRequest="35" 
-                                                 Padding="8" 
-                                                 CornerRadius="18"
-                                                 VerticalOptions="Start">
-                                        <ImageButton.Behaviors>
-                                            <toolkit:IconTintColorBehavior TintColor="{AppThemeBinding Light=#27AE60, Dark=#2ECC71}" />
-                                        </ImageButton.Behaviors>
-                                    </ImageButton>
+                                    <HorizontalStackLayout Grid.Column="1" Spacing="10" VerticalOptions="Start" IsVisible="{Binding Source={RelativeSource AncestorType={x:Type view:MedicationsPage}}, Path=IsDoctor}">
+                                        
+                                        <ImageButton Source="pen_solid.png" 
+                                                     ToolTipProperties.Text="Edit Prescription"
+                                                     Clicked="OnEditMedicationClicked"
+                                                     CommandParameter="{Binding .}"
+                                                     BackgroundColor="{AppThemeBinding Light=#E8F8F5, Dark=#154331}"
+                                                     HeightRequest="35" WidthRequest="35" Padding="8" CornerRadius="18">
+                                            <ImageButton.Behaviors>
+                                                <toolkit:IconTintColorBehavior TintColor="{AppThemeBinding Light=#27AE60, Dark=#2ECC71}" />
+                                            </ImageButton.Behaviors>
+                                        </ImageButton>
+
+                                        <ImageButton Source="trash_solid.png" 
+                                                     ToolTipProperties.Text="Delete Prescription"
+                                                     Clicked="OnDeleteMedicationClicked"
+                                                     CommandParameter="{Binding .}"
+                                                     BackgroundColor="{AppThemeBinding Light=#FDEDEC, Dark=#4A1C1C}"
+                                                     HeightRequest="35" WidthRequest="35" Padding="8" CornerRadius="18">
+                                            <ImageButton.Behaviors>
+                                                <toolkit:IconTintColorBehavior TintColor="{AppThemeBinding Light=#E74C3C, Dark=#E57373}" />
+                                            </ImageButton.Behaviors>
+                                        </ImageButton>
+                                        
+                                    </HorizontalStackLayout>
                                     
                                 </Grid>
 
