@@ -1,6 +1,4 @@
-using System;
 using FluentValidation;
-using MAUI_app.Model;
 
 namespace MAUI_app.Model.Validators;
 

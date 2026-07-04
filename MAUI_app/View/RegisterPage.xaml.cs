@@ -1,6 +1,3 @@
-using System;
-using System.Threading.Tasks;
-using Microsoft.Maui.Controls;
 using MAUI_app.Controller;
 using MAUI_app.Services.Interfaces;
 using MAUI_app.View.interfaces;

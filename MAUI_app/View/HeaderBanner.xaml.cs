@@ -1,6 +1,4 @@
-﻿using System;
-using Microsoft.Maui.Controls;
-using MAUI_app.Services.Interfaces;
+﻿using MAUI_app.Services.Interfaces;
 
 namespace MAUI_app.View;
 

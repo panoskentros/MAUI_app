@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Maui.Controls;
 using MAUI_app.Controller;
 using MAUI_app.Model;
 using MAUI_app.Services.Interfaces;

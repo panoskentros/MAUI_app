@@ -1,11 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 using MAUI_app.Model;
 using MAUI_app.Services.Interfaces;
 using MAUI_app.View.interfaces;
-using MAUI_app.Data;
 
 namespace MAUI_app.Controller;
 

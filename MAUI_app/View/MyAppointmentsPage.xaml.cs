@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using Microsoft.Maui.Controls;
+﻿using System.Collections.ObjectModel;
 using MAUI_app.Controller;
 using MAUI_app.Model;
 using MAUI_app.Services.Interfaces;

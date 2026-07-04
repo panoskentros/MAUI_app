@@ -1,7 +1,6 @@
 using FluentValidation;
 using MAUI_app.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace MAUI_app.Model.Validators;
 

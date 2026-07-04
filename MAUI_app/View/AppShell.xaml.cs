@@ -1,8 +1,5 @@
 ﻿using MAUI_app.Controller;
 using MAUI_app.View.interfaces;
-using Microsoft.Maui.Controls;
-using System;
-using System.Threading.Tasks;
 using MAUI_app.View;
 
 namespace MAUI_app;

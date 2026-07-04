@@ -1,5 +1,3 @@
-using System.Threading.Tasks;
-
 namespace MAUI_app.View.interfaces;
 
 public interface ISettingsView

@@ -1,6 +1,5 @@
 using MAUI_app.Controller;
 using MAUI_app.Model;
-using MAUI_app.View.Interfaces;
 using MAUI_app.Services.Interfaces;
 using System.Collections.ObjectModel;
 

@@ -1,5 +1,3 @@
-using System;
-using System.Threading.Tasks;
 using MAUI_app.Model;
 using MAUI_app.Services.Interfaces;
 using MAUI_app.View.interfaces;
@@ -24,6 +22,7 @@ public class AppShellController
     public void SubscribeToUserChanges()
     {
         _userService.UserChanged += UpdateMenuBasedOnRole;
+        UpdateMenuBasedOnRole(this, EventArgs.Empty);
     }
 
     public void UnsubscribeFromUserChanges()
