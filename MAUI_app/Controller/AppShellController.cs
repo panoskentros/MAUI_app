@@ -24,6 +24,7 @@ public class AppShellController
     public void SubscribeToUserChanges()
     {
         _userService.UserChanged += UpdateMenuBasedOnRole;
+        UpdateMenuBasedOnRole(this, EventArgs.Empty);
     }
 
     public void UnsubscribeFromUserChanges()
