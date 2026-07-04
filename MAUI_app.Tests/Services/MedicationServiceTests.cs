@@ -1,12 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using MAUI_app.Data;
 using MAUI_app.Model;
 using MAUI_app.Services;
 using MAUI_app.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Xunit;
 
 namespace MAUI_app.Tests.Services;
 
@@ -30,13 +26,17 @@ public class MedicationServiceTests
     public async Task GetMedicationsAsync_Doctor_ReturnsAll()
     {
         var context = GetDatabaseContext();
-        var doctor = new ApplicationUser { Id = 2, UserName = "DoctorOne", Role = UserRole.Doctor, HashedPassword = "dummy" };
         
-        context.Users.Add(doctor);
+        var doctor = new ApplicationUser { Id = 2, UserName = "DoctorOne", Email = "doctor@gmail.com", Role = UserRole.Doctor, HashedPassword = "dummy" };
+        var patient1 = new ApplicationUser { Id = 1, UserName = "PatientOne", Email = "p1@gmail.com", Role = UserRole.Patient, HashedPassword = "dummy" };
+        var patient2 = new ApplicationUser { Id = 3, UserName = "PatientTwo", Email = "p2@gmail.com", Role = UserRole.Patient, HashedPassword = "dummy" };
+        
+        context.Users.AddRange(doctor, patient1, patient2);
+        
         context.Medications.AddRange(new List<Medication>
         {
-            new Medication { Id = 1, MedicationName = "Aspirin", DoctorId = 2, ApplicationUserId = 1, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddDays(7) },
-            new Medication { Id = 2, MedicationName = "Ibuprofen", DoctorId = 2, ApplicationUserId = 3, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddDays(7) }
+            new Medication { Id = 1, MedicationName = "Aspirin", Instructions = "", DoctorId = 2, ApplicationUserId = 1, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddDays(7) },
+            new Medication { Id = 2, MedicationName = "Ibuprofen", Instructions = "", DoctorId = 2, ApplicationUserId = 3, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddDays(7) }
         });
         await context.SaveChangesAsync();
 
@@ -51,13 +51,17 @@ public class MedicationServiceTests
     public async Task GetMedicationsAsync_Patient_ReturnsOnlyOwn()
     {
         var context = GetDatabaseContext();
-        var patient = new ApplicationUser { Id = 1, UserName = "PatientOne", Role = UserRole.Patient, HashedPassword = "dummy" };
         
-        context.Users.Add(patient);
+        var patient = new ApplicationUser { Id = 1, UserName = "PatientOne", Email = "patient1@gmail.com", Role = UserRole.Patient, HashedPassword = "dummy" };
+        var otherPatient = new ApplicationUser { Id = 3, UserName = "PatientTwo", Email = "patient2@gmail.com", Role = UserRole.Patient, HashedPassword = "dummy" };
+        var doctor = new ApplicationUser { Id = 2, UserName = "DoctorOne", Email = "doctor@gmail.com", Role = UserRole.Doctor, HashedPassword = "dummy" };
+        
+        context.Users.AddRange(patient, otherPatient, doctor);
+        
         context.Medications.AddRange(new List<Medication>
         {
-            new Medication { Id = 1, MedicationName = "Aspirin", DoctorId = 2, ApplicationUserId = 1, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddDays(7) },
-            new Medication { Id = 2, MedicationName = "Ibuprofen", DoctorId = 2, ApplicationUserId = 3, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddDays(7) }
+            new Medication { Id = 1, MedicationName = "Aspirin", Instructions = "", DoctorId = 2, ApplicationUserId = 1, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddDays(7) },
+            new Medication { Id = 2, MedicationName = "Ibuprofen", Instructions = "", DoctorId = 2, ApplicationUserId = 3, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddDays(7) }
         });
         await context.SaveChangesAsync();
 
@@ -73,7 +77,8 @@ public class MedicationServiceTests
     public async Task SaveMedicationAsync_Secretary_ReturnsFalse()
     {
         var context = GetDatabaseContext();
-        var secretary = new ApplicationUser { Id = 4, UserName = "SecretaryOne", Role = UserRole.Secretary, HashedPassword = "dummy" };
+        
+        var secretary = new ApplicationUser { Id = 4, UserName = "SecretaryOne", Email = "secretary@gmail.com", Role = UserRole.Secretary, HashedPassword = "dummy" };
         
         context.Users.Add(secretary);
         await context.SaveChangesAsync();
@@ -97,7 +102,8 @@ public class MedicationServiceTests
     public async Task SaveMedicationAsync_Doctor_ReturnsTrueAndSaves()
     {
         var context = GetDatabaseContext();
-        var doctor = new ApplicationUser { Id = 2, UserName = "DoctorOne", Role = UserRole.Doctor, HashedPassword = "dummy" };
+        
+        var doctor = new ApplicationUser { Id = 2, UserName = "DoctorOne", Email = "doctor@gmail.com", Role = UserRole.Doctor, HashedPassword = "dummy" };
         
         context.Users.Add(doctor);
         await context.SaveChangesAsync();

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:model="clr-namespace:MAUI_app.Model"
              xmlns:view="clr-namespace:MAUI_app.View"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="MAUI_app.View.AddMedicationPage"
              BackgroundColor="{AppThemeBinding Light=#F5F5F7, Dark=#000000}"
              Shell.NavBarIsVisible="False">
@@ -56,10 +56,17 @@
                     </Border.Shadow>
                     
                     <VerticalStackLayout Spacing="15">
-                        
                         <HorizontalStackLayout Spacing="8" VerticalOptions="Center" Margin="0,0,0,5">
-                            <Label Text="💊" FontSize="18" VerticalOptions="Center"/>
-                            <Label Text="Prescription Details" FontSize="16" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#0D47A1, Dark=#64B5F6}" />
+                            <Image Source="pill_icon.png" HeightRequest="20" WidthRequest="20" VerticalOptions="Center">
+                                <Image.Behaviors>
+                                    <toolkit:IconTintColorBehavior TintColor="{AppThemeBinding Light=#0D47A1, Dark=#64B5F6}" />
+                                </Image.Behaviors>
+                            </Image>
+                            <Label Text="Prescription Details" 
+                                   FontSize="16" 
+                                   FontAttributes="Bold" 
+                                   TextColor="{AppThemeBinding Light=#0D47A1, Dark=#64B5F6}" 
+                                   VerticalOptions="Center"/>
                         </HorizontalStackLayout>
 
                         <VerticalStackLayout Spacing="8">
