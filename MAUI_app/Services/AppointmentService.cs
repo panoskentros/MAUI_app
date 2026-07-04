@@ -22,7 +22,7 @@ public class AppointmentService : IAppointmentService
     {
         try
         {
-            var datetimeNow = DateTime.Now;
+            var datetimeNow = DateTime.UtcNow;
             return await _context.Set<Appointment>()
                 .AsNoTracking()
                 .Include(a => a.ApplicationUser)
@@ -65,7 +65,7 @@ public class AppointmentService : IAppointmentService
     {
         try
         {
-            var now = DateTime.Now;
+            var now = DateTime.UtcNow;
             var tomorrow = now.AddDays(1);
 
             return await _context.Set<Appointment>()
@@ -88,7 +88,7 @@ public class AppointmentService : IAppointmentService
     {
         try
         {
-            var datetimeNow = DateTime.Now;
+            var datetimeNow = DateTime.UtcNow;
             return await _context.Set<Appointment>()
                 .AsNoTracking()
                 .Include(a => a.ApplicationUser)
@@ -202,7 +202,7 @@ public class AppointmentService : IAppointmentService
     {
         try
         {
-            var rightNow = DateTime.Now;
+            var rightNow = DateTime.UtcNow;
             return await _context.Set<Appointment>()
                 .AsNoTracking()
                 .Include(a => a.ApplicationUser)
@@ -224,7 +224,7 @@ public class AppointmentService : IAppointmentService
     {
         try
         {
-            var rightNow = DateTime.Now;
+            var rightNow = DateTime.UtcNow;
             return await _context.Set<Appointment>()
                 .AsNoTracking()
                 .Include(a => a.ApplicationUser)

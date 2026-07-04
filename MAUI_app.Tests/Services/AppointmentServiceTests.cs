@@ -42,9 +42,9 @@ public class AppointmentServiceTests
 
         context.Appointments.AddRange(new List<Appointment>
         {
-            new Appointment { Id = 1, ApplicationUserId = userId, AppointmentDate = DateTime.Now.AddDays(1) },
-            new Appointment { Id = 2, ApplicationUserId = userId, AppointmentDate = DateTime.Now.AddDays(-1) },
-            new Appointment { Id = 3, ApplicationUserId = 99, AppointmentDate = DateTime.Now.AddDays(1) }
+            new Appointment { Id = 1, ApplicationUserId = userId, AppointmentDate = DateTime.UtcNow.AddDays(1) },
+            new Appointment { Id = 2, ApplicationUserId = userId, AppointmentDate = DateTime.UtcNow.AddDays(-1) },
+            new Appointment { Id = 3, ApplicationUserId = 99, AppointmentDate = DateTime.UtcNow.AddDays(1) }
         });
         await context.SaveChangesAsync();
 
@@ -85,15 +85,14 @@ public class AppointmentServiceTests
     {
         var context = GetDatabaseContext();
         int doctorId = 5;
-        var today = DateTime.Now;
-
+    
         context.AddRange(new ApplicationUser { Id = 1, UserName = "Patient1", Email = "p1@test.com", HashedPassword = "hash" });
 
         context.Appointments.AddRange(new List<Appointment>
         {
-            new Appointment { Id = 1, ApplicationUserId = 1, DoctorId = doctorId, AppointmentDate = today.AddDays(-1) },
-            new Appointment { Id = 2, ApplicationUserId = 1, DoctorId = doctorId, AppointmentDate = today.AddMinutes(5) },
-            new Appointment { Id = 3, ApplicationUserId = 1, DoctorId = 99, AppointmentDate = today.AddHours(12) }
+            new Appointment { Id = 1, ApplicationUserId = 1, DoctorId = doctorId, AppointmentDate = DateTime.UtcNow.AddDays(-2) },
+            new Appointment { Id = 2, ApplicationUserId = 1, DoctorId = doctorId, AppointmentDate = DateTime.UtcNow.AddHours(2) },
+            new Appointment { Id = 3, ApplicationUserId = 1, DoctorId = 99, AppointmentDate = DateTime.UtcNow.AddMinutes(5) }
         });
         await context.SaveChangesAsync();
 
@@ -102,8 +101,8 @@ public class AppointmentServiceTests
 
         var results = await service.GetTodaysPatientsForDoctorAsync(doctorId);
 
-        Assert.Single(results);
-        Assert.Equal(2, results[0].Id);
+        Assert.Single(results);// 1 record
+        Assert.Equal(2, results[0].Id); // the record with id 2
     }
 
     [Fact]
@@ -144,9 +143,9 @@ public class AppointmentServiceTests
 
         context.Appointments.AddRange(new List<Appointment>
         {
-            new Appointment { Id = 1, ApplicationUserId = userId, AppointmentDate = DateTime.Now.AddDays(-2) },
-            new Appointment { Id = 2, ApplicationUserId = userId, AppointmentDate = DateTime.Now.AddDays(2) },
-            new Appointment { Id = 3, ApplicationUserId = 99, AppointmentDate = DateTime.Now.AddDays(-1) }
+            new Appointment { Id = 1, ApplicationUserId = userId, AppointmentDate = DateTime.UtcNow.AddDays(-2) },
+            new Appointment { Id = 2, ApplicationUserId = userId, AppointmentDate = DateTime.UtcNow.AddDays(2) },
+            new Appointment { Id = 3, ApplicationUserId = 99, AppointmentDate = DateTime.UtcNow.AddDays(-1) }
         });
         await context.SaveChangesAsync();
 
@@ -169,9 +168,9 @@ public class AppointmentServiceTests
 
         context.Appointments.AddRange(new List<Appointment>
         {
-            new Appointment { Id = 1, ApplicationUserId = 1, DoctorId = doctorId, AppointmentDate = DateTime.Now.AddDays(-3) },
-            new Appointment { Id = 2, ApplicationUserId = 1, DoctorId = doctorId, AppointmentDate = DateTime.Now.AddDays(1) },
-            new Appointment { Id = 3, ApplicationUserId = 1, DoctorId = 99, AppointmentDate = DateTime.Now.AddDays(-2) }
+            new Appointment { Id = 1, ApplicationUserId = 1, DoctorId = doctorId, AppointmentDate = DateTime.UtcNow.AddDays(-3) },
+            new Appointment { Id = 2, ApplicationUserId = 1, DoctorId = doctorId, AppointmentDate = DateTime.UtcNow.AddDays(1) },
+            new Appointment { Id = 3, ApplicationUserId = 1, DoctorId = 99, AppointmentDate = DateTime.UtcNow.AddDays(-2) }
         });
         await context.SaveChangesAsync();
 
