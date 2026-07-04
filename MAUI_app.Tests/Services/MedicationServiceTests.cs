@@ -1,63 +1,47 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using Xunit;
+using MAUI_app.Data;
+using MAUI_app.Model;
 using MAUI_app.Services;
 using MAUI_app.Services.Interfaces;
-using MAUI_app.Model;
-using MAUI_app.Data;
 using Microsoft.EntityFrameworkCore;
+using Xunit;
 
 namespace MAUI_app.Tests.Services;
 
 public class MedicationServiceTests
 {
-    private AppDbContext GetDbContext()
+    private AppDbContext GetDatabaseContext()
     {
         var options = new DbContextOptionsBuilder<AppDbContext>()
             .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
             .Options;
+        var databaseContext = new AppDbContext(options);
+        databaseContext.Database.EnsureCreated();
         
-        var context = new AppDbContext(options);
+        databaseContext.Set<ApplicationUser>().RemoveRange(databaseContext.Set<ApplicationUser>());
+        databaseContext.SaveChanges();
         
-        context.Users.AddRange(
-            new ApplicationUser { Id = 1, UserName = "PatientOne", Email = "p1@test.com", HashedPassword = "dummy", Role = UserRole.Patient },
-            new ApplicationUser { Id = 2, UserName = "DoctorOne", Email = "d1@test.com", HashedPassword = "dummy", Role = UserRole.Doctor },
-            new ApplicationUser { Id = 3, UserName = "PatientTwo", Email = "p2@test.com", HashedPassword = "dummy", Role = UserRole.Patient },
-            new ApplicationUser { Id = 4, UserName = "SecretaryOne", Email = "s1@test.com", HashedPassword = "dummy", Role = UserRole.Secretary }
-        );
-
-        context.Medications.AddRange(
-            new Medication { 
-                Id = 1, 
-                MedicationName = "Aspirin", 
-                Instructions = "Take one tablet daily",
-                ApplicationUserId = 1, 
-                DoctorId = 2, 
-                StartDate = DateTime.UtcNow, 
-                EndDate = DateTime.UtcNow.AddDays(7) 
-            },
-            new Medication { 
-                Id = 2, 
-                MedicationName = "Ibuprofen", 
-                Instructions = "Take with food",
-                ApplicationUserId = 3, 
-                DoctorId = 2, 
-                StartDate = DateTime.UtcNow, 
-                EndDate = DateTime.UtcNow.AddDays(7) 
-            }
-        );
-        context.SaveChanges();
-        
-        return context;
+        return databaseContext;
     }
 
     [Fact]
     public async Task GetMedicationsAsync_Doctor_ReturnsAll()
     {
-        var context = GetDbContext();
-        IMedicationService service = new MedicationService(context);
-        var doctor = new ApplicationUser { Id = 2, Role = UserRole.Doctor };
+        var context = GetDatabaseContext();
+        var doctor = new ApplicationUser { Id = 2, UserName = "DoctorOne", Role = UserRole.Doctor, HashedPassword = "dummy" };
+        
+        context.Users.Add(doctor);
+        context.Medications.AddRange(new List<Medication>
+        {
+            new Medication { Id = 1, MedicationName = "Aspirin", DoctorId = 2, ApplicationUserId = 1, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddDays(7) },
+            new Medication { Id = 2, MedicationName = "Ibuprofen", DoctorId = 2, ApplicationUserId = 3, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddDays(7) }
+        });
+        await context.SaveChangesAsync();
 
+        IMedicationService service = new MedicationService(context);
+        
         var result = await service.GetMedicationsAsync(doctor);
 
         Assert.Equal(2, result.Count);
@@ -66,9 +50,18 @@ public class MedicationServiceTests
     [Fact]
     public async Task GetMedicationsAsync_Patient_ReturnsOnlyOwn()
     {
-        var context = GetDbContext();
+        var context = GetDatabaseContext();
+        var patient = new ApplicationUser { Id = 1, UserName = "PatientOne", Role = UserRole.Patient, HashedPassword = "dummy" };
+        
+        context.Users.Add(patient);
+        context.Medications.AddRange(new List<Medication>
+        {
+            new Medication { Id = 1, MedicationName = "Aspirin", DoctorId = 2, ApplicationUserId = 1, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddDays(7) },
+            new Medication { Id = 2, MedicationName = "Ibuprofen", DoctorId = 2, ApplicationUserId = 3, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddDays(7) }
+        });
+        await context.SaveChangesAsync();
+
         IMedicationService service = new MedicationService(context);
-        var patient = new ApplicationUser { Id = 1, Role = UserRole.Patient };
 
         var result = await service.GetMedicationsAsync(patient);
 
@@ -79,10 +72,15 @@ public class MedicationServiceTests
     [Fact]
     public async Task SaveMedicationAsync_Secretary_ReturnsFalse()
     {
-        var context = GetDbContext();
+        var context = GetDatabaseContext();
+        var secretary = new ApplicationUser { Id = 4, UserName = "SecretaryOne", Role = UserRole.Secretary, HashedPassword = "dummy" };
+        
+        context.Users.Add(secretary);
+        await context.SaveChangesAsync();
+
         IMedicationService service = new MedicationService(context);
-        var secretary = new ApplicationUser { Id = 4, Role = UserRole.Secretary };
-        var med = new Medication { 
+        var med = new Medication 
+        { 
             Id = 0, 
             MedicationName = "Tylenol", 
             Instructions = "Take as needed for pain",
@@ -98,10 +96,15 @@ public class MedicationServiceTests
     [Fact]
     public async Task SaveMedicationAsync_Doctor_ReturnsTrueAndSaves()
     {
-        var context = GetDbContext();
+        var context = GetDatabaseContext();
+        var doctor = new ApplicationUser { Id = 2, UserName = "DoctorOne", Role = UserRole.Doctor, HashedPassword = "dummy" };
+        
+        context.Users.Add(doctor);
+        await context.SaveChangesAsync();
+
         IMedicationService service = new MedicationService(context);
-        var doctor = new ApplicationUser { Id = 2, Role = UserRole.Doctor };
-        var med = new Medication { 
+        var med = new Medication 
+        { 
             Id = 0, 
             MedicationName = "Amoxicillin", 
             Instructions = "Take one pill every 8 hours",
@@ -121,7 +124,20 @@ public class MedicationServiceTests
     [Fact]
     public async Task DeleteMedicationAsync_ExistingId_ReturnsTrueAndDeletes()
     {
-        var context = GetDbContext();
+        var context = GetDatabaseContext();
+        
+        context.Medications.Add(new Medication 
+        { 
+            Id = 1, 
+            MedicationName = "Aspirin",
+            Instructions = "Take one tablet daily",
+            ApplicationUserId = 1, 
+            DoctorId = 2, 
+            StartDate = DateTime.UtcNow, 
+            EndDate = DateTime.UtcNow.AddDays(7) 
+        });
+        await context.SaveChangesAsync();
+
         IMedicationService service = new MedicationService(context);
 
         var result = await service.DeleteMedicationAsync(1);
@@ -134,7 +150,7 @@ public class MedicationServiceTests
     [Fact]
     public async Task DeleteMedicationAsync_NonExistingId_ReturnsFalse()
     {
-        var context = GetDbContext();
+        var context = GetDatabaseContext();
         IMedicationService service = new MedicationService(context);
 
         var result = await service.DeleteMedicationAsync(99);
