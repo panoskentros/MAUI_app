@@ -85,14 +85,14 @@ public class AppointmentServiceTests
     {
         var context = GetDatabaseContext();
         int doctorId = 5;
-        var today = DateTime.Today;
+        var today = DateTime.Now;
 
         context.AddRange(new ApplicationUser { Id = 1, UserName = "Patient1", Email = "p1@test.com", HashedPassword = "hash" });
 
         context.Appointments.AddRange(new List<Appointment>
         {
             new Appointment { Id = 1, ApplicationUserId = 1, DoctorId = doctorId, AppointmentDate = today.AddDays(-1) },
-            new Appointment { Id = 2, ApplicationUserId = 1, DoctorId = doctorId, AppointmentDate = today.AddHours(12) },
+            new Appointment { Id = 2, ApplicationUserId = 1, DoctorId = doctorId, AppointmentDate = today.AddMinutes(5) },
             new Appointment { Id = 3, ApplicationUserId = 1, DoctorId = 99, AppointmentDate = today.AddHours(12) }
         });
         await context.SaveChangesAsync();

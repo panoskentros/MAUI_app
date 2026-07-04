@@ -65,13 +65,13 @@ public class AppointmentService : IAppointmentService
     {
         try
         {
-            var today = DateTime.Today;
-            var tomorrow = today.AddDays(1);
+            var now = DateTime.Now;
+            var tomorrow = now.AddDays(1);
 
             return await _context.Set<Appointment>()
                 .AsNoTracking()
                 .Include(a => a.ApplicationUser)
-                .Where(a => a.DoctorId == doctorId && a.AppointmentDate >= today && a.AppointmentDate < tomorrow)
+                .Where(a => a.DoctorId == doctorId && a.AppointmentDate >= now && a.AppointmentDate < tomorrow)
                 .ToListAsync();
         }
         catch (InvalidOperationException ex) when (ex.InnerException is NpgsqlException)
