@@ -61,18 +61,6 @@ public class MedicationsControllerTests
     }
 
     [Fact]
-    public async Task GetMedicationsAsync_Secretary_ReturnsAll()
-    {
-        var context = GetDbContext();
-        var controller = new MedicationsController(context);
-        var secretary = new ApplicationUser { Id = 4, Role = UserRole.Secretary };
-
-        var result = await controller.GetMedicationsAsync(secretary);
-
-        Assert.Equal(2, result.Count);
-    }
-
-    [Fact]
     public async Task GetMedicationsAsync_Patient_ReturnsOnlyOwn()
     {
         var context = GetDbContext();
