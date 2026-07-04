@@ -15,10 +15,11 @@ public class MedicationsController
     
     public async Task<List<Medication>> GetMedicationsAsync(ApplicationUser currentUser)
     {
-        if (currentUser.Role == UserRole.Doctor || currentUser.Role == UserRole.Secretary)
+        if(currentUser.Role == UserRole.Doctor)
         {
             return await _context.Medications
                 .Include(m => m.Patient)
+                .Where(m => m.DoctorId == currentUser.Id)
                 .ToListAsync();
         }
         else if (currentUser.Role == UserRole.Patient)
@@ -28,8 +29,7 @@ public class MedicationsController
                 .Where(m => m.ApplicationUserId == currentUser.Id)
                 .ToListAsync();
         }
-
-        return new List<Medication>();
+        else throw new Exception("Unsupported role");
     }
 
     public async Task<bool> SaveMedicationAsync(Medication medication, ApplicationUser currentUser)
