@@ -93,7 +93,7 @@
                         <Border.StrokeShape><RoundRectangle CornerRadius="12" /></Border.StrokeShape>
                         <VerticalStackLayout>
                             <Label x:Name="SecretaryApptsTodayLabel" FontSize="24" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#0D47A1, Dark=#BBDEFB}" />
-                            <Label Text="Appointments Today" FontSize="12" TextColor="{AppThemeBinding Light=#0D47A1, Dark=#BBDEFB}" />
+                            <Label Text="Upcoming Appointments" FontSize="12" TextColor="{AppThemeBinding Light=#0D47A1, Dark=#BBDEFB}" />
                         </VerticalStackLayout>
                     </Border>
 

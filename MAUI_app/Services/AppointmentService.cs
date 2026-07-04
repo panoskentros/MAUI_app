@@ -44,12 +44,12 @@ public class AppointmentService : IAppointmentService
     {
         try
         {
-            var today = DateTime.Today;
-            var tomorrow = today.AddDays(1);
+            var datetimeNow = DateTime.UtcNow;
+            var tomorrow = datetimeNow.Date.AddDays(1);
 
             return await _context.Set<Appointment>()
                 .AsNoTracking()
-                .CountAsync(a => a.AppointmentDate >= today && a.AppointmentDate < tomorrow);
+                .CountAsync(a => a.AppointmentDate >= datetimeNow && a.AppointmentDate < tomorrow);
         }
         catch (InvalidOperationException ex) when (ex.InnerException is NpgsqlException)
         {
@@ -65,13 +65,13 @@ public class AppointmentService : IAppointmentService
     {
         try
         {
-            var now = DateTime.UtcNow;
-            var tomorrow = now.AddDays(1);
+            var datetimeNow = DateTime.UtcNow;
+            var tomorrow = datetimeNow.Date.AddDays(1);
 
             return await _context.Set<Appointment>()
                 .AsNoTracking()
                 .Include(a => a.ApplicationUser)
-                .Where(a => a.DoctorId == doctorId && a.AppointmentDate >= now && a.AppointmentDate < tomorrow)
+                .Where(a => a.DoctorId == doctorId && a.AppointmentDate >= datetimeNow && a.AppointmentDate < tomorrow)
                 .ToListAsync();
         }
         catch (InvalidOperationException ex) when (ex.InnerException is NpgsqlException)
@@ -202,11 +202,11 @@ public class AppointmentService : IAppointmentService
     {
         try
         {
-            var rightNow = DateTime.UtcNow;
+            var datetimeNow = DateTime.UtcNow;
             return await _context.Set<Appointment>()
                 .AsNoTracking()
                 .Include(a => a.ApplicationUser)
-                .Where(a => a.ApplicationUserId == userId && a.AppointmentDate < rightNow)
+                .Where(a => a.ApplicationUserId == userId && a.AppointmentDate < datetimeNow)
                 .OrderByDescending(a => a.AppointmentDate)
                 .ToListAsync();
         }
@@ -224,11 +224,11 @@ public class AppointmentService : IAppointmentService
     {
         try
         {
-            var rightNow = DateTime.UtcNow;
+            var datetimeNow = DateTime.UtcNow;
             return await _context.Set<Appointment>()
                 .AsNoTracking()
                 .Include(a => a.ApplicationUser)
-                .Where(a => a.DoctorId == doctorId && a.AppointmentDate < rightNow)
+                .Where(a => a.DoctorId == doctorId && a.AppointmentDate < datetimeNow)
                 .OrderByDescending(a => a.AppointmentDate)
                 .ToListAsync();
         }
