@@ -1,3 +1,4 @@
+using System;
 using FluentValidation;
 using MAUI_app.Model;
 
@@ -22,7 +23,8 @@ public class MedicationValidator : AbstractValidator<Medication>
             .GreaterThan(0).WithMessage("A patient must be selected.");
 
         RuleFor(x => x.StartDate)
-            .NotEmpty().WithMessage("Start date is required.");
+            .NotEmpty().WithMessage("Start date is required.")
+            .Must(date => date.Date >= DateTime.Today).WithMessage("The start date cannot be in the past.");
 
         RuleFor(x => x.EndDate)
             .NotEmpty().WithMessage("End date is required.")

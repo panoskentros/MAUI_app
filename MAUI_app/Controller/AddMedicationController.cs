@@ -12,15 +12,15 @@ namespace MAUI_app.Controller;
 public class AddMedicationController
 {
     private readonly IAddMedicationView _view;
-    private readonly MedicationsController _medicationsController;
+    private readonly IMedicationService _medicationService;
     private readonly IUserService _userService;
     private Medication? _medicationToEdit;
     private List<ApplicationUser> _patients = new();
 
-    public AddMedicationController(IAddMedicationView view, MedicationsController medicationsController, IUserService userService)
+    public AddMedicationController(IAddMedicationView view, IMedicationService medicationService, IUserService userService)
     {
         _view = view;
-        _medicationsController = medicationsController;
+        _medicationService = medicationService;
         _userService = userService;
     }
 
@@ -38,18 +38,15 @@ public class AddMedicationController
 
             if (_medicationToEdit != null)
             {
-                // Προεπιλέγουμε τον ασθενή αν υπάρχει (π.χ. από το Dashboard)
                 if (_medicationToEdit.ApplicationUserId != 0)
                 {
                     _view.PrefillData(_medicationToEdit, _patients);
                 }
                 
-                // Επαναφέραμε το κείμενο να λέει πάντα "Update" αν υπάρχει έστω και προσχέδιο
                 _view.SetSubmitButtonText("Update Prescription");
             }
             else
             {
-                // Αν πατήσει σκέτο "Add" από άλλο μενού χωρίς προσχέδιο
                 _view.SetSubmitButtonText("Save Prescription");
             }
         }
@@ -95,7 +92,7 @@ public class AddMedicationController
 
         try
         {
-            bool success = await _medicationsController.SaveMedicationAsync(medication, doctor);
+            bool success = await _medicationService.SaveMedicationAsync(medication, doctor);
 
             if (success)
             {

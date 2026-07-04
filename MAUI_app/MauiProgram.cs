@@ -103,6 +103,8 @@ public static class MauiProgram
         builder.Services.AddTransient<AddMedicationController>();
         builder.Services.AddTransient<AddMedicationPage>();
         
+        builder.Services.AddScoped<IMedicationService, MedicationService>();
+        
         builder.Services.AddSingleton<AppShellController>();
         builder.Services.AddSingleton<AppShell>();
         

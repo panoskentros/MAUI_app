@@ -1,12 +1,15 @@
+using System;
+using System.Threading.Tasks;
 using Xunit;
-using MAUI_app.Controller;
+using MAUI_app.Services;
+using MAUI_app.Services.Interfaces;
 using MAUI_app.Model;
 using MAUI_app.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace MAUI_app.Tests.Controllers;
+namespace MAUI_app.Tests.Services;
 
-public class MedicationsControllerTests
+public class MedicationServiceTests
 {
     private AppDbContext GetDbContext()
     {
@@ -30,8 +33,8 @@ public class MedicationsControllerTests
                 Instructions = "Take one tablet daily",
                 ApplicationUserId = 1, 
                 DoctorId = 2, 
-                StartDate = DateTime.Now, 
-                EndDate = DateTime.Now.AddDays(7) 
+                StartDate = DateTime.UtcNow, 
+                EndDate = DateTime.UtcNow.AddDays(7) 
             },
             new Medication { 
                 Id = 2, 
@@ -39,8 +42,8 @@ public class MedicationsControllerTests
                 Instructions = "Take with food",
                 ApplicationUserId = 3, 
                 DoctorId = 2, 
-                StartDate = DateTime.Now, 
-                EndDate = DateTime.Now.AddDays(7) 
+                StartDate = DateTime.UtcNow, 
+                EndDate = DateTime.UtcNow.AddDays(7) 
             }
         );
         context.SaveChanges();
@@ -52,10 +55,10 @@ public class MedicationsControllerTests
     public async Task GetMedicationsAsync_Doctor_ReturnsAll()
     {
         var context = GetDbContext();
-        var controller = new MedicationsController(context);
+        IMedicationService service = new MedicationService(context);
         var doctor = new ApplicationUser { Id = 2, Role = UserRole.Doctor };
 
-        var result = await controller.GetMedicationsAsync(doctor);
+        var result = await service.GetMedicationsAsync(doctor);
 
         Assert.Equal(2, result.Count);
     }
@@ -64,10 +67,10 @@ public class MedicationsControllerTests
     public async Task GetMedicationsAsync_Patient_ReturnsOnlyOwn()
     {
         var context = GetDbContext();
-        var controller = new MedicationsController(context);
+        IMedicationService service = new MedicationService(context);
         var patient = new ApplicationUser { Id = 1, Role = UserRole.Patient };
 
-        var result = await controller.GetMedicationsAsync(patient);
+        var result = await service.GetMedicationsAsync(patient);
 
         Assert.Single(result);
         Assert.Equal(1, result[0].ApplicationUserId);
@@ -77,17 +80,17 @@ public class MedicationsControllerTests
     public async Task SaveMedicationAsync_Secretary_ReturnsFalse()
     {
         var context = GetDbContext();
-        var controller = new MedicationsController(context);
+        IMedicationService service = new MedicationService(context);
         var secretary = new ApplicationUser { Id = 4, Role = UserRole.Secretary };
         var med = new Medication { 
             Id = 0, 
             MedicationName = "Tylenol", 
             Instructions = "Take as needed for pain",
-            StartDate = DateTime.Now, 
-            EndDate = DateTime.Now.AddDays(5) 
+            StartDate = DateTime.UtcNow, 
+            EndDate = DateTime.UtcNow.AddDays(5) 
         };
 
-        var result = await controller.SaveMedicationAsync(med, secretary);
+        var result = await service.SaveMedicationAsync(med, secretary);
 
         Assert.False(result);
     }
@@ -96,7 +99,7 @@ public class MedicationsControllerTests
     public async Task SaveMedicationAsync_Doctor_ReturnsTrueAndSaves()
     {
         var context = GetDbContext();
-        var controller = new MedicationsController(context);
+        IMedicationService service = new MedicationService(context);
         var doctor = new ApplicationUser { Id = 2, Role = UserRole.Doctor };
         var med = new Medication { 
             Id = 0, 
@@ -104,14 +107,38 @@ public class MedicationsControllerTests
             Instructions = "Take one pill every 8 hours",
             ApplicationUserId = 1, 
             DoctorId = 2, 
-            StartDate = DateTime.Now, 
-            EndDate = DateTime.Now.AddDays(10) 
+            StartDate = DateTime.UtcNow, 
+            EndDate = DateTime.UtcNow.AddDays(10) 
         };
 
-        var result = await controller.SaveMedicationAsync(med, doctor);
+        var result = await service.SaveMedicationAsync(med, doctor);
         var savedMed = await context.Medications.FirstOrDefaultAsync(m => m.MedicationName == "Amoxicillin");
 
         Assert.True(result);
         Assert.NotNull(savedMed);
+    }
+    
+    [Fact]
+    public async Task DeleteMedicationAsync_ExistingId_ReturnsTrueAndDeletes()
+    {
+        var context = GetDbContext();
+        IMedicationService service = new MedicationService(context);
+
+        var result = await service.DeleteMedicationAsync(1);
+        var deletedMed = await context.Medications.FindAsync(1);
+
+        Assert.True(result);
+        Assert.Null(deletedMed);
+    }
+
+    [Fact]
+    public async Task DeleteMedicationAsync_NonExistingId_ReturnsFalse()
+    {
+        var context = GetDbContext();
+        IMedicationService service = new MedicationService(context);
+
+        var result = await service.DeleteMedicationAsync(99);
+
+        Assert.False(result);
     }
 }

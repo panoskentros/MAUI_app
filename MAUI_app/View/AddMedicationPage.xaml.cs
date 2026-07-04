@@ -26,15 +26,13 @@ public partial class AddMedicationPage : ContentPage, IAddMedicationView
         }
     }
 
-    public AddMedicationPage(IUserService userService, MedicationsController medicationsController)
+    public AddMedicationPage(IUserService userService, IMedicationService medicationService)
     {
         InitializeComponent();
         
-        // Assuming a dedicated controller is created, similar to BookAppointmentController
-        _controller = new AddMedicationController(this, medicationsController, userService);
+        _controller = new AddMedicationController(this, medicationService, userService);
         
-        // Default the End Date to +7 days to save the doctor time
-        EndDatePicker.Date = DateTime.Now.AddDays(7);
+        EndDatePicker.Date = DateTime.Today.AddDays(7);
     }
 
     protected override async void OnAppearing()
@@ -57,8 +55,8 @@ public partial class AddMedicationPage : ContentPage, IAddMedicationView
     {
         MedicationNameEntry.Text = medication.MedicationName;
         MedicationInstructionsEditor.Text = medication.Instructions;
-        StartDatePicker.Date = medication.StartDate.Date;
-        EndDatePicker.Date = medication.EndDate.Date;
+        StartDatePicker.Date = medication.StartDate.ToLocalTime().Date;
+        EndDatePicker.Date = medication.EndDate.ToLocalTime().Date;
         
         if (patients != null)
             PatientPicker.SelectedItem = patients.FirstOrDefault(p => p.Id == medication.ApplicationUserId);

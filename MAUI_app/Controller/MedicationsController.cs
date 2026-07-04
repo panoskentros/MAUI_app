@@ -1,75 +1,31 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using MAUI_app.Model;
-using MAUI_app.Data;
-using Microsoft.EntityFrameworkCore;
+using MAUI_app.Services.Interfaces;
 
 namespace MAUI_app.Controller;
 
 public class MedicationsController
 {
-    private readonly AppDbContext _context;
+    private readonly IMedicationService _medicationService;
 
-    public MedicationsController(AppDbContext context)
+    public MedicationsController(IMedicationService medicationService)
     {
-        _context = context;
+        _medicationService = medicationService;
     }
     
-    public async Task<List<Medication>> GetMedicationsAsync(ApplicationUser currentUser)
+    public Task<List<Medication>> GetMedicationsAsync(ApplicationUser currentUser)
     {
-        if(currentUser.Role == UserRole.Doctor)
-        {
-            return await _context.Medications
-                .Include(m => m.Patient)
-                .Where(m => m.DoctorId == currentUser.Id)
-                .ToListAsync();
-        }
-        else if (currentUser.Role == UserRole.Patient)
-        {
-            return await _context.Medications
-                .Include(m => m.Doctor)
-                .Where(m => m.ApplicationUserId == currentUser.Id)
-                .ToListAsync();
-        }
-        else throw new Exception("Unsupported role");
+        return _medicationService.GetMedicationsAsync(currentUser);
     }
 
-    public async Task<bool> SaveMedicationAsync(Medication medication, ApplicationUser currentUser)
+    public Task<bool> SaveMedicationAsync(Medication medication, ApplicationUser currentUser)
     {
-        if (currentUser.Role != UserRole.Doctor)
-        {
-            return false;
-        }
-
-        if (medication.Id == 0)
-        {
-            _context.Medications.Add(medication);
-        }
-        else
-        {
-            _context.Medications.Update(medication);
-        }
-
-        await _context.SaveChangesAsync();
-        return true;
+        return _medicationService.SaveMedicationAsync(medication, currentUser);
     }
     
-    public async Task<bool> DeleteMedicationAsync(int medicationId)
+    public Task<bool> DeleteMedicationAsync(int medicationId)
     {
-        try
-        {
-            var medToDelete = await _context.Medications.FindAsync(medicationId);
-            
-            if (medToDelete != null)
-            {
-                _context.Medications.Remove(medToDelete);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            
-            return false;
-        }
-        catch (Exception)
-        {
-            return false;
-        }
+        return _medicationService.DeleteMedicationAsync(medicationId);
     }
 }
