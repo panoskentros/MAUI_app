@@ -93,7 +93,7 @@ public class DashboardController
             var nextAppointment = appointments.First();
             _nextDoctorAppointment = nextAppointment;
             
-            string timeNameStr = nextAppointment.AppointmentDate.ToString("dddd, MMM dd - h:mm tt") + " - " + nextAppointment.ApplicationUser.UserName;
+            string timeNameStr = nextAppointment.AppointmentDate.ToString("dddd, MMM dd - h:mm tt") + " - " + nextAppointment.ApplicationUser?.UserName;
             string detailsStr = "Reason: " + (string.IsNullOrWhiteSpace(nextAppointment.MedicalNotes) ? "Standard Checkup" : nextAppointment.MedicalNotes);
 
             _view.SetDoctorNextPatient(timeNameStr, detailsStr);
