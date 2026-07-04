@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.Maui.Controls;
 using MAUI_app.Controller;
 using MAUI_app.Model;
 using MAUI_app.Services.Interfaces;

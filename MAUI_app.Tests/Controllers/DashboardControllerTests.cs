@@ -1,12 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using MAUI_app.Controller;
 using MAUI_app.Model;
 using MAUI_app.Services.Interfaces;
 using MAUI_app.View.interfaces;
 using Moq;
-using Xunit;
 
 namespace MAUI_app.Tests.Controllers;
 

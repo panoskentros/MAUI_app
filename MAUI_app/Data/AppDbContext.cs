@@ -1,6 +1,4 @@
-using System;
 using MAUI_app.Model;
-using MAUI_app.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace MAUI_app.Data;

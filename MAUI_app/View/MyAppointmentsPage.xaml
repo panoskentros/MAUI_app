@@ -68,7 +68,6 @@
                 </CollectionView.EmptyView>
 
                 <CollectionView.ItemTemplate>
-                    <!-- Added x:DataType here to resolve symbol warnings -->
                     <DataTemplate x:DataType="model:Appointment">
                         <Border Margin="5" 
                                 BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource OffBlack}}" 

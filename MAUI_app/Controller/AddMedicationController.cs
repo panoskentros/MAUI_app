@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using MAUI_app.Model;
 using MAUI_app.Model.Validators;
 using MAUI_app.Services.Interfaces;

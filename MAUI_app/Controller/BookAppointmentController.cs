@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using MAUI_app.Data;
+﻿using MAUI_app.Data;
 using MAUI_app.Model;
 using MAUI_app.Services.Interfaces;
 using MAUI_app.View.interfaces;

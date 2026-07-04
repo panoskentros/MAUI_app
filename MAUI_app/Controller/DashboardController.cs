@@ -1,9 +1,6 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using MAUI_app.Model;
+﻿using MAUI_app.Model;
 using MAUI_app.Services.Interfaces;
 using MAUI_app.View.interfaces;
-using MAUI_app.Data;
 
 namespace MAUI_app.Controller;
 
@@ -29,8 +26,7 @@ public class DashboardController
     {
         var user = _userService.CurrentUser;
         if (user == null) return;
-
-        // Ορίζουμε ποιο View φαίνεται
+        
         _view.ShowPatientView(user.Role == UserRole.Patient);
         _view.ShowSecretaryView(user.Role == UserRole.Secretary);
         _view.ShowDoctorView(user.Role == UserRole.Doctor);

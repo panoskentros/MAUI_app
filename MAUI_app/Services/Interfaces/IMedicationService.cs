@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using MAUI_app.Model;
 
 namespace MAUI_app.Services.Interfaces;

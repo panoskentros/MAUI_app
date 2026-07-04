@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using FluentValidation;
 using FluentValidation.Results;
 using MAUI_app.Data;
@@ -9,7 +5,6 @@ using MAUI_app.Model;
 using MAUI_app.Services;
 using Microsoft.EntityFrameworkCore;
 using Moq;
-using Xunit;
 
 namespace MAUI_app.Tests.Services;
 
@@ -101,8 +96,8 @@ public class AppointmentServiceTests
 
         var results = await service.GetTodaysPatientsForDoctorAsync(doctorId);
 
-        Assert.Single(results);// 1 record
-        Assert.Equal(2, results[0].Id); // the record with id 2
+        Assert.Single(results);
+        Assert.Equal(2, results[0].Id);
     }
 
     [Fact]
